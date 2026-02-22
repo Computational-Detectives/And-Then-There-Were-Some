@@ -1,0 +1,84 @@
+source_id,target_id,source_name,target_name,weight,sentence_ids
+71,125,Philip Lombard,Vera Elizabeth Claythorne,96,"[60, 221, 286, 287, 307, 312, 316, 338, 342, 783, 1111, 1112, 1611, 2549, 2646, 2665, 2760, 2774, 2775, 2778, 2779, 2791, 2794, 2795, 2797, 2798, 2799, 2800, 2801, 2813, 2816, 2821, 2830, 2834, 2835, 3028, 3103, 3263, 3320, 3359, 3665, 3666, 3682, 3683, 3689, 3694, 3734, 3744, 3777, 3805, 4009, 4074, 4080, 4095, 4115, 4156, 4168, 4169, 4170, 4216, 4230, 4236, 4244, 4245, 4253, 4271, 4272, 4287, 4288, 4297, 4316, 4319, 4323, 4345, 4354, 4355, 4364, 4372, 4389, 4399, 4401, 4417, 4418, 4425, 4428, 4431, 4432, 4435, 4443, 4446, 4707, 4735, 4751, 4758, 4975, 4977]"
+71,93,Philip Lombard,William Henry Blore,84,"[952, 1150, 1154, 1618, 1624, 1698, 1759, 1761, 1785, 1791, 1928, 1944, 2046, 2074, 2087, 2120, 2139, 2239, 2259, 2262, 2266, 2270, 2346, 2356, 2380, 2389, 2392, 2394, 2407, 2555, 2646, 2665, 2698, 2710, 2836, 2959, 2962, 2971, 3000, 3005, 3116, 3130, 3134, 3138, 3143, 3144, 3150, 3151, 3152, 3156, 3161, 3162, 3163, 3172, 3174, 3178, 3182, 3382, 3399, 3447, 3453, 3712, 3734, 3751, 3769, 3777, 3883, 3947, 3972, 3986, 3992, 4017, 4127, 4135, 4153, 4155, 4161, 4245, 4253, 4348, 4707, 4735, 4751, 4758]"
+71,84,Philip Lombard,Edward George Armstrong,69,"[221, 766, 788, 1174, 1271, 1292, 1301, 1789, 1791, 1936, 1942, 1966, 1971, 1982, 1988, 1990, 2007, 2011, 2018, 2038, 2239, 2260, 2262, 2265, 2270, 2375, 2380, 2386, 2389, 2401, 2409, 2646, 2651, 2690, 2710, 2816, 2823, 2824, 2830, 2834, 3020, 3348, 3387, 3396, 3688, 3764, 3777, 3883, 3947, 3996, 4018, 4049, 4080, 4095, 4121, 4144, 4175, 4176, 4177, 4328, 4338, 4348, 4417, 4419, 4425, 4707, 4737, 4913, 4921]"
+84,93,Edward George Armstrong,William Henry Blore,57,"[1272, 1287, 1689, 1697, 1791, 2094, 2144, 2238, 2239, 2249, 2262, 2267, 2270, 2294, 2298, 2304, 2364, 2365, 2372, 2377, 2379, 2380, 2383, 2389, 2477, 2646, 2674, 2710, 2716, 2717, 2718, 3100, 3401, 3421, 3676, 3678, 3700, 3709, 3730, 3759, 3777, 3783, 3883, 3947, 3970, 4004, 4006, 4014, 4085, 4091, 4124, 4179, 4185, 4250, 4260, 4348, 4707]"
+84,125,Edward George Armstrong,Vera Elizabeth Claythorne,47,"[221, 706, 1261, 1272, 2163, 2477, 2646, 2649, 2814, 2816, 2820, 2825, 2830, 2834, 3092, 3094, 3097, 3099, 3100, 3316, 3381, 3401, 3537, 3549, 3672, 3673, 3777, 4010, 4047, 4048, 4050, 4052, 4080, 4091, 4094, 4095, 4124, 4187, 4197, 4250, 4255, 4330, 4336, 4417, 4421, 4425, 4707]"
+76,125,Emily Brent,Vera Elizabeth Claythorne,42,"[221, 682, 683, 687, 701, 1633, 1840, 1855, 1862, 1863, 1879, 1880, 1887, 1890, 1909, 1911, 1915, 1918, 1920, 2164, 2167, 2447, 2646, 2697, 2729, 2919, 2958, 3062, 3097, 3110, 3202, 3206, 3208, 3209, 3240, 3263, 3267, 3281, 3282, 3310, 3734, 4702]"
+93,125,William Henry Blore,Vera Elizabeth Claythorne,37,"[664, 1272, 2477, 2489, 2646, 2665, 2742, 3100, 3281, 3310, 3401, 3422, 3584, 3591, 3662, 3705, 3714, 3734, 3777, 3981, 4068, 4076, 4091, 4124, 4212, 4234, 4237, 4245, 4250, 4253, 4254, 4263, 4707, 4735, 4744, 4751, 4758]"
+55,84,Lawrence John Wargrave,Edward George Armstrong,36,"[221, 583, 590, 596, 597, 662, 825, 1266, 1317, 1657, 1792, 1929, 1931, 2038, 2041, 2140, 2494, 2571, 2581, 2718, 2863, 2865, 2867, 2876, 2880, 3060, 3339, 3356, 3381, 3387, 3401, 3421, 3709, 3715, 3716, 4190]"
+55,71,Lawrence John Wargrave,Philip Lombard,35,"[221, 324, 771, 787, 790, 844, 952, 958, 1975, 1979, 2038, 2549, 2577, 2579, 2602, 2604, 2611, 2612, 2617, 2665, 2680, 2726, 2778, 2807, 2813, 3043, 3387, 3399, 3400, 3447, 3460, 3599, 3712, 4161, 4550]"
+55,125,Lawrence John Wargrave,Vera Elizabeth Claythorne,33,"[221, 295, 308, 314, 340, 497, 501, 503, 520, 681, 701, 942, 2172, 2174, 2530, 2531, 2549, 2587, 2589, 2590, 2665, 2728, 2739, 2778, 2813, 3048, 3328, 3331, 3381, 3401, 3587, 3687, 3706]"
+55,93,Lawrence John Wargrave,William Henry Blore,29,"[912, 913, 920, 952, 964, 965, 995, 2512, 2543, 2553, 2576, 2665, 2667, 2699, 2718, 3021, 3180, 3337, 3399, 3401, 3421, 3440, 3447, 3448, 3455, 3456, 3709, 3712, 4161]"
+55,94,Lawrence John Wargrave,Ethel Rogers,22,"[221, 501, 502, 516, 609, 831, 836, 857, 880, 881, 1984, 2025, 2611, 2652, 2662, 2671, 2680, 3039, 3460, 3901, 4190, 4706]"
+84,94,Edward George Armstrong,Ethel Rogers,22,"[221, 807, 811, 823, 860, 1573, 1581, 1591, 1592, 1595, 1599, 1795, 1808, 1953, 2008, 2294, 2644, 2651, 2820, 3057, 4190, 4921]"
+55,76,Lawrence John Wargrave,Emily Brent,21,"[221, 285, 368, 697, 700, 701, 705, 759, 852, 853, 939, 1200, 1203, 2593, 2594, 3039, 3266, 3336, 3339, 4190, 4706]"
+71,94,Philip Lombard,Ethel Rogers,21,"[221, 751, 1132, 1754, 1963, 2003, 2004, 2005, 2601, 2603, 2611, 2614, 2651, 2680, 2966, 3011, 3025, 3143, 3172, 3460, 4921]"
+76,84,Emily Brent,Edward George Armstrong,19,"[221, 872, 873, 1174, 1258, 1546, 1642, 1666, 2646, 2685, 3097, 3113, 3269, 3272, 3276, 3339, 3348, 3354, 4190]"
+90,94,Anthony James Marston,Ethel Rogers,16,"[221, 1034, 2003, 2004, 2005, 2016, 2059, 2510, 2537, 2622, 2651, 3901, 4551, 4706, 4891, 4903]"
+94,125,Ethel Rogers,Vera Elizabeth Claythorne,15,"[221, 481, 484, 487, 488, 501, 504, 508, 510, 1863, 2447, 2480, 2483, 2820, 2919]"
+71,90,Philip Lombard,Anthony James Marston,15,"[221, 743, 744, 791, 792, 861, 1101, 1292, 1986, 1988, 2003, 2004, 2005, 2074, 2651]"
+93,94,William Henry Blore,Ethel Rogers,14,"[1705, 1739, 2294, 2309, 2322, 2622, 2631, 2845, 2852, 3038, 3133, 3141, 3143, 3172]"
+68,125,Hugo Hamilton,Vera Elizabeth Claythorne,13,"[52, 57, 1462, 1463, 1478, 1483, 3198, 3622, 3819, 3859, 3863, 4514, 4515]"
+76,109,Emily Brent,Beatrice Taylor,12,"[1896, 1898, 1900, 1904, 1909, 1911, 1916, 1918, 2902, 3231, 3232, 4634]"
+69,125,Cyril Ogilvie Hamilton,Vera Elizabeth Claythorne,12,"[55, 729, 1474, 1479, 3191, 3193, 3819, 3824, 3826, 3827, 3829, 3840]"
+76,94,Emily Brent,Ethel Rogers,10,"[221, 797, 1863, 2447, 2919, 3038, 3039, 4190, 4551, 4706]"
+80,125,John Gordon Macarthur,Vera Elizabeth Claythorne,10,"[2163, 2177, 2180, 2183, 2184, 2194, 2447, 2742, 2746, 4555]"
+113,140,Arthur Richmond,Leslie Macarthur,10,"[1356, 1359, 1362, 1363, 1364, 1366, 1367, 1371, 1376, 1428]"
+76,93,Emily Brent,William Henry Blore,9,"[1680, 2646, 3031, 3036, 3038, 3281, 3310, 3344, 3734]"
+84,90,Edward George Armstrong,Anthony James Marston,8,"[221, 662, 1250, 1292, 1564, 1988, 1997, 2651]"
+55,90,Lawrence John Wargrave,Anthony James Marston,8,"[221, 662, 943, 1113, 1116, 3901, 4641, 4706]"
+90,93,Anthony James Marston,William Henry Blore,7,"[921, 925, 982, 1288, 2074, 2622, 2628]"
+80,84,John Gordon Macarthur,Edward George Armstrong,6,"[2163, 2249, 2470, 2472, 2582, 2823]"
+93,111,William Henry Blore,James Stephen Landor,6,"[728, 1165, 3160, 3167, 3169, 3910]"
+109,125,Beatrice Taylor,Vera Elizabeth Claythorne,6,"[1908, 1909, 1911, 1913, 1918, 3328]"
+173,174,Thomas Legge,Maine,6,"[4545, 4548, 4607, 4670, 4671, 4696]"
+55,80,Lawrence John Wargrave,John Gordon Macarthur,6,"[868, 889, 1610, 2745, 2747, 4706]"
+55,119,Lawrence John Wargrave,Edward Seton,6,"[734, 1066, 1342, 1973, 4617, 4620]"
+71,76,Philip Lombard,Emily Brent,6,"[221, 1174, 2646, 3263, 3348, 3734]"
+55,63,Lawrence John Wargrave,Constance Culmington,5,"[19, 20, 597, 602, 609]"
+80,94,John Gordon Macarthur,Ethel Rogers,5,"[2447, 2537, 2622, 2753, 4706]"
+113,141,Arthur Richmond,Armitage,4,"[1388, 1391, 1394, 1402]"
+71,80,Philip Lombard,John Gordon Macarthur,4,"[355, 1106, 1773, 2823]"
+80,140,John Gordon Macarthur,Leslie Macarthur,4,"[1352, 1360, 2236, 2237]"
+71,74,Philip Lombard,Isaac Morris,4,"[72, 79, 80, 82]"
+80,113,John Gordon Macarthur,Arthur Richmond,3,"[1350, 1351, 4645]"
+55,100,Lawrence John Wargrave,Fred Narracott,3,"[414, 421, 1221]"
+90,125,Anthony James Marston,Vera Elizabeth Claythorne,3,"[221, 1513, 1516]"
+90,114,Anthony James Marston,Lucy Combes,3,"[732, 1113, 4641]"
+84,119,Edward George Armstrong,Edward Seton,3,"[1062, 1318, 1319]"
+74,173,Isaac Morris,Thomas Legge,3,"[4665, 4666, 4671]"
+80,93,John Gordon Macarthur,William Henry Blore,3,"[2249, 2622, 2742]"
+80,90,John Gordon Macarthur,Anthony James Marston,3,"[2537, 2622, 4706]"
+76,80,Emily Brent,John Gordon Macarthur,3,"[663, 2447, 4706]"
+76,90,Emily Brent,Anthony James Marston,3,"[221, 4551, 4706]"
+68,69,Hugo Hamilton,Cyril Ogilvie Hamilton,2,"[1493, 3819]"
+84,133,Edward George Armstrong,Jennifer Brady,2,"[1140, 1953]"
+55,114,Lawrence John Wargrave,Lucy Combes,2,"[1113, 4641]"
+74,84,Isaac Morris,Edward George Armstrong,2,"[149, 4922]"
+80,159,John Gordon Macarthur,Elsie MacPherson,2,"[2890, 3225]"
+94,100,Ethel Rogers,Fred Narracott,2,"[1219, 2429]"
+55,74,Lawrence John Wargrave,Isaac Morris,2,"[4563, 4580]"
+74,174,Isaac Morris,Maine,2,"[4580, 4671]"
+125,140,Vera Elizabeth Claythorne,Leslie Macarthur,2,"[2206, 2230]"
+140,141,Leslie Macarthur,Armitage,2,"[1405, 1406]"
+76,79,Emily Brent,Oliver,1,[125]
+125,173,Vera Elizabeth Claythorne,Thomas Legge,1,[4748]
+101,174,Elmer Robson,Maine,1,[4584]
+100,174,Fred Narracott,Maine,1,[4590]
+100,101,Fred Narracott,Elmer Robson,1,[4592]
+94,133,Ethel Rogers,Jennifer Brady,1,[1953]
+74,101,Isaac Morris,Elmer Robson,1,[4592]
+55,109,Lawrence John Wargrave,Beatrice Taylor,1,[3328]
+93,133,William Henry Blore,Jennifer Brady,1,[1151]
+63,94,Constance Culmington,Ethel Rogers,1,[609]
+69,74,Cyril Ogilvie Hamilton,Isaac Morris,1,[1492]
+90,174,Anthony James Marston,Maine,1,[4639]
+74,100,Isaac Morris,Fred Narracott,1,[4592]
+55,174,Lawrence John Wargrave,Maine,1,[4580]
+55,459,Lawrence John Wargrave,Thomas Rogers,1,[834]
+90,91,Anthony James Marston,Badger Berkeley,1,[476]
+63,84,Constance Culmington,Edward George Armstrong,1,[597]
+71,100,Philip Lombard,Fred Narracott,1,[459]
+84,100,Edward George Armstrong,Fred Narracott,1,[556]
+84,128,Edward George Armstrong,Matthews,1,[1053]
