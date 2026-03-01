@@ -197,10 +197,23 @@ def network_analysis(G):
 
 
     print('\n\nEIGENVECTOR CENTRALITY (changing to simple digraph)')
-    display_results(nx.eigenvector_centrality(G))
+    try:
+        # Increased max_iter to 1000 to improve convergence chances
+        eig_cent = nx.eigenvector_centrality(G, max_iter=1000)
+        display_results(eig_cent)
+    except nx.PowerIterationFailedConvergence:
+        print('Analysis Failed: Eigenvector centrality failed to converge.')
 
     print('\n\nKATZ CENTRALITY (changing to simple digraph)')
-    display_results(nx.katz_centrality(G))
+    try:
+        # Katz is sensitive to the alpha parameter
+        katz_cent = nx.katz_centrality(G, max_iter=1000)
+        display_results(katz_cent)
+    except nx.PowerIterationFailedConvergence:
+        print('Analysis Failed: Katz centrality failed to converge.')
+    except Exception as e:
+        # Catches other potential mathematical errors (e.g., alpha too large)
+        print(f'Analysis Failed: An error occurred during Katz calculation ({e})')
 
 def visualize(G):
     # Converti multigraph a grafo semplice se necessario
@@ -369,13 +382,15 @@ def visualize_closeness(G, title):
     if not os.path.isdir('networks'):
         os.makedirs('networks')
 
-    plt.savefig(f'networks/{title}.png', dpi=300, bbox_inches='tight')
+    plt.savefig(f'network_analysis/networks/{title}.png', dpi=300, bbox_inches='tight')
 
 
 def full_analysis(file, division, only_main_characters, visualization, analysis):
     
     global blocks
     blocks=division.copy()    
+
+    graphs_list=[]
 
     sections=list(blocks.keys())         
     for se in sections:
@@ -391,7 +406,9 @@ def full_analysis(file, division, only_main_characters, visualization, analysis)
         if analysis==True:
             network_analysis(G)
     
-    return G
+        graphs_list.append(G)
+
+    return graphs_list
 
 
 #EXAMPLE OF USAGE
@@ -414,3 +431,70 @@ def killer_hypothesis(G):
             print('Possible: Highest closeness centrality\n'.upper())
         else:
             print('Impossible: Not highest closeness centrality\n'.upper())
+
+
+def simplify_multigraph(mg):
+    if len(mg.nodes)==1:
+        return nx.Graph(mg)
+    # Crea un grafo semplice (Graph) partendo dai nodi del multigrafo
+    g = nx.Graph()
+    # Calcola la molteplicità di ogni coppia (u, v) e imposta il peso come 1/molteplicità
+    g.add_edges_from((u, v, {'weight': 1/mg.number_of_edges(u, v)}) for u, v in mg.edges())
+    return g
+
+def print_graph_summary(g):
+    print(f"Resoconto Grafo: {g.number_of_nodes()} nodi, {g.number_of_edges()} archi")
+    print("-" * 30)
+    # Itera sugli archi chiedendo anche i dati (data=True) per accedere al peso
+    for u, v, data in g.edges(data=True):
+        peso = data.get('weight', 'N/A')
+        print(f"Arco ({u} <-> {v}) | Peso (1/n): {peso:.4f}")
+
+def plot_centrality_evolution(labels, characters_data):
+    """
+    Plots closeness centrality evolution for multiple characters.
+    
+    :param labels: List of strings (phases/deaths)
+    :param characters_data: Dictionary {character_name: [centrality_scores]}
+    """
+    x_ticks = list(range(len(labels)))
+    x_points = [x - 0.5 for x in x_ticks]
+    
+    plt.figure(figsize=(12, 7))
+
+    for name, scores in characters_data.items():
+        # Ensure scores match the number of labels
+        plt.plot(x_points, scores, marker='o', label=name, linewidth=1.5)
+
+    # Label mapping and axis formatting
+    plt.xticks(x_ticks, labels, rotation=45)
+    plt.xlim(-1, len(labels) - 1)
+    plt.xlabel("Timeline (Deaths)")
+    plt.ylabel("Closeness Centrality")
+    plt.title("Character Centrality Evolution - And Then There Were None")
+    
+    plt.grid(True, linestyle='--', alpha=0.5)
+    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left') # Legend outside the plot
+    plt.tight_layout()
+    
+    plt.show()
+
+
+def calculate_closeness_evolution(graphs_list):    # the graph_list must be based on deaths
+    # this list is useful to calculate closeness based on distance:
+    weighted_graphs_list=[]
+    for mg in graphs_list:
+        weighted_graphs_list.append(simplify_multigraph(mg))
+
+    characters_closeness_centralities={}
+    for ch in main_characters:
+        characters_closeness_centralities[ch]=[]
+        for step in weighted_graphs_list:
+            if ch in step.nodes:
+                cl=nx.closeness_centrality(step, distance='weight')[ch]
+            else:
+                cl=0
+            characters_closeness_centralities[ch].append(cl)
+
+    labels=list(deaths.keys())
+    plot_centrality_evolution(labels, characters_closeness_centralities)
