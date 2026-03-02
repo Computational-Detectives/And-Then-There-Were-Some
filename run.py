@@ -6,14 +6,14 @@ import argparse
 import pandas as pd
 
 from pathlib import Path
-from config import ATTWN, BASE_OUT_DIR
+from src.config import ATTWN, BASE_OUT_DIR
 
-from ingest import main as ingest
-from match_names import main as match_names
-from extract_avp_triples import extract_avp
-from extract_svo_triples import main as extract_svo
-from join_triples import join_triples
-from cooccurrence import main as extract_coocurrence
+from src.extraction.ingest import main as ingest
+from src.extraction.match_names import main as match_names
+from src.extraction.extract_avp_triples import extract_avp
+from src.extraction.extract_svo_triples import main as extract_svo
+from src.extraction.join_triples import join_triples
+from src.extraction.cooccurrence import main as extract_coocurrence
 
 
 def main(input: Path, out: Path, verbose: bool = False):
@@ -79,5 +79,3 @@ if __name__ == '__main__':
     )
     args = parser.parse_args()
     main(args.input, args.out, args.verbose)
-
-

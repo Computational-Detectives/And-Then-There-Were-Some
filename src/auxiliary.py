@@ -9,7 +9,7 @@ import pandas as pd
 from pathlib import Path
 from colorama import Fore, Style, init
 from typing import List, Set, Optional
-from config import ARTICLES, NON_NAME_WORDS, KEEP_IDS_COMMON, ADD_GENDER_IDS, BASE_OUT_DIR
+from .config import ARTICLES, NON_NAME_WORDS, KEEP_IDS_COMMON, ADD_GENDER_IDS, BASE_OUT_DIR
 
 init()
 

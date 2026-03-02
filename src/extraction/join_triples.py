@@ -2,8 +2,8 @@ import argparse
 import pandas as pd
 
 from pathlib import Path
-from config import BASE_OUT_DIR, TRIPLE_OUT
-from auxiliary import print_headers, print_information
+from ..config import BASE_OUT_DIR, TRIPLE_OUT
+from ..auxiliary import print_headers, print_information
 
 
 def join_triples(dir: Path = TRIPLE_OUT) -> None:

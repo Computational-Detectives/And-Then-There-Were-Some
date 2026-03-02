@@ -11,8 +11,8 @@ from textacy import extract
 from spacy.tokens import Doc
 from spacy.attrs import HEAD, DEP
 from typing import List, Tuple, Dict, Any, Optional, Set
-from config import TOKENS, ENTITY, BASE_OUT_DIR, BOOK, TRIPLE_OUT
-from auxiliary import load_booknlp_file, print_headers, print_information, safe_to_list
+from ..config import TOKENS, ENTITY, BASE_OUT_DIR, BOOK, TRIPLE_OUT
+from ..auxiliary import load_booknlp_file, print_headers, print_information, safe_to_list
 
 
 # ================= CONFIG =================

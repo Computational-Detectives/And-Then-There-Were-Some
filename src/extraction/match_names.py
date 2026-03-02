@@ -4,8 +4,8 @@ import pandas as pd
 
 from rapidfuzz import fuzz, process
 from typing import Dict, List, Optional, Set, Tuple
-from config import BOOK, BASE_OUT_DIR, TITLES, MAN_CORRECT_IDS, CLEAN_NAMES
-from auxiliary import load_and_flatten_characters, normalize_name, clean_non_names, extract_gender, print_headers, print_information
+from ..config import BOOK, BASE_OUT_DIR, TITLES, MAN_CORRECT_IDS, CLEAN_NAMES
+from ..auxiliary import load_and_flatten_characters, normalize_name, clean_non_names, extract_gender, print_headers, print_information
 
 
 # ============================================================================

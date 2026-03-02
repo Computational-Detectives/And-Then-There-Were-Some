@@ -8,8 +8,8 @@ from itertools import combinations
 from collections import defaultdict
 from typing import Dict, Set, Tuple, List
 
-from config import TOKENS, ENTITY, BASE_OUT_DIR, COOC_OUT
-from auxiliary import load_booknlp_file, print_headers, print_information
+from ..config import TOKENS, ENTITY, BASE_OUT_DIR, COOC_OUT
+from ..auxiliary import load_booknlp_file, print_headers, print_information
 
 
 # ============================================================================

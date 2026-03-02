@@ -4,9 +4,9 @@ import pandas as pd
 
 
 from pathlib import Path
-from config import TOKENS, BASE_OUT_DIR, TRIPLE_OUT
-from extract_svo_triples import make_doc_from_sentence, is_negated
-from auxiliary import get_chapter_token_range, int_range, print_headers, print_information
+from ..config import TOKENS, BASE_OUT_DIR, TRIPLE_OUT
+from .extract_svo_triples import make_doc_from_sentence, is_negated
+from ..auxiliary import get_chapter_token_range, int_range, print_headers, print_information
 
 
 def get_negation(avp: pd.DataFrame, tokens_df: pd.DataFrame) -> pd.DataFrame:
