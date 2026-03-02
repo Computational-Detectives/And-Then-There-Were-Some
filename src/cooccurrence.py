@@ -159,10 +159,57 @@ def aggregate_edges(cooccurrences: pd.DataFrame) -> pd.DataFrame:
 
 
 # ============================================================================
+# RAW OCCURRENCE COUNTING
+# ============================================================================
+
+def count_raw_occurrences(
+    sentence_to_characters: Dict[int, Set[int]],
+    coref_to_canonical: Dict[int, Tuple[int, str]],
+) -> pd.DataFrame:
+    """
+    Count per-character occurrences across sentences.
+
+    For each character, records the total number of sentences they appear in
+    and the list of sentence IDs.  This uses the same entity-resolution
+    pipeline as the co-occurrence extraction (COREF → canonical mapping).
+
+    :param sentence_to_characters: Mapping from sentence_id to character IDs
+    :param coref_to_canonical: Mapping from COREF ID to canonical info
+    :return: DataFrame sorted by count (descending) with columns
+             canonical_id, fullname, count, sentence_ids
+    """
+    # Build canonical_id → fullname lookup
+    id_to_name: Dict[int, str] = {}
+    for canonical_id, fullname in coref_to_canonical.values():
+        id_to_name[canonical_id] = fullname
+
+    # Accumulate
+    char_sentences: Dict[int, list] = defaultdict(list)
+    for sentence_id, char_ids in sentence_to_characters.items():
+        for cid in char_ids:
+            char_sentences[cid].append(sentence_id)
+
+    records = []
+    for cid, sids in char_sentences.items():
+        sids_sorted = sorted(sids)
+        records.append({
+            "canonical_id": cid,
+            "fullname": id_to_name.get(cid, ""),
+            "count": len(sids_sorted),
+            "sentence_ids": sids_sorted,
+        })
+
+    df = pd.DataFrame(records)
+    if not df.empty:
+        df = df.sort_values("count", ascending=False).reset_index(drop=True)
+    return df
+
+
+# ============================================================================
 # MAIN PIPELINE
 # ============================================================================
 
-def main(output_dir: Path = COOC_OUT, verbose: bool = False) -> None:
+def main(output_dir: Path = COOC_OUT, verbose: bool = False, raw_occurrences: bool = True) -> None:
     print_headers("SENTENCE-LEVEL CO-OCCURRENCE EXTRACTION", "=", prefix="\n")
     
     # Resolve output paths
@@ -261,6 +308,17 @@ def main(output_dir: Path = COOC_OUT, verbose: bool = False) -> None:
     edges.to_csv(edges_path, index=False)
     print_information(f"Edge list saved to → {edges_path}", symb="✓", col="GREEN")
     
+    # --------- Raw occurrences (optional) ---------
+    if raw_occurrences:
+        print_information("Counting raw character occurrences...", 7, "\n")
+        occ = count_raw_occurrences(sentence_chars, coref_to_canonical)
+        occ_path = output_dir / "raw_occurrences.csv"
+        occ.to_csv(occ_path, index=False)
+        print_information(
+            f"Raw occurrences ({len(occ)} characters) saved to → {occ_path}",
+            symb="✓", col="GREEN",
+        )
+
     # --------- Summary ---------
     if verbose:
         print_headers("CO-OCCURRENCE SUMMARY", "-", prefix="\n")
@@ -293,6 +351,11 @@ if __name__ == "__main__":
         action="store_true",
         help="Show detailed statistics"
     )
+    parser.add_argument(
+        "--no-raw-occurrences",
+        action="store_false",
+        help="By default is also counts and saves raw per-character occurrences. Can be turned off with --no-raw-occurrences"
+    )
     
     args = parser.parse_args()
-    main(args.out, verbose=args.verbose)
+    main(args.out, verbose=args.verbose, raw_occurrences=args.no_raw_occurrences)

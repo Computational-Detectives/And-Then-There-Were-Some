@@ -1,5 +1,6 @@
 canonical_id,fullname,original_ids,avg_name_match_score
-55,Lawrence John Wargrave,"[55, 56, 62, 89, 95, 118, 122, 127, 129, 136, 338]",94.64743896641453
+55,Lawrence John Wargrave,"[55, 62, 118, 129, 136, 338]",94.77797601759264
+56,Owen,"[56, 89, 95, 122, 127]",96.4349376114082
 57,Gabrielle Turl,[57],100.0
 59,Merryweather,[59],100.0
 63,Constance Culmington,[63],100.0
@@ -13,7 +14,7 @@ canonical_id,fullname,original_ids,avg_name_match_score
 80,John Gordon Macarthur,"[80, 142]",96.32386729160923
 83,God,[83],0.0
 84,Edward George Armstrong,"[84, 86, 287, 737, 861]",99.88747066199402
-90,Anthony James Marston,"[90, 92, 123, 175]",98.42393787117405
+90,Anthony James Marston,"[90, 92, 123, 168, 175]",98.13647698934481
 91,Badger Berkeley,[91],100.0
 92,Jim,[92],0.0
 93,William Henry Blore,"[93, 98, 157]",99.9384287004351

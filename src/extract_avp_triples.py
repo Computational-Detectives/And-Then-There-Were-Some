@@ -80,6 +80,7 @@ def extract_avp(
 
     print_information("Merging to extract AVP triples...", 1, "\n")
 
+    # Get triples by merging on index. Creates all combinations of triples for the same index.
     merged = characters.merge(
         characters,
         on='index',
@@ -90,6 +91,25 @@ def extract_avp(
     avp = merged[
         merged["canonical_id_left"] != merged["canonical_id_right"]
     ]
+
+    # Remove all agent-agent and patient-patient rows.
+    # Self-join already ensures the corresponding triples exist.
+    same_role = (avp['role_left'] == avp['role_right'])
+    avp = avp[~same_role]
+
+    # Mirror rows so the agent is always on the left
+    pa_mask = (avp['role_left'] == 'patient') & (avp['role_right'] == 'agent')
+    left_cols  = [c for c in avp.columns if c.endswith('_left')]
+    right_cols = [c.replace('_left', '_right') for c in left_cols]
+    for lc, rc in zip(left_cols, right_cols):
+        avp.loc[pa_mask, [lc, rc]] = avp.loc[pa_mask, [rc, lc]].values
+
+    # Deduplicate after mirroring as
+    # patient -> agent rows overlap with agent -> patient counterparts
+    avp = avp.drop_duplicates(
+        subset=['canonical_id_left', 'canonical_id_right', 'index'],
+        keep='first'
+    ).reset_index(drop=True)
 
     # Merge avp with tokens to get the lemma for word_agent
     # Match avp['index'] with tokens['token_ID_within_document']
@@ -129,6 +149,7 @@ def extract_avp(
         print(f"    Entries dropped:        {dropped} ({dropped / total_entries * 100:.1f}%)")
         print(f"    Negated triples:        {num_negated} ({num_negated / num_triples * 100:.1f}%)")
 
+        print("\nNOTE: These statistics are potentially misleading as triple creation cannot necessarily be expressed as a percentage of total entries.")
 
     if not os.path.isdir(out):
         os.makedirs(out)

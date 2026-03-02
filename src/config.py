@@ -8,6 +8,7 @@ BASE_OUT_DIR = "../out"
 TRIPLE_OUT = BASE_OUT_DIR + "/triples"
 COOC_OUT = BASE_OUT_DIR + "/cooccurrence"
 NETWORK_OUT = BASE_OUT_DIR + "/network"
+EGO_OUT = BASE_OUT_DIR + "/ego_networks"
 
 # Path to BookNLP files
 ATTWN = BASE_DATA_DIR + "/book/attwn.txt"
@@ -16,7 +17,7 @@ ENTITY = BASE_OUT_DIR + "/preproc_attwn.entities"
 TOKENS = BASE_OUT_DIR + "/preproc_attwn.tokens"
 
 # Path to canonical names database
-CLEAN_NAMES = BASE_DATA_DIR + "/names.csv"
+CLEAN_NAMES = BASE_DATA_DIR + "/names_owen_split.csv"
 
 
 # ============================

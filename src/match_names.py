@@ -4,7 +4,7 @@ import pandas as pd
 
 from rapidfuzz import fuzz, process
 from typing import Dict, List, Optional, Set, Tuple
-from config import BOOK, BASE_OUT_DIR, TITLES, MAN_CORRECT_IDS
+from config import BOOK, BASE_OUT_DIR, TITLES, MAN_CORRECT_IDS, CLEAN_NAMES
 from auxiliary import load_and_flatten_characters, normalize_name, clean_non_names, extract_gender, print_headers, print_information
 
 
@@ -288,7 +288,7 @@ def main(input_file: str, output_dir: str, verbose: bool = False):
 
     # Load clean names
     print_information("Loading clean names database...", 1, "\n")
-    names_df = pd.read_csv("../data/names.csv")
+    names_df = pd.read_csv(CLEAN_NAMES)
     print_information(f"Loaded {len(names_df)} canonical characters", prefix="    ")
 
     # Build index of name variant

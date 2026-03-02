@@ -10,7 +10,7 @@ We recommend to follow the below steps on a Unix machine to reproduce the enviro
 ```bash
 # Create & activate virtual environment on Unix (or Windows equivalent)
 python3.12 -m venv <venv_name>
-source bin/activate/<venv_name>
+source <venv_name>/bin/activate
 
 # Install packages
 pip install -r requirements.txt

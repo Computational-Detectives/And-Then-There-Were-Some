@@ -26,7 +26,7 @@ def main(input: Path, out: Path, verbose: bool = False):
         output_dir=str(out), 
         verbose=verbose
         )
-
+ 
     # 3) Extract AVP triples
     characters = pd.read_csv(f'{out}/merged_characters.characters', sep='\t')
     extract_avp(
@@ -44,13 +44,14 @@ def main(input: Path, out: Path, verbose: bool = False):
     # 6) Join AVP & SVO triples
     join_triples(
         dir=out / 'triples',
-        verbose=verbose
+        # verbose=verbose
     )
 
     # 7) Run cooccurrence network creation
     extract_coocurrence(
         output_dir=out / 'cooccurrence', 
-        verbose=verbose
+        verbose=verbose,
+        raw_occurrences=True
     )
 
 

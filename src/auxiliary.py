@@ -9,7 +9,7 @@ import pandas as pd
 from pathlib import Path
 from colorama import Fore, Style, init
 from typing import List, Set, Optional
-from config import ARTICLES, NON_NAME_WORDS, KEEP_IDS_COMMON, ADD_GENDER_IDS
+from config import ARTICLES, NON_NAME_WORDS, KEEP_IDS_COMMON, ADD_GENDER_IDS, BASE_OUT_DIR
 
 init()
 
@@ -291,7 +291,7 @@ def get_chapter_token_range() -> str:
     :return: A tabular string representation of the token ranges for each chapter.
     :rtype: str
     """
-    tokens = pd.read_csv("../data/out_new/preproc_attwn.tokens", sep="\t")
+    tokens = pd.read_csv(f"{BASE_OUT_DIR}/preproc_attwn.tokens", sep="\t")
 
     # Filter rows where word matches our chapter markers
     chapter_markers = tokens[

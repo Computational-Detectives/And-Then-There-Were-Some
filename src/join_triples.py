@@ -37,6 +37,10 @@ def join_triples(dir: Path = TRIPLE_OUT) -> None:
     # Remove duplicates based on these columns (keep first occurrence, which is AVP)
     combined = combined.drop_duplicates(subset=dedup_cols, keep='first')
     post_dedup_count = len(combined)
+
+    # Rename SVO roles to AVP roles names
+    combined.loc[combined['role_left'] == 'subj', 'role_left'] = 'agent'
+    combined.loc[combined['role_right'] == 'obj', 'role_right'] = 'patient'
     
     print_information(f"Joined and removed {pre_dedup_count - post_dedup_count} duplicates", prefix="    ")
     combined.to_csv(f'{dir}/combined_triples.csv', sep='\t', index=False)
@@ -44,7 +48,7 @@ def join_triples(dir: Path = TRIPLE_OUT) -> None:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Extract SVO triples from tokenized text and match to canonical names.")
+    parser = argparse.ArgumentParser(description="Joins AVP and SVO triples into a single output file.")
 
     parser.add_argument(
         "-o",
@@ -53,14 +57,8 @@ if __name__ == "__main__":
         help="The output directory to which the processing results are written",
     )
 
-    parser.add_argument(
-        '-v', '--verbose', 
-        action="store_true",
-        help="A flag to trigger verbose output"
-    )
-
     args = parser.parse_args()
 
-    join_triples(args.out, verbose=args.verbose)
+    join_triples(args.out)
 
     
