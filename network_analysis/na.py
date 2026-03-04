@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import ast
 import networkx as nx
 from networkx.drawing.nx_pydot import write_dot
@@ -8,6 +9,10 @@ import matplotlib.cm as cm
 import matplotlib.colors as mcolors
 from pyvis.network import Network
 import os
+import nltk
+nltk.download('vader_lexicon')
+from nltk.tokenize import sent_tokenize, word_tokenize
+from nltk.sentiment import SentimentIntensityAnalyzer
 
 blocks={'entire_book':[(3,66980),(1,5021)],    #the whole book, from the very beginning to the very end
         'entire_story':[(3,59218),(1,4544)],   #the whole story, except the epilogues
@@ -62,7 +67,7 @@ main_characters=["Philip Lombard",
                  "Thomas Rogers",
                  "Owen"]
 
-def estrai_grafo(path, section, only_main=False):
+def estrai_grafo(path, section, only_main=False, sentiment=False):
 
     if 'avp_triples' in path:
         block=blocks[section][0]
@@ -121,6 +126,28 @@ def estrai_grafo(path, section, only_main=False):
         for st in real_edges:
             if block[0] <= int(st[2]) <= block[1] :
                 filtered_edges.append(st)
+
+        if sentiment==True:
+
+            tokens=pd.read_csv('network_analysis\data\preproc_attwn.tokens', sep='\t')[["sentence_ID","word"]]
+            tokens['word'] = tokens['word'].fillna('')
+            sia=SentimentIntensityAnalyzer()
+            G = nx.Graph()
+            for x,y,s in filtered_edges:
+                filtered_tokens=tokens[tokens['sentence_ID']==int(s)]
+                filtered_tokens_list=list(filtered_tokens['word'])
+                sentence=' '.join(filtered_tokens_list)
+                sent=sia.polarity_scores(sentence)['compound']
+                if (x,y) in G.edges:
+                    G.edges[x, y]['sentiment']+=sent
+                else:
+                    G.add_edge(x,y, sentiment=sent)
+
+            if only_main==True:
+                G=G.subgraph(main_characters)
+                print("Subgraph with only the ten main characters created!!!")
+
+            return G
 
         G = nx.MultiGraph()
         G.add_edges_from((x, y) for x,y,s in filtered_edges)
@@ -385,7 +412,7 @@ def visualize_closeness(G, title):
     plt.savefig(f'network_analysis/networks/{title}.png', dpi=300, bbox_inches='tight')
 
 
-def full_analysis(file, division, only_main_characters, visualization, analysis):
+def full_analysis(file, division, only_main_characters, visualization, analysis, sentiment):
     
     global blocks
     blocks=division.copy()    
@@ -397,11 +424,15 @@ def full_analysis(file, division, only_main_characters, visualization, analysis)
 
         print('\n\n\n***', se.upper(), '***\n\n\n')
 
-        G=estrai_grafo(file, section=se, only_main=only_main_characters)  #only_main means if you want to take into account only the ten protagonists
+        G=estrai_grafo(file, section=se, only_main=only_main_characters, sentiment=sentiment)  #only_main means if you want to take into account only the ten protagonists
         #G.remove_node('Lawrence John Wargrave')            #if we are interested in removing some characters to see what happens
         
         if visualization==True:
-            visualize_closeness(G, se)
+
+            if sentiment==True:
+                visualize_sentiment_graph(G, se)
+            else:
+                visualize_closeness(G, se)
 
         if analysis==True:
             network_analysis(G)
@@ -491,10 +522,109 @@ def calculate_closeness_evolution(graphs_list):    # the graph_list must be base
         characters_closeness_centralities[ch]=[]
         for step in weighted_graphs_list:
             if ch in step.nodes:
-                cl=nx.closeness_centrality(step, distance='weight')[ch]
+                cl=nx.closeness_centrality(step, distance='weight')[ch]    
             else:
                 cl=0
             characters_closeness_centralities[ch].append(cl)
 
     labels=list(deaths.keys())
     plot_centrality_evolution(labels, characters_closeness_centralities)
+
+
+
+
+GREEN     = "#2ca02c"
+RED       = "#d62728"
+GRAY      = "#999999"
+WIDTH_MIN = 0.5
+WIDTH_MAX = 6.0
+
+
+def visualize_sentiment_graph(G: nx.Graph, title: str = "sentiment_graph"):
+    """
+    Visualize a graph coloring edges by their 'sentiment' attribute:
+      - Green (thicker = stronger positive) if sentiment > 0
+      - Gray  (thin)                        if sentiment == 0
+      - Red   (thicker = stronger negative) if sentiment < 0
+
+    The image is saved to 'networks/{title}.png'.
+
+    Args:
+        G:     NetworkX graph with a 'sentiment' attribute on every edge.
+        title: Output filename (no extension).
+    """
+    # Collapse multigraphs by averaging sentiment on parallel edges
+    if isinstance(G, (nx.MultiGraph, nx.MultiDiGraph)):
+        G_simple = nx.Graph()
+        for u, v, data in G.edges(data=True):
+            s = data.get("sentiment", 0)
+            if G_simple.has_edge(u, v):
+                G_simple[u][v]["sentiment"] += s
+                G_simple[u][v]["count"] += 1
+            else:
+                G_simple.add_edge(u, v, sentiment=s, count=1)
+        for u, v, d in G_simple.edges(data=True):
+            d["sentiment"] = d["sentiment"] / d["count"]
+    else:
+        G_simple = G
+
+    pos = nx.spring_layout(G_simple, k=2, iterations=50, seed=42)
+
+    # --- Edges: fixed color per sign, width scaled by intensity ---
+    sentiments = np.array(
+        [d.get("sentiment", 0) for _, _, d in G_simple.edges(data=True)],
+        dtype=float,
+    )
+
+    if sentiments.size == 0:
+        fig, ax = plt.subplots(figsize=(14, 10))
+        nx.draw_networkx_nodes(G_simple, pos, ax=ax, node_size=800, node_color="#D9D9D9")
+        nx.draw_networkx_labels(G_simple, pos, ax=ax, font_size=9, font_weight="bold")
+        ax.set_title('Before death: '+title, fontsize=14, fontweight="bold")
+        ax.axis("off")
+        plt.tight_layout()
+        os.makedirs("networks", exist_ok=True)
+        plt.savefig(os.path.join("networks", f"{title}.png"), dpi=300, bbox_inches="tight")
+        plt.close(fig)
+        print(f"Image saved to: networks/{title}.png (single node, no edges)")
+        return
+
+    pos_max = float(sentiments.max()) if sentiments.max() > 0 else 1.0
+    neg_min = float(sentiments.min()) if sentiments.min() < 0 else -1.0
+
+    edge_colors, edge_widths = [], []
+    for s in sentiments:
+        if s > 0:
+            edge_colors.append(GREEN)
+            edge_widths.append(WIDTH_MIN + (s / pos_max) * (WIDTH_MAX - WIDTH_MIN))
+        elif s < 0:
+            edge_colors.append(RED)
+            edge_widths.append(WIDTH_MIN + (s / neg_min) * (WIDTH_MAX - WIDTH_MIN))
+        else:
+            edge_colors.append(GRAY)
+            edge_widths.append(WIDTH_MIN)
+
+    # --- Figure ---
+    fig, ax = plt.subplots(figsize=(14, 10))
+
+    nx.draw_networkx_nodes(G_simple, pos, ax=ax, node_size=800, node_color="#D9D9D9")
+    nx.draw_networkx_labels(G_simple, pos, ax=ax, font_size=9, font_weight="bold")
+    nx.draw_networkx_edges(G_simple, pos, ax=ax, edge_color=edge_colors, width=edge_widths)
+
+    legend_elements = [
+        Line2D([0], [0], color=GREEN, linewidth=WIDTH_MIN, label="Positive sentiment (low)"),
+        Line2D([0], [0], color=GREEN, linewidth=WIDTH_MAX,  label="Positive sentiment (high)"),
+        Line2D([0], [0], color=GRAY,  linewidth=WIDTH_MIN, label="Neutral sentiment (0)"),
+        Line2D([0], [0], color=RED,   linewidth=WIDTH_MIN, label="Negative sentiment (low)"),
+        Line2D([0], [0], color=RED,   linewidth=WIDTH_MAX,  label="Negative sentiment (high)"),
+    ]
+    ax.legend(handles=legend_elements, loc="upper left", title="Edge Sentiment")
+    ax.set_title('Before death: '+title, fontsize=14, fontweight="bold")
+    ax.axis("off")
+    plt.tight_layout()
+
+    os.makedirs("networks", exist_ok=True)
+    out_path = os.path.join("networks", f"{title}.png")
+    plt.savefig(out_path, dpi=300, bbox_inches="tight")
+    plt.close(fig)
+    print(f"Image saved to: {out_path}")
