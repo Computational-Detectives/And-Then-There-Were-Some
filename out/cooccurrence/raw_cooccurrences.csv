@@ -37,35 +37,35 @@ source_id,target_id,source_name,target_name,sentence_id
 71,125,Philip Lombard,Vera Elizabeth Claythorne,287
 55,125,Lawrence John Wargrave,Vera Elizabeth Claythorne,295
 71,125,Philip Lombard,Vera Elizabeth Claythorne,307
-55,125,Lawrence John Wargrave,Vera Elizabeth Claythorne,308
+56,125,Owen,Vera Elizabeth Claythorne,308
 71,125,Philip Lombard,Vera Elizabeth Claythorne,312
-55,125,Lawrence John Wargrave,Vera Elizabeth Claythorne,314
+56,125,Owen,Vera Elizabeth Claythorne,314
 71,125,Philip Lombard,Vera Elizabeth Claythorne,316
-55,71,Lawrence John Wargrave,Philip Lombard,324
+56,71,Owen,Philip Lombard,324
 71,125,Philip Lombard,Vera Elizabeth Claythorne,338
-55,125,Lawrence John Wargrave,Vera Elizabeth Claythorne,340
+56,125,Owen,Vera Elizabeth Claythorne,340
 71,125,Philip Lombard,Vera Elizabeth Claythorne,342
 71,80,Philip Lombard,John Gordon Macarthur,355
 55,76,Lawrence John Wargrave,Emily Brent,368
-55,100,Lawrence John Wargrave,Fred Narracott,414
-55,100,Lawrence John Wargrave,Fred Narracott,421
+56,100,Owen,Fred Narracott,414
+56,100,Owen,Fred Narracott,421
 71,100,Philip Lombard,Fred Narracott,459
 90,91,Anthony James Marston,Badger Berkeley,476
 94,125,Ethel Rogers,Vera Elizabeth Claythorne,481
 94,125,Ethel Rogers,Vera Elizabeth Claythorne,484
 94,125,Ethel Rogers,Vera Elizabeth Claythorne,487
 94,125,Ethel Rogers,Vera Elizabeth Claythorne,488
-55,125,Lawrence John Wargrave,Vera Elizabeth Claythorne,497
-55,94,Lawrence John Wargrave,Ethel Rogers,501
-55,125,Lawrence John Wargrave,Vera Elizabeth Claythorne,501
+56,125,Owen,Vera Elizabeth Claythorne,497
+56,94,Owen,Ethel Rogers,501
+56,125,Owen,Vera Elizabeth Claythorne,501
 94,125,Ethel Rogers,Vera Elizabeth Claythorne,501
-55,94,Lawrence John Wargrave,Ethel Rogers,502
-55,125,Lawrence John Wargrave,Vera Elizabeth Claythorne,503
+56,94,Owen,Ethel Rogers,502
+56,125,Owen,Vera Elizabeth Claythorne,503
 94,125,Ethel Rogers,Vera Elizabeth Claythorne,504
 94,125,Ethel Rogers,Vera Elizabeth Claythorne,508
 94,125,Ethel Rogers,Vera Elizabeth Claythorne,510
-55,94,Lawrence John Wargrave,Ethel Rogers,516
-55,125,Lawrence John Wargrave,Vera Elizabeth Claythorne,520
+56,94,Owen,Ethel Rogers,516
+56,125,Owen,Vera Elizabeth Claythorne,520
 84,100,Edward George Armstrong,Fred Narracott,556
 55,84,Lawrence John Wargrave,Edward George Armstrong,583
 55,84,Lawrence John Wargrave,Edward George Armstrong,590
@@ -86,10 +86,10 @@ source_id,target_id,source_name,target_name,sentence_id
 76,125,Emily Brent,Vera Elizabeth Claythorne,682
 76,125,Emily Brent,Vera Elizabeth Claythorne,683
 76,125,Emily Brent,Vera Elizabeth Claythorne,687
-55,76,Lawrence John Wargrave,Emily Brent,697
-55,76,Lawrence John Wargrave,Emily Brent,700
-55,76,Lawrence John Wargrave,Emily Brent,701
-55,125,Lawrence John Wargrave,Vera Elizabeth Claythorne,701
+56,76,Owen,Emily Brent,697
+56,76,Owen,Emily Brent,700
+56,76,Owen,Emily Brent,701
+56,125,Owen,Vera Elizabeth Claythorne,701
 76,125,Emily Brent,Vera Elizabeth Claythorne,701
 55,76,Lawrence John Wargrave,Emily Brent,705
 84,125,Edward George Armstrong,Vera Elizabeth Claythorne,706
@@ -115,11 +115,13 @@ source_id,target_id,source_name,target_name,sentence_id
 84,94,Edward George Armstrong,Ethel Rogers,823
 55,84,Lawrence John Wargrave,Edward George Armstrong,825
 55,94,Lawrence John Wargrave,Ethel Rogers,831
-55,459,Lawrence John Wargrave,Thomas Rogers,834
+56,459,Owen,Thomas Rogers,834
+55,56,Lawrence John Wargrave,Owen,836
 55,94,Lawrence John Wargrave,Ethel Rogers,836
+56,94,Owen,Ethel Rogers,836
 55,71,Lawrence John Wargrave,Philip Lombard,844
-55,76,Lawrence John Wargrave,Emily Brent,852
-55,76,Lawrence John Wargrave,Emily Brent,853
+56,76,Owen,Emily Brent,852
+56,76,Owen,Emily Brent,853
 55,94,Lawrence John Wargrave,Ethel Rogers,857
 84,94,Edward George Armstrong,Ethel Rogers,860
 71,90,Philip Lombard,Anthony James Marston,861
@@ -127,8 +129,9 @@ source_id,target_id,source_name,target_name,sentence_id
 76,84,Emily Brent,Edward George Armstrong,872
 76,84,Emily Brent,Edward George Armstrong,873
 55,94,Lawrence John Wargrave,Ethel Rogers,880
-55,94,Lawrence John Wargrave,Ethel Rogers,881
-55,80,Lawrence John Wargrave,John Gordon Macarthur,889
+56,94,Owen,Ethel Rogers,881
+56,80,Owen,John Gordon Macarthur,889
+55,56,Lawrence John Wargrave,Owen,906
 55,93,Lawrence John Wargrave,William Henry Blore,912
 55,93,Lawrence John Wargrave,William Henry Blore,913
 55,93,Lawrence John Wargrave,William Henry Blore,920
@@ -144,7 +147,8 @@ source_id,target_id,source_name,target_name,sentence_id
 55,93,Lawrence John Wargrave,William Henry Blore,964
 55,93,Lawrence John Wargrave,William Henry Blore,965
 90,93,Anthony James Marston,William Henry Blore,982
-55,93,Lawrence John Wargrave,William Henry Blore,995
+55,56,Lawrence John Wargrave,Owen,991
+56,93,Owen,William Henry Blore,995
 90,94,Anthony James Marston,Ethel Rogers,1034
 84,128,Edward George Armstrong,Matthews,1053
 84,119,Edward George Armstrong,Edward Seton,1062
@@ -294,7 +298,7 @@ source_id,target_id,source_name,target_name,sentence_id
 71,84,Philip Lombard,Edward George Armstrong,1971
 55,119,Lawrence John Wargrave,Edward Seton,1973
 55,71,Lawrence John Wargrave,Philip Lombard,1975
-55,71,Lawrence John Wargrave,Philip Lombard,1979
+56,71,Owen,Philip Lombard,1979
 71,84,Philip Lombard,Edward George Armstrong,1982
 55,94,Lawrence John Wargrave,Ethel Rogers,1984
 71,90,Philip Lombard,Anthony James Marston,1986
@@ -317,11 +321,11 @@ source_id,target_id,source_name,target_name,sentence_id
 71,84,Philip Lombard,Edward George Armstrong,2011
 90,94,Anthony James Marston,Ethel Rogers,2016
 71,84,Philip Lombard,Edward George Armstrong,2018
-55,94,Lawrence John Wargrave,Ethel Rogers,2025
-55,71,Lawrence John Wargrave,Philip Lombard,2038
-55,84,Lawrence John Wargrave,Edward George Armstrong,2038
+56,94,Owen,Ethel Rogers,2025
+56,71,Owen,Philip Lombard,2038
+56,84,Owen,Edward George Armstrong,2038
 71,84,Philip Lombard,Edward George Armstrong,2038
-55,84,Lawrence John Wargrave,Edward George Armstrong,2041
+56,84,Owen,Edward George Armstrong,2041
 71,93,Philip Lombard,William Henry Blore,2046
 90,94,Anthony James Marston,Ethel Rogers,2059
 71,90,Philip Lombard,Anthony James Marston,2074
@@ -331,7 +335,7 @@ source_id,target_id,source_name,target_name,sentence_id
 84,93,Edward George Armstrong,William Henry Blore,2094
 71,93,Philip Lombard,William Henry Blore,2120
 71,93,Philip Lombard,William Henry Blore,2139
-55,84,Lawrence John Wargrave,Edward George Armstrong,2140
+56,84,Owen,Edward George Armstrong,2140
 84,93,Edward George Armstrong,William Henry Blore,2144
 80,84,John Gordon Macarthur,Edward George Armstrong,2163
 80,125,John Gordon Macarthur,Vera Elizabeth Claythorne,2163
@@ -412,8 +416,8 @@ source_id,target_id,source_name,target_name,sentence_id
 93,125,William Henry Blore,Vera Elizabeth Claythorne,2489
 55,84,Lawrence John Wargrave,Edward George Armstrong,2494
 90,94,Anthony James Marston,Ethel Rogers,2510
-55,93,Lawrence John Wargrave,William Henry Blore,2512
-55,125,Lawrence John Wargrave,Vera Elizabeth Claythorne,2530
+56,93,Owen,William Henry Blore,2512
+56,125,Owen,Vera Elizabeth Claythorne,2530
 55,125,Lawrence John Wargrave,Vera Elizabeth Claythorne,2531
 80,90,John Gordon Macarthur,Anthony James Marston,2537
 80,94,John Gordon Macarthur,Ethel Rogers,2537
@@ -442,9 +446,13 @@ source_id,target_id,source_name,target_name,sentence_id
 55,71,Lawrence John Wargrave,Philip Lombard,2611
 55,94,Lawrence John Wargrave,Ethel Rogers,2611
 71,94,Philip Lombard,Ethel Rogers,2611
+55,56,Lawrence John Wargrave,Owen,2612
 55,71,Lawrence John Wargrave,Philip Lombard,2612
+56,71,Owen,Philip Lombard,2612
 71,94,Philip Lombard,Ethel Rogers,2614
+55,56,Lawrence John Wargrave,Owen,2617
 55,71,Lawrence John Wargrave,Philip Lombard,2617
+56,71,Owen,Philip Lombard,2617
 80,90,John Gordon Macarthur,Anthony James Marston,2622
 80,93,John Gordon Macarthur,William Henry Blore,2622
 80,94,John Gordon Macarthur,Ethel Rogers,2622
@@ -623,7 +631,7 @@ source_id,target_id,source_name,target_name,sentence_id
 93,94,William Henry Blore,Ethel Rogers,3172
 71,93,Philip Lombard,William Henry Blore,3174
 71,93,Philip Lombard,William Henry Blore,3178
-55,93,Lawrence John Wargrave,William Henry Blore,3180
+56,93,Owen,William Henry Blore,3180
 71,93,Philip Lombard,William Henry Blore,3182
 69,125,Cyril Ogilvie Hamilton,Vera Elizabeth Claythorne,3191
 69,125,Cyril Ogilvie Hamilton,Vera Elizabeth Claythorne,3193
@@ -718,7 +726,7 @@ source_id,target_id,source_name,target_name,sentence_id
 84,93,Edward George Armstrong,William Henry Blore,3678
 71,125,Philip Lombard,Vera Elizabeth Claythorne,3682
 71,125,Philip Lombard,Vera Elizabeth Claythorne,3683
-55,125,Lawrence John Wargrave,Vera Elizabeth Claythorne,3687
+56,125,Owen,Vera Elizabeth Claythorne,3687
 71,84,Philip Lombard,Edward George Armstrong,3688
 71,125,Philip Lombard,Vera Elizabeth Claythorne,3689
 71,125,Philip Lombard,Vera Elizabeth Claythorne,3694
@@ -817,8 +825,8 @@ source_id,target_id,source_name,target_name,sentence_id
 71,93,Philip Lombard,William Henry Blore,4153
 71,93,Philip Lombard,William Henry Blore,4155
 71,125,Philip Lombard,Vera Elizabeth Claythorne,4156
-55,71,Lawrence John Wargrave,Philip Lombard,4161
-55,93,Lawrence John Wargrave,William Henry Blore,4161
+56,71,Owen,Philip Lombard,4161
+56,93,Owen,William Henry Blore,4161
 71,93,Philip Lombard,William Henry Blore,4161
 71,125,Philip Lombard,Vera Elizabeth Claythorne,4168
 71,125,Philip Lombard,Vera Elizabeth Claythorne,4169
@@ -877,92 +885,93 @@ source_id,target_id,source_name,target_name,sentence_id
 71,125,Philip Lombard,Vera Elizabeth Claythorne,4364
 71,125,Philip Lombard,Vera Elizabeth Claythorne,4372
 71,125,Philip Lombard,Vera Elizabeth Claythorne,4389
-71,125,Philip Lombard,Vera Elizabeth Claythorne,4399
-71,125,Philip Lombard,Vera Elizabeth Claythorne,4401
-71,84,Philip Lombard,Edward George Armstrong,4417
+84,90,Edward George Armstrong,Anthony James Marston,4393
+71,125,Philip Lombard,Vera Elizabeth Claythorne,4398
+71,125,Philip Lombard,Vera Elizabeth Claythorne,4400
+71,84,Philip Lombard,Edward George Armstrong,4416
+71,125,Philip Lombard,Vera Elizabeth Claythorne,4416
+84,125,Edward George Armstrong,Vera Elizabeth Claythorne,4416
 71,125,Philip Lombard,Vera Elizabeth Claythorne,4417
-84,125,Edward George Armstrong,Vera Elizabeth Claythorne,4417
-71,125,Philip Lombard,Vera Elizabeth Claythorne,4418
-71,84,Philip Lombard,Edward George Armstrong,4419
-84,125,Edward George Armstrong,Vera Elizabeth Claythorne,4421
-71,84,Philip Lombard,Edward George Armstrong,4425
-71,125,Philip Lombard,Vera Elizabeth Claythorne,4425
-84,125,Edward George Armstrong,Vera Elizabeth Claythorne,4425
-71,125,Philip Lombard,Vera Elizabeth Claythorne,4428
+71,84,Philip Lombard,Edward George Armstrong,4418
+84,125,Edward George Armstrong,Vera Elizabeth Claythorne,4420
+71,84,Philip Lombard,Edward George Armstrong,4424
+71,125,Philip Lombard,Vera Elizabeth Claythorne,4424
+84,125,Edward George Armstrong,Vera Elizabeth Claythorne,4424
+71,125,Philip Lombard,Vera Elizabeth Claythorne,4427
+71,125,Philip Lombard,Vera Elizabeth Claythorne,4430
 71,125,Philip Lombard,Vera Elizabeth Claythorne,4431
-71,125,Philip Lombard,Vera Elizabeth Claythorne,4432
-71,125,Philip Lombard,Vera Elizabeth Claythorne,4435
-71,125,Philip Lombard,Vera Elizabeth Claythorne,4443
-71,125,Philip Lombard,Vera Elizabeth Claythorne,4446
+71,125,Philip Lombard,Vera Elizabeth Claythorne,4434
+71,125,Philip Lombard,Vera Elizabeth Claythorne,4442
+71,125,Philip Lombard,Vera Elizabeth Claythorne,4445
+68,125,Hugo Hamilton,Vera Elizabeth Claythorne,4513
 68,125,Hugo Hamilton,Vera Elizabeth Claythorne,4514
-68,125,Hugo Hamilton,Vera Elizabeth Claythorne,4515
-173,174,Thomas Legge,Maine,4545
-173,174,Thomas Legge,Maine,4548
-55,71,Lawrence John Wargrave,Philip Lombard,4550
-76,90,Emily Brent,Anthony James Marston,4551
-76,94,Emily Brent,Ethel Rogers,4551
-90,94,Anthony James Marston,Ethel Rogers,4551
-80,125,John Gordon Macarthur,Vera Elizabeth Claythorne,4555
-55,74,Lawrence John Wargrave,Isaac Morris,4563
-55,74,Lawrence John Wargrave,Isaac Morris,4580
-55,174,Lawrence John Wargrave,Maine,4580
-74,174,Isaac Morris,Maine,4580
-101,174,Elmer Robson,Maine,4584
-100,174,Fred Narracott,Maine,4590
-74,100,Isaac Morris,Fred Narracott,4592
-74,101,Isaac Morris,Elmer Robson,4592
-100,101,Fred Narracott,Elmer Robson,4592
-173,174,Thomas Legge,Maine,4607
-55,119,Lawrence John Wargrave,Edward Seton,4617
-55,119,Lawrence John Wargrave,Edward Seton,4620
-76,109,Emily Brent,Beatrice Taylor,4634
-90,174,Anthony James Marston,Maine,4639
-55,90,Lawrence John Wargrave,Anthony James Marston,4641
-55,114,Lawrence John Wargrave,Lucy Combes,4641
-90,114,Anthony James Marston,Lucy Combes,4641
-80,113,John Gordon Macarthur,Arthur Richmond,4645
+173,174,Thomas Legge,Maine,4544
+173,174,Thomas Legge,Maine,4547
+55,71,Lawrence John Wargrave,Philip Lombard,4549
+76,90,Emily Brent,Anthony James Marston,4550
+76,94,Emily Brent,Ethel Rogers,4550
+90,94,Anthony James Marston,Ethel Rogers,4550
+80,125,John Gordon Macarthur,Vera Elizabeth Claythorne,4554
+56,74,Owen,Isaac Morris,4562
+56,74,Owen,Isaac Morris,4579
+56,174,Owen,Maine,4579
+74,174,Isaac Morris,Maine,4579
+101,174,Elmer Robson,Maine,4583
+100,174,Fred Narracott,Maine,4589
+74,100,Isaac Morris,Fred Narracott,4591
+74,101,Isaac Morris,Elmer Robson,4591
+100,101,Fred Narracott,Elmer Robson,4591
+173,174,Thomas Legge,Maine,4606
+55,119,Lawrence John Wargrave,Edward Seton,4616
+55,119,Lawrence John Wargrave,Edward Seton,4619
+76,109,Emily Brent,Beatrice Taylor,4633
+90,174,Anthony James Marston,Maine,4638
+55,90,Lawrence John Wargrave,Anthony James Marston,4640
+55,114,Lawrence John Wargrave,Lucy Combes,4640
+90,114,Anthony James Marston,Lucy Combes,4640
+80,113,John Gordon Macarthur,Arthur Richmond,4644
+74,173,Isaac Morris,Thomas Legge,4664
 74,173,Isaac Morris,Thomas Legge,4665
-74,173,Isaac Morris,Thomas Legge,4666
+173,174,Thomas Legge,Maine,4669
+74,173,Isaac Morris,Thomas Legge,4670
+74,174,Isaac Morris,Maine,4670
 173,174,Thomas Legge,Maine,4670
-74,173,Isaac Morris,Thomas Legge,4671
-74,174,Isaac Morris,Maine,4671
-173,174,Thomas Legge,Maine,4671
-173,174,Thomas Legge,Maine,4696
-76,125,Emily Brent,Vera Elizabeth Claythorne,4702
-55,76,Lawrence John Wargrave,Emily Brent,4706
-55,80,Lawrence John Wargrave,John Gordon Macarthur,4706
-55,90,Lawrence John Wargrave,Anthony James Marston,4706
-55,94,Lawrence John Wargrave,Ethel Rogers,4706
-76,80,Emily Brent,John Gordon Macarthur,4706
-76,90,Emily Brent,Anthony James Marston,4706
-76,94,Emily Brent,Ethel Rogers,4706
-80,90,John Gordon Macarthur,Anthony James Marston,4706
-80,94,John Gordon Macarthur,Ethel Rogers,4706
-90,94,Anthony James Marston,Ethel Rogers,4706
-71,84,Philip Lombard,Edward George Armstrong,4707
-71,93,Philip Lombard,William Henry Blore,4707
-71,125,Philip Lombard,Vera Elizabeth Claythorne,4707
-84,93,Edward George Armstrong,William Henry Blore,4707
-84,125,Edward George Armstrong,Vera Elizabeth Claythorne,4707
-93,125,William Henry Blore,Vera Elizabeth Claythorne,4707
-71,93,Philip Lombard,William Henry Blore,4735
-71,125,Philip Lombard,Vera Elizabeth Claythorne,4735
-93,125,William Henry Blore,Vera Elizabeth Claythorne,4735
-71,84,Philip Lombard,Edward George Armstrong,4737
-93,125,William Henry Blore,Vera Elizabeth Claythorne,4744
-125,173,Vera Elizabeth Claythorne,Thomas Legge,4748
-71,93,Philip Lombard,William Henry Blore,4751
-71,125,Philip Lombard,Vera Elizabeth Claythorne,4751
-93,125,William Henry Blore,Vera Elizabeth Claythorne,4751
-71,93,Philip Lombard,William Henry Blore,4758
-71,125,Philip Lombard,Vera Elizabeth Claythorne,4758
-93,125,William Henry Blore,Vera Elizabeth Claythorne,4758
-90,94,Anthony James Marston,Ethel Rogers,4891
-90,94,Anthony James Marston,Ethel Rogers,4903
-71,84,Philip Lombard,Edward George Armstrong,4913
-71,84,Philip Lombard,Edward George Armstrong,4921
-71,94,Philip Lombard,Ethel Rogers,4921
-84,94,Edward George Armstrong,Ethel Rogers,4921
-74,84,Isaac Morris,Edward George Armstrong,4922
-71,125,Philip Lombard,Vera Elizabeth Claythorne,4975
-71,125,Philip Lombard,Vera Elizabeth Claythorne,4977
+173,174,Thomas Legge,Maine,4695
+76,125,Emily Brent,Vera Elizabeth Claythorne,4701
+55,76,Lawrence John Wargrave,Emily Brent,4705
+55,80,Lawrence John Wargrave,John Gordon Macarthur,4705
+55,90,Lawrence John Wargrave,Anthony James Marston,4705
+55,94,Lawrence John Wargrave,Ethel Rogers,4705
+76,80,Emily Brent,John Gordon Macarthur,4705
+76,90,Emily Brent,Anthony James Marston,4705
+76,94,Emily Brent,Ethel Rogers,4705
+80,90,John Gordon Macarthur,Anthony James Marston,4705
+80,94,John Gordon Macarthur,Ethel Rogers,4705
+90,94,Anthony James Marston,Ethel Rogers,4705
+71,84,Philip Lombard,Edward George Armstrong,4706
+71,93,Philip Lombard,William Henry Blore,4706
+71,125,Philip Lombard,Vera Elizabeth Claythorne,4706
+84,93,Edward George Armstrong,William Henry Blore,4706
+84,125,Edward George Armstrong,Vera Elizabeth Claythorne,4706
+93,125,William Henry Blore,Vera Elizabeth Claythorne,4706
+71,93,Philip Lombard,William Henry Blore,4734
+71,125,Philip Lombard,Vera Elizabeth Claythorne,4734
+93,125,William Henry Blore,Vera Elizabeth Claythorne,4734
+71,84,Philip Lombard,Edward George Armstrong,4736
+93,125,William Henry Blore,Vera Elizabeth Claythorne,4743
+125,173,Vera Elizabeth Claythorne,Thomas Legge,4747
+71,93,Philip Lombard,William Henry Blore,4750
+71,125,Philip Lombard,Vera Elizabeth Claythorne,4750
+93,125,William Henry Blore,Vera Elizabeth Claythorne,4750
+71,93,Philip Lombard,William Henry Blore,4757
+71,125,Philip Lombard,Vera Elizabeth Claythorne,4757
+93,125,William Henry Blore,Vera Elizabeth Claythorne,4757
+90,94,Anthony James Marston,Ethel Rogers,4890
+90,94,Anthony James Marston,Ethel Rogers,4902
+71,84,Philip Lombard,Edward George Armstrong,4912
+71,84,Philip Lombard,Edward George Armstrong,4920
+71,94,Philip Lombard,Ethel Rogers,4920
+84,94,Edward George Armstrong,Ethel Rogers,4920
+74,84,Isaac Morris,Edward George Armstrong,4921
+71,125,Philip Lombard,Vera Elizabeth Claythorne,4974
+71,125,Philip Lombard,Vera Elizabeth Claythorne,4976

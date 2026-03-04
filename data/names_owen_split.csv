@@ -1,0 +1,39 @@
+id,fullname,firstname,middlename,surname,gender,aka,profession,prot_status
+0,Lawrence John Wargrave,Lawrence,John,Wargrave,m,Llewellyn;Justice Wargrave,Justice;Judge,main
+1,Vera Elizabeth Claythorne,Vera,Elizabeth,Claythorne,f,,,main
+2,Philip Lombard,Philip,,Lombard,m,Captain Lombard,Captain,main
+3,Edward George Armstrong,Edward,George,Armstrong,m,Dr. Armstrong,Doctor,main
+4,William Henry Blore,William,Henry,Blore,m,Mr. Davis;Inspector Blore;Ex-Inspector Blore,Inspector;Ex-Inspector,main
+5,Emily Brent,Emily,,Brent,f,,,main
+6,John Gordon Macarthur,John,Gordon,Macarthur,m,General Macarthur,General,main
+7,Anthony James Marston,Anthony,James,Marston,m,Tony Marston,,main
+8,Ethel Rogers,Ethel,,Rogers,f,Rogerses;Mother Rogers,,main
+9,Thomas Rogers,Thomas,,Rogers,m,Rogerses,Butler,main
+10,Isaac Morris,Isaac,,Morris,m,,,supp
+11,Fred Narracott,Fred,,Narracott,m,,,supp
+12,Thomas Legge,Thomas,,Legge,m,A.C.;Sir Thomas Legge,Assistant Commissioner,supp
+13,Edward Seton,Edward,,Seton,m,,,supp
+14,Hugo Hamilton,Hugo,,Hamilton,m,,,backstry
+15,Cyril Ogilvie Hamilton,Cyril,Ogilvie,Hamilton,m,,,backstry
+16,Mrs. Hamilton,,,Hamilton,f,,,backstry
+17,Beatrice Taylor,Beatrice,,Taylor,f,,,backstry
+18,James Stephen Landor,James,Stephen,Landor,m,,,backstry
+19,Arthur Richmond,Arthur,,Richmond,m,,,backstry
+20,Leslie Macarthur,Leslie,,Macarthur,f,,,backstry
+21,Louisa Mary Clees,Louisa,Mary,Clees,f,,,backstry
+22,Jennifer Brady,Jennifer,,Brady,f,,,backstry
+23,Lucy Combes,Lucy,,Combes,f,,,backstry
+24,John Combes,John,,Combes,m,,,backstry
+25,Constance Culmington,Constance,,Culmington,f,Lady Constance Culmington;Lady Constance,,backstry
+26,Gabrielle Turl,Gabrielle,,Turl,f,,,backstry
+27,Elmer Robson,Elmer,,Robson,f,,,backstry
+28,Armitage,Armitage,,,m,,,backstry
+29,Matthews,,,Matthews,m,,K.C.;King's Counsel,supp
+30,Badger Berkeley,Badger,,Berkeley,m,,,backstry
+31,Oliver,,,Oliver,f,Miss Ogden,,backstry
+32,Ogden,,,Ogden,f,Miss Oliver,,backstry
+33,Maurice Hamilton,Maurice,,Hamilton,m,,,backstry
+34,Maine,,,Maine,m,Inspector Maine,Inspector,supp
+35,Merryweather,,,Merryweather,m,,,backstry
+36,Elsie MacPherson,Elsie,,MacPherson,f,,,backstry
+37,Owen,,,Owen,m,U.N. Owen;Ulick Norman Owen;Una Nancy Owen;Mr. Owen;Mrs. Owen;Mr. Unknown Owen;Owens,,backstry

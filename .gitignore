@@ -13,7 +13,7 @@ data/book/scan
 archive/
 gen/
 webapp/
-b
+
 
 # Ignore Jupyter Notebooks
 *.ipynb
@@ -22,6 +22,9 @@ b
 # Ignore all md-files except for README.md
 *.md
 README.md
+
+# Ignore other files formats
+# *.txt
 
 # Ignore BookNLP Output files
 # out/

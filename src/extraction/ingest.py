@@ -8,10 +8,10 @@ import argparse
 
 from typing import Dict
 from pathlib import Path
-from config import BASE_OUT_DIR
+from ..config import BASE_OUT_DIR
 from booknlp.booknlp import BookNLP
-from auxiliary import preprocess, print_headers, print_information
-from booknlp_fix import exists_model_path, get_model_path, process_model_files
+from ..auxiliary import preprocess, print_headers, print_information
+from .booknlp_fix import exists_model_path, get_model_path, process_model_files
 
 
 def init_run(file_name: str, out: str):
