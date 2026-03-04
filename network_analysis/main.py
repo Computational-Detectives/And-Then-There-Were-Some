@@ -7,4 +7,6 @@ graphs_list=full_analysis(file="network_analysis/data/edge_list_owen.csv",     #
                             visualization=False,                 #this creates the images in a folder entitled 'networks'
                             analysis=False)                     #this prints the measures results
 
+calculate_closeness_evolution(graphs_list)
+
 #nx.write_gexf(G, 'graph.gexf')  #If you activate this operation, you get a file you can put in GEPHI software and there you can perform further analysis
