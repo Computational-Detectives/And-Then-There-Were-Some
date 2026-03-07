@@ -1,15 +1,9 @@
-import warnings
-warnings.simplefilter(action="ignore", category=FutureWarning)
-warnings.simplefilter(action="ignore", category=UserWarning)
-
 import os
-import torch
 import argparse
 
 from typing import Dict
 from pathlib import Path
 from ..config import BASE_OUT_DIR
-from booknlp.booknlp import BookNLP
 from ..auxiliary import preprocess, print_headers, print_information
 from .booknlp_fix import exists_model_path, get_model_path, process_model_files
 
@@ -51,6 +45,7 @@ def run_pipeline(file_name: str, model_params: Dict, out: str) -> None:
     :param model_params: The dictionary containing the model parameters
     :type model_params: Dict
     """
+    from booknlp.booknlp import BookNLP
     # Create the BookNLP pipeline object
     booknlp = BookNLP("en", model_params)
 
@@ -115,6 +110,7 @@ def main(file_name: Path, out: Path):
             ],
         }
 
+        import torch
         # Create the `torch.device`-Object
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -127,6 +123,10 @@ def main(file_name: Path, out: Path):
 
 
 if __name__ == "__main__":
+    import warnings
+    warnings.simplefilter(action="ignore", category=FutureWarning)
+    warnings.simplefilter(action="ignore", category=UserWarning)
+
     parser = argparse.ArgumentParser(
         description="A script to process a given input file in TXT-format using the BookNLP library."
     )

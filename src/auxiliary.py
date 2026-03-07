@@ -1,10 +1,10 @@
+from __future__ import annotations
+
 import os
 import re
 import ast
 import csv
 import json
-import spacy
-import pandas as pd
 
 from pathlib import Path
 from colorama import Fore, Style, init
@@ -18,6 +18,7 @@ init()
 # ============================
 def preprocess(input_file: str, output_file: str):
     # Load spaCy model
+    import spacy
     nlp = spacy.load("en_core_web_sm")
 
     # Read raw text
@@ -60,6 +61,7 @@ def preprocess(input_file: str, output_file: str):
 
 
 def load_booknlp_file(path: str):
+    import pandas as pd
     return pd.read_csv(
         path,
         sep="\t",
@@ -113,6 +115,7 @@ def load_and_flatten_characters(input_file: str, verbose: bool = False) -> pd.Da
                     }
                 )
 
+    import pandas as pd
     characters = pd.DataFrame(rows)
 
     if verbose:
@@ -188,6 +191,7 @@ def normalize_name(name: str) -> str:
     - Collapses multiple spaces
     - Removes leading articles (the, a, an)
     """
+    import pandas as pd
     if pd.isna(name) or not name:
         return ""
 
@@ -278,9 +282,155 @@ def print_information(msg: str, symb: Optional[str|int] = None, prefix: str = ""
         print(f'{prefix}{msg}')
 
 
+def short_name(name: str) -> str:
+    """Extract surname or short label for compact display."""
+    if not name:
+        return "?"
+    parts = name.split()
+    return parts[0][0] + ". " + parts[-1] if parts else name
+
+
 # ========================
 # ArgParser
 # ========================
+
+def int_list(arg: str) -> list[int]:
+    """Parse a comma-separated string of ints, e.g. '5000,10000'."""
+    return [int(x.strip()) for x in arg.split(",")]
+
+
+def int_pair(arg: str) -> list[int]:
+    """Parse 'start,end' into [start, end]."""
+    from argparse import ArgumentTypeError
+    parts = [int(x.strip()) for x in arg.split(",")]
+    if len(parts) != 2 or parts[0] > parts[1]:
+        raise ArgumentTypeError(
+            f"Expected 'start,end' with start ≤ end, got '{arg}'"
+        )
+    return parts
+
+
+def int_range(args: List[str]) -> List[int]:
+    """
+    An auxiliary function for custom type specification
+    for the argument parser.
+
+    :param args: The argument passed through the CLI to be processed
+    :type: List[str]
+    :return: A list of integers to define a token range
+    :rtype: List[int]
+    """
+    return [int(a) for a in args.split(",")]
+
+
+def make_windows(cutpoints: list[int] | None, col_min: int, col_max: int) -> list[tuple[int, int]]:
+    """
+    Convert a list of cutpoints into (start, end) windows.
+
+    E.g. cutpoints=[5000, 10000] with col_min=0, col_max=20000 →
+         [(0, 4999), (5000, 9999), (10000, 20000)]
+    """
+    if not cutpoints:
+        return [(col_min, col_max)]
+
+    boundaries = sorted(set([col_min] + cutpoints + [col_max + 1]))
+    windows = []
+    for lo, hi in zip(boundaries, boundaries[1:]):
+        windows.append((lo, hi - 1))
+    return windows
+
+
+# ========================
+# Chapter / Token Mapping
+# ========================
+
+def build_chapter_sentence_ranges(tokens_path: str) -> list[dict]:
+    """
+    Use the BookNLP tokens file to discover chapter boundaries (by chapter
+    marker words) and return a list of dicts with chapter number, start/end
+    sentence IDs, and start/end token IDs.
+    """
+    import pandas as pd
+    tokens = pd.read_csv(tokens_path, sep="\t")
+
+    # Locate chapter markers (same logic as get_chapter_token_range)
+    chapter_markers = tokens[
+        (tokens["word"] == "Chapter")
+        | (tokens["word"] == "Epilogue")
+        | (tokens["word"] == "MANUSCRIPT")
+    ].copy()
+
+    token_ids = chapter_markers["token_ID_within_document"].tolist()
+    token_ids[-1] = token_ids[-1] - 1  # shift last marker
+
+    chapters = []
+    for i, tok_id in enumerate(token_ids):
+        # Start token (skip "Chapter X ." header tokens)
+        if i < 16:
+            start_tok = tok_id + 3
+        elif i == 16:
+            start_tok = tok_id + 1
+        elif i == 17:
+            start_tok = tok_id + 18
+        else:
+            start_tok = tok_id
+
+        # End token
+        if i < len(token_ids) - 1:
+            end_tok = token_ids[i + 1] - 1
+        else:
+            end_tok = tokens["token_ID_within_document"].max()
+
+        # Map token range → sentence range
+        mask = (
+            (tokens["token_ID_within_document"] >= start_tok)
+            & (tokens["token_ID_within_document"] <= end_tok)
+        )
+        sids = tokens.loc[mask, "sentence_ID"]
+        if sids.empty:
+            continue
+
+        chapters.append({
+            "chapter": i + 1,
+            "start_tok": start_tok,
+            "end_tok": end_tok,
+            "start_sid": int(sids.min()),
+            "end_sid": int(sids.max()),
+        })
+
+    return chapters
+
+
+def format_chapter_ranges(tokens_path: str) -> str:
+    """Build a printable table of chapter → token-range → sentence-range."""
+    chapters = build_chapter_sentence_ranges(tokens_path)
+    lines = [
+        f"{'Ch':>3}  {'Token start':>11}  {'Token end':>9}  {'Sent start':>10}  {'Sent end':>8}"
+    ]
+    lines.append("-" * len(lines[0]))
+    for ch in chapters:
+        lines.append(
+            f"{ch['chapter']:>3}  {ch['start_tok']:>11}  {ch['end_tok']:>9}"
+            f"  {ch['start_sid']:>10}  {ch['end_sid']:>8}"
+        )
+    return "\n".join(lines)
+
+
+def token_range_to_sentence_range(
+    tok_start: int, tok_end: int, tokens_path: str
+) -> tuple[int, int]:
+    """Map a token-ID range to the corresponding sentence-ID range."""
+    import pandas as pd
+    tokens = pd.read_csv(tokens_path, sep="\t",
+                         usecols=["token_ID_within_document", "sentence_ID"])
+    mask = (
+        (tokens["token_ID_within_document"] >= tok_start)
+        & (tokens["token_ID_within_document"] <= tok_end)
+    )
+    sids = tokens.loc[mask, "sentence_ID"]
+    return int(sids.min()), int(sids.max())
+
+
 def get_chapter_token_range() -> str:
     """
     An auxiliary function to get the token ranges for each chapter of the analysed book.
@@ -291,6 +441,7 @@ def get_chapter_token_range() -> str:
     :return: A tabular string representation of the token ranges for each chapter.
     :rtype: str
     """
+    import pandas as pd
     tokens = pd.read_csv(f"{BASE_OUT_DIR}/preproc_attwn.tokens", sep="\t")
 
     # Filter rows where word matches our chapter markers
@@ -327,6 +478,7 @@ def get_chapter_token_range() -> str:
         )
 
     # Create DataFrame for easy formatting
+    import pandas as pd
     df = pd.DataFrame(chapters)
 
     # Format as a table string
@@ -348,16 +500,3 @@ def get_chapter_token_range() -> str:
     table = "\n".join([header, separator] + rows)
 
     return table
-
-
-def int_range(args: List[str]) -> List[int]:
-    """
-    An auxiliary function for custom type specification
-    for the argument parser.
-
-    :param args: The argument passed through the CLI to be processed
-    :type: List[str]
-    :return: A list of integers to define a token range
-    :rtype: List[int]
-    """
-    return [int(a) for a in args.split(",")]

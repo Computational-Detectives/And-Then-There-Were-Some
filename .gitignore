@@ -23,8 +23,9 @@ webapp/
 *.md
 README.md
 
-# Ignore other files formats
+# Ignore other files
 # *.txt
+src/svo_graph_creation_deprecated.py
 
 # Ignore BookNLP Output files
 # out/

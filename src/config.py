@@ -59,3 +59,19 @@ NON_NAME_WORDS = set(ARTICLES) | {
     "one", "someone", "anyone", "nobody", "everybody",
     "died", "who", "dearest", "bloody"
 }
+
+DEATH_INTERVALS = [
+    ("#1 Marston",     1,    1292),
+    ("#2 E.Rogers",    1293, 1609),
+    ("#3 Macarthur",   1610, 2486),
+    ("#4 T.Rogers",    2487, 3057),
+    ("#5 Brent",       3058, 3344),
+    ("#6 Wargrave",    3345, 3749),
+    ("#7 Blore",       3750, 4314),
+    ("#8 Armstrong",   4315, 4393),
+    ("#9 Lombard",     4394, 4455),
+    ("#10 Claythorne", 4456, 4544),
+]
+
+EGO_COLOR = "#e63946"
+ALTER_COLOR = "#2a9d8f"

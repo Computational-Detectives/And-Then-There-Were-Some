@@ -8,15 +8,15 @@ import pandas as pd
 from pathlib import Path
 from src.config import ATTWN, BASE_OUT_DIR
 
-from src.extraction.ingest import main as ingest
-from src.extraction.match_names import main as match_names
-from src.extraction.extract_avp_triples import extract_avp
-from src.extraction.extract_svo_triples import main as extract_svo
-from src.extraction.join_triples import join_triples
-from src.extraction.cooccurrence import main as extract_coocurrence
-
 
 def main(input: Path, out: Path, verbose: bool = False):
+    from src.extraction.ingest import main as ingest
+    from src.extraction.match_names import main as match_names
+    from src.extraction.extract_avp_triples import extract_avp
+    from src.extraction.extract_svo_triples import main as extract_svo
+    from src.extraction.join_triples import join_triples
+    from src.extraction.cooccurrence import main as extract_coocurrence
+
     # 1) Run BookNLP pipeline on input
     ingest(input, out)
 
