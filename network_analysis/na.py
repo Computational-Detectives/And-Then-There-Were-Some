@@ -628,3 +628,116 @@ def visualize_sentiment_graph(G: nx.Graph, title: str = "sentiment_graph"):
     plt.savefig(out_path, dpi=300, bbox_inches="tight")
     plt.close(fig)
     print(f"Image saved to: {out_path}")
+
+
+
+def calculate_sentiment_evolution(graphs_list):
+    
+    #main_characters=["Lawrence John Wargrave",'Owen']   #if we want to specify only some characters
+
+    characters_sentiment_evolution={}
+    for ch in main_characters:
+        characters_sentiment_evolution[ch]=[]
+        for step in graphs_list:
+            if ch in step.nodes:
+                sentiment=0
+                n=0
+                connected_edges=step.edges(ch, data=True)
+                for u, v, attributes in connected_edges:
+                    value = attributes.get('sentiment', 0.0)
+                    sentiment += value
+                    n +=1                        
+            else:
+                sentiment=0
+            
+            if n==0:
+                n=1
+            sentiment=sentiment/n   #we keep this line if we want to calculate the average sentiment, otherwise we calculate the total sentiment
+            characters_sentiment_evolution[ch].append(sentiment)
+
+    #print(characters_sentiment_evolution)
+    labels=list(deaths.keys())
+    plot_sentiment_evolution(labels, characters_sentiment_evolution)
+
+
+
+def vecchia_plot_sentiment_evolution(labels, characters_data):
+    """
+    Plots sentiment evolution for multiple characters with background color coding.
+    """
+    x_ticks = list(range(len(labels)))
+    # Centriamo i punti tra le tacche se necessario, 
+    # ma solitamente x_ticks va bene per la timeline
+    x_points = x_ticks 
+    
+    fig, ax = plt.subplots(figsize=(12, 7))
+
+    for name, scores in characters_data.items():
+        ax.plot(x_points, scores, marker='o', label=name, linewidth=2, markersize=6)
+
+    # Linea marcata sullo zero per separare Positivo/Negativo
+    ax.axhline(0, color='black', linewidth=1.5, linestyle='-')
+
+    # Colorazione dello sfondo: Verde (positivo) e Rosso (negativo)
+    # Calcoliamo i limiti attuali per coprire tutto lo sfondo
+    ymin, ymax = ax.get_ylim()
+    limit = max(abs(ymin), abs(ymax), 0.1) # Assicura un range minimo
+    
+    ax.axhspan(0, limit, facecolor='green', alpha=0.1)  # Verde tenue sopra
+    ax.axhspan(-limit, 0, facecolor='red', alpha=0.1)    # Rosso tenue sotto
+    ax.set_ylim(-limit, limit) # Centra il grafico sullo zero
+
+    # Formattazione assi
+    ax.set_xticks(x_ticks)
+    ax.set_xticklabels(labels, rotation=45)
+    ax.set_xlabel("Timeline (Deaths)")
+    ax.set_ylabel("Average Sentiment Score")
+    ax.set_title("Character Sentiment Evolution - And Then There Were None")
+    
+    ax.grid(True, linestyle='--', alpha=0.3)
+    ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+    
+    plt.tight_layout()
+    plt.show()
+
+
+
+def plot_sentiment_evolution(labels, characters_data):
+    # Usiamo lo stesso sfasamento della tua funzione originale
+    x_ticks = list(range(len(labels)))
+    x_points = [x - 0.5 for x in x_ticks]
+    
+    fig, ax = plt.subplots(figsize=(12, 7))
+
+    for name, scores in characters_data.items():
+        # I punti ora cadono "tra" le etichette delle X
+        ax.plot(x_points, scores, marker='o', label=name, linewidth=2)
+
+    # Linea dello zero
+    ax.axhline(0, color='black', linewidth=1.2, linestyle='-', alpha=0.8)
+
+    # Gestione dinamica dei limiti per le aree colorate
+    # Prendiamo il valore massimo assoluto per rendere il grafico simmetrico
+    all_scores = [s for sublist in characters_data.values() for s in sublist]
+    max_val = max([abs(s) for s in all_scores]) * 1.1 if all_scores else 1.0
+
+    # Aree colorate: Verde sopra, Rosso sotto
+    ax.axhspan(0, max_val, facecolor='green', alpha=0.08)
+    ax.axhspan(-max_val, 0, facecolor='red', alpha=0.08)
+    ax.set_ylim(-max_val, max_val)
+
+    # Formattazione assi (mantenendo la tua logica dei ticks)
+    ax.set_xticks(x_ticks)
+    ax.set_xticklabels(labels, rotation=45)
+    ax.set_xlim(-1, len(labels) - 1)
+    
+    ax.set_xlabel("Timeline (Deaths)")
+    ax.set_ylabel("Sentiment Score")
+    ax.set_title("Character Sentiment Evolution - And Then There Were None")
+    
+    ax.grid(True, linestyle='--', alpha=0.3)
+    ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+    
+    plt.tight_layout()
+    plt.show()
+
