@@ -1,0 +1,36 @@
+sentence_id: 680
+token_id: 8714
+ask expected --> ROOT CCOMP
+
+sentence_id: 399
+token_id: 5203
+said seen --> ROOT CCOMP
++ wrong object character association
+
+sentence_id: 681
+token_id: 8730
+wrong subject character association
+
+sentence_id: 286
+token_id: 3871
+wrong object character association/incorrect character attribution in window
+
+sentence_id: 418
+token_id: 5501
+visible that models associate name variants mentioned with wrong characters e.g. "Blore" with "the Judge"
+
+sentence_id: 512
+token_id: 6769
+wrong object character association
+
+sentence_id: 512
+token_id: 6777
+wrong object character association
+
+sentence_id: 646
+token_id: 8387
+wrong object character association despite correct COREF labelling. Object extraction probably preferred 'dobj' over 'pobj'
+
+sentence_id: 1721
+token_id: 20026
+wrong subject name despite correct COREF labelling
