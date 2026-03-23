@@ -5,15 +5,16 @@ import argparse
 from pathlib import Path
 import sys
 
-from .utils import print_information, load_text
+from .utils import print_information, load_text, load_span_index
+from src.manual_extraction.config import RAW_TEXT, OUT_DIR
 
-# Attempt to import config
-try:
-    sys.path.append(str(Path(__file__).parent.parent.parent))
-    from src.manual_extraction.config import RAW_TEXT, OUT_DIR
-except ImportError:
-    RAW_TEXT = Path("data/book/attwn_2_chpts.md")
-    OUT_DIR = Path("out_manual")
+# # Attempt to import config
+# try:
+#     sys.path.append(str(Path(__file__).parent.parent.parent))
+    
+# except ImportError:
+#     RAW_TEXT = Path("data/book/attwn_2_chpts.md")
+#     OUT_DIR = Path("out_manual")
 
 
 def main(text: Path, spans_path: Path, unknown: Path, out: Path):
@@ -26,22 +27,16 @@ def main(text: Path, spans_path: Path, unknown: Path, out: Path):
     # Load resolved spans
     # print(f"Loading resolved spans from {spans_path}")
     if spans_path.exists():
-        with open(spans_path, "r", encoding="utf-8") as f:
-            for line in f:
-                if not line.strip():
-                    continue
-                data = json.loads(line)
-                start = data.get("start_char")
-                end = data.get("end_char")
-                fullname = data.get("fullname", "RESOLVED")
-                if start is not None and end is not None:
-                    spans.append((start, end, fullname, True))
+        known_spans = load_span_index(spans_path)       
+        spans = [(s.get("start_char"), s.get("end_char"), s.get("fullname", "RESOLVED"), True) 
+                 for s in known_spans if s.get("start_char") is not None and s.get("end_char") is not None]
 
     # Load unknown clusters
     # print(f"Loading unknown clusters from {unknown}")
     if unknown.exists():
         with open(unknown, "r", encoding="utf-8") as f:
             clusters = json.load(f)
+            
             for cluster in clusters:
                 for data in cluster:
                     start = data.get("start_char")

@@ -20,98 +20,11 @@ from colorama import Fore, Style, init
 from .config import ARTICLES, NON_NAME_WORDS, TITLES, SPACY_MODEL
 
 init()
-
-@contextmanager
-def suppress_stdout():
-    """
-    Redirect Python print statements from external libraries to '/dev/null'
-    """
-    with open(os.devnull, 'w') as devnull:
-        old_stdout = sys.stdout
-        sys.stdout = devnull
-        try:
-            yield
-        finally:
-            sys.stdout = old_stdout
-
-# ============================================================================
-# MODEL LOADING HELPERS
-# ============================================================================
-def load_spacy_model(nlp=None):
-    if nlp is None:
-        import spacy
-        import spacy.util
-        nlp = spacy.load(SPACY_MODEL)
-
-        # # Fix em-dash tokenization
-        # # Get the default infix patterns as a list (these are raw strings, not compiled)
-        # infixes = list(nlp.Defaults.infixes)
-
-        # # Append your custom em/en-dash pattern
-        # infixes.append(r'(?<=[0-9])[\-\–](?=[A-Z])')
-
-        # # Recompile and reassign
-        # nlp.tokenizer.infix_finditer = spacy.util.compile_infix_regex(infixes).finditer
-        original_tokenizer = nlp.tokenizer
-
-        def custom_tokenizer(text: str):
-            text = re.sub(r'—', ' — ', text)
-            return original_tokenizer(text)
-
-        nlp.tokenizer = custom_tokenizer
-        print_information("Model loaded", prefix="    ")
-    else:
-        print_information("Using pre-loaded global spaCy model.", prefix="    ")
-
-    return nlp
-
-def load_gliner_model(gliner_model=None):
-    if gliner_model is None:
-        from gliner import GLiNER
-        gliner_model = GLiNER.from_pretrained("urchade/gliner_multi-v2.1")
-        print_information("GLiNER model loaded", prefix="    ")
-    else:
-        print_information("Using pre-loaded global GLiNER model", prefix="    ")
-
-    return gliner_model
-
-
-def load_span_index(path: Path) -> list[dict]:
-    """Load span_index.jsonl from Stage 2."""
-    spans = []
-    with open(path, "r", encoding="utf-8") as f:
-        for line in f:
-            spans.append(json.loads(line))
-    return spans
-
-
-def load_alias_dict(path: Path) -> Dict[Any]:
-    """Load alias_dict.json from Stage 1 output."""
-    with open(path, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-
-# ============================================================================
-# TEXT LOADING
-# ============================================================================
-
-def load_text(path: Path) -> str:
-    """Read the raw text file and normalise whitespace depending on extension."""
-    if path.suffix.lower() == ".txt":
-        print(f"    Preprocessing .txt file: {path.name}")
-        # from src.auxiliary import preprocess
-        # preproc_path = out_dir / "preproc_attwn.txt"
-        #  preprocess(str(path), str(preproc_path))
-        text = path.read_text(encoding="utf-8").replace("\r\n", "\n")
-        return text
-    else:
-        # Markdown files pass through directly, preserving offsets and structure
-        text = path.read_text(encoding="utf-8")
-        # return re.sub(r"[^\S\n]*\n[^\S\n]*", "\n", text)
-        #     text = path.read_text(encoding="utf-8").replace("\r\n", "\n")
-        return re.sub(r"[^\S\n]*\n[^\S\n]*", "\n", text)
     
 
+# =============================================================
+# -------------------- OFFSET MANIPULATORS --------------------
+# =============================================================
 def build_char_offset_to_canonical(span_index: List[Dict]) -> Dict[Tuple[int, int], int]:
     """
     Build a lookup from (start_char, end_char) → canonical_id.
@@ -125,27 +38,20 @@ def build_char_offset_to_canonical(span_index: List[Dict]) -> Dict[Tuple[int, in
     return lookup
 
 
-# ============================================================================
-# PRINTING HELPERS  (copied from src/auxiliary.py)
-# ============================================================================
-
-def print_headers(msg: str, symb: str, prefix: str = ""):
-    print(f'{prefix}{symb * 80}\n{msg}\n{symb * 80}')
-
-
-def print_information(msg: str, symb: Optional[str | int] = None, prefix: str = "", col: str = "BLUE"):
-    if symb:
-        colour = getattr(Fore, col)
-        print(f'{prefix}[{colour}{symb}{Style.RESET_ALL}] {msg}')
-    else:
-        print(f'{prefix}{msg}')
+def snap_span(start: int, end: int, tokens: List[Dict], full_text: str) -> Tuple[int, int, str]:
+    matched = [t for t in tokens if t["byte_offset"] > start and t["byte_onset"] < end]
+    if matched:
+        s = int(matched[0]["byte_onset"])
+        e = int(matched[-1]["byte_offset"])
+        return s, e, full_text[s:e]
+    
+    return start, end, full_text[start:end]
 
 
-# ============================================================================
-# NAME NORMALISATION  (copied from src/auxiliary.py)
-# ============================================================================
-
-def normalize_name(name: str) -> str:
+# =============================================================
+# ------------------ NAME MATCHING (PRIVATE) ------------------
+# =============================================================
+def _normalize_name(name: str) -> str:
     """
     Normalize a name string for consistent matching.
 
@@ -169,7 +75,7 @@ def normalize_name(name: str) -> str:
     return name
 
 
-def clean_non_names(normalized_phrase: str, known_names: Set[str]) -> str:
+def _clean_non_names(normalized_phrase: str, known_names: Set[str]) -> str:
     """
     Extract proper name tokens from a phrase by removing non-name words.
 
@@ -199,29 +105,7 @@ def clean_non_names(normalized_phrase: str, known_names: Set[str]) -> str:
     return " ".join(kept_tokens)
 
 
-def extract_gender(pronoun_str: str) -> str:
-    """
-    Extract gender category from pronoun string.
-
-    Copied from src/auxiliary.py.
-    """
-    if not pronoun_str or pronoun_str == "they/them/their":
-        return "u"
-
-    pronoun_str = pronoun_str.lower()
-
-    if any(p in pronoun_str for p in ["she", "her"]):
-        return "f"
-    elif any(p in pronoun_str for p in ["he", "him", "his"]):
-        return "m"
-    return "u"
-
-
-# ============================================================================
-# NAME VARIANT GENERATION  (copied from src/extraction/match_names.py)
-# ============================================================================
-
-def build_name_variants(row: pd.Series) -> Set[str]:
+def _build_name_variants(row: pd.Series) -> Set[str]:
     """
     Build all possible name variants for a clean name entry.
 
@@ -245,34 +129,37 @@ def build_name_variants(row: pd.Series) -> Set[str]:
 
     for field in [fullname, firstname, middlename, surname]:
         if pd.notna(field) and field:
-            variants.add(normalize_name(str(field)))
+            variants.add(_normalize_name(str(field)))
 
     if pd.notna(firstname) and pd.notna(surname):
-        variants.add(normalize_name(f"{firstname} {surname}"))
+        variants.add(_normalize_name(f"{firstname} {surname}"))
 
     if pd.notna(firstname) and pd.notna(middlename):
-        variants.add(normalize_name(f"{firstname} {middlename}"))
+        variants.add(_normalize_name(f"{firstname} {middlename}"))
 
     aka = row.get("aka")
     if pd.notna(aka) and aka:
         for alias in str(aka).split(";"):
-            variants.add(normalize_name(alias.strip()))
+            variants.add(_normalize_name(alias.strip()))
 
     prof = row.get('profession')
     if pd.notna(prof) and prof:
         for profession in str(prof).split(";"):
-            variants.add(normalize_name(profession.strip()))
+            variants.add(_normalize_name(profession.strip()))
 
     if pd.notna(surname) and titles:
         for title in titles:
-            variants.add(normalize_name(f"{title} {surname}"))
+            variants.add(_normalize_name(f"{title} {surname}"))
             if pd.notna(fullname):
-                variants.add(normalize_name(f"{title} {fullname}"))
+                variants.add(_normalize_name(f"{title} {fullname}"))
 
     variants.discard("")
     return variants
 
 
+# =============================================================
+# ------------------ NAME MATCHING (PUBLIC) -------------------
+# =============================================================
 def build_variant_index(
     names_df: pd.DataFrame,
 ) -> Tuple[Dict[str, List[int]], List[str], Dict[int, str], Set[str]]:
@@ -294,7 +181,7 @@ def build_variant_index(
         row_id = int(row["id"])
         id_to_gender[row_id] = row["gender"]
 
-        for variant in build_name_variants(row):
+        for variant in _build_name_variants(row):
             if variant not in variant_to_ids:
                 variant_to_ids[variant] = []
             if row_id not in variant_to_ids[variant]:
@@ -308,10 +195,6 @@ def build_variant_index(
 
     return variant_to_ids, all_variants, id_to_gender, all_name_tokens
 
-
-# ============================================================================
-# FUZZY NAME MATCHING  (copied from src/extraction/match_names.py)
-# ============================================================================
 
 def match_name(
     name: str,
@@ -332,8 +215,8 @@ def match_name(
     Copied from src/extraction/match_names.py.
     """
     original_name = name
-    normalized = normalize_name(name)
-    cleaned = clean_non_names(normalized, all_name_tokens)
+    normalized = _normalize_name(name)
+    cleaned = _clean_non_names(normalized, all_name_tokens)
 
     if not cleaned:
         return None, original_name, 0.0, None
@@ -387,10 +270,9 @@ def match_name(
     return None, original_name, 0.0, None
 
 
-# ============================================================================
-# NEGATION DETECTION  (copied from src/extraction/extract_svo_triples.py)
-# ============================================================================
-
+# =============================================================
+# ---------------------- TOKEN COMPONENTS ---------------------
+# =============================================================
 def is_negated(verb_component) -> bool:
     """
     Check if the verb is negated by looking for a child with dep_="neg".
@@ -414,10 +296,6 @@ def is_negated(verb_component) -> bool:
                 return True
     return False
 
-
-# ============================================================================
-# COMPOUND NOUN / NOUN & VERB INFO  (copied from extract_svo_triples.py)
-# ============================================================================
 
 def get_compound_tokens(token) -> list:
     """
@@ -514,9 +392,9 @@ def get_verb_info(component) -> tuple:
     return text, lemma, ids, primary_id, pos
 
 
-# ============================================================================
-# SPACY DOC RECONSTRUCTION
-# ============================================================================
+# =============================================================
+# ------------------- SENTENCE RECONSTRUCTION -----------------
+# =============================================================
 def make_doc_from_sentence(sentence: pd.DataFrame, nlp) -> spacy.tokens.Doc:
     """
     Reconstructs a spaCy Doc from a sentence DataFrame.
@@ -571,3 +449,109 @@ def make_doc_from_sentence(sentence: pd.DataFrame, nlp) -> spacy.tokens.Doc:
         token._.global_id = row["token_ID_within_document"]
 
     return doc
+
+
+# =============================================================
+# ----------------------- MODEL LOADING -----------------------
+# =============================================================
+def load_spacy_model(nlp=None):
+    """Load the provided spaCy model"""
+    if nlp is None:
+        import spacy
+        from spacy.util import compile_infix_regex
+        nlp = spacy.load(SPACY_MODEL)
+
+        # Fix em-dash tokenization by adding a
+        # preprocessing step to the tokenizer
+        # original_tokenizer = nlp.tokenizer
+        # def custom_tokenizer(text: str):
+        #     """Wrap em-dashes in whitespace s.t. spaCy tokenizes them individually"""
+        #     text = re.sub(r'[–—]', ' — ', text)
+        #     return original_tokenizer(text)
+        # nlp.tokenizer = custom_tokenizer
+
+        infixes = list(nlp.Defaults.infixes) + [r'(?<=[–—])[–—]', r'[–—]'] # list(nlp.Defaults.infixes) + [r'[–—]']
+        nlp.tokenizer.infix_finditer = compile_infix_regex(infixes).finditer
+        print_information("Model loaded", prefix="    ")
+    else:
+        print_information("Using pre-loaded global spaCy model.", prefix="    ")
+
+    return nlp
+
+
+def load_gliner_model(gliner_model=None):
+    """Load the provided GLiNER model"""
+    if gliner_model is None:
+        from gliner import GLiNER
+        gliner_model = GLiNER.from_pretrained("urchade/gliner_multi-v2.1")
+        print_information("GLiNER model loaded", prefix="    ")
+    else:
+        print_information("Using pre-loaded global GLiNER model", prefix="    ")
+
+    return gliner_model
+
+
+# =============================================================
+# ------------------------ MISC LOADING -----------------------
+# =============================================================
+def load_span_index(path: Path) -> list[dict]:
+    """Load span_index.jsonl from Stage 2."""
+    spans = []
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            spans.append(json.loads(line))
+    return spans
+
+
+def load_alias_dict(path: Path) -> Dict[Any]:
+    """Load alias_dict.json from Stage 1 output."""
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def load_text(path: Path) -> str:
+    """Read the raw text file and normalise whitespace depending on extension."""
+    if path.suffix.lower() == ".txt":
+        print(f"    Preprocessing .txt file: {path.name}")
+        # from src.auxiliary import preprocess
+        # preproc_path = out_dir / "preproc_attwn.txt"
+        #  preprocess(str(path), str(preproc_path))
+        text = path.read_text(encoding="utf-8").replace("\r\n", "\n")
+        return text
+    else:
+        text = path.read_text(encoding="utf-8").replace("\r\n", "\n")
+
+        # Remove leading/trailing whitespace around '\n'
+        return re.sub(r"[^\S\n]*\n[^\S\n]*", "\n", text)
+    
+
+# =============================================================
+# ---------------------- PRINT SUPPRESSOR ---------------------
+# =============================================================
+@contextmanager
+def suppress_stdout():
+    """
+    Redirect Python print statements from external libraries to '/dev/null'
+    """
+    with open(os.devnull, 'w') as devnull:
+        old_stdout = sys.stdout
+        sys.stdout = devnull
+        try:
+            yield
+        finally:
+            sys.stdout = old_stdout
+
+
+# =============================================================
+# ---------------------- PRINTING HELPERS ---------------------
+# =============================================================
+def print_headers(msg: str, symb: str, prefix: str = ""):
+    print(f'{prefix}{symb * 80}\n{msg}\n{symb * 80}')
+
+
+def print_information(msg: str, symb: Optional[str | int] = None, prefix: str = "", col: str = "BLUE"):
+    if symb:
+        colour = getattr(Fore, col)
+        print(f'{prefix}[{colour}{symb}{Style.RESET_ALL}] {msg}')
+    else:
+        print(f'{prefix}{msg}')

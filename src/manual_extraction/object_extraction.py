@@ -255,13 +255,13 @@ def build_triples(
             id_to_variants[cid] = set()
         id_to_variants[cid].add(form)
 
-    print(f'{id_to_name=}')
-    print()
-    print(f'{id_to_gender=}')
-    print()
-    print(f'{id_to_variants=}')
+    # print(f'{id_to_name=}')
+    # print()
+    # print(f'{id_to_gender=}')
+    # print()
+    # print(f'{id_to_variants=}')
 
-    return
+    # return
     for span in span_index:
         cid = span.get("canonical_id")
         if cid is not None and not span["text"].lower() in PRONOUNS:

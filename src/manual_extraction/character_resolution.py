@@ -23,7 +23,7 @@ from .utils import (
     build_variant_index, match_name,
     print_headers, print_information,
     load_spacy_model, load_gliner_model,
-    load_text
+    load_text, snap_span
 )
 
 
@@ -92,6 +92,7 @@ def segment_sentences(text: str, tokens_path: Path) -> list[dict]:
     :return: List of ``{ sid, text, start_char, end_char }``.
     """
     import pandas as pd
+    print(f'TOKEN PATH: {tokens_path}')
     df = pd.read_csv(tokens_path, sep="\t", keep_default_na=False)
     
     sentences = []
@@ -111,16 +112,6 @@ def segment_sentences(text: str, tokens_path: Path) -> list[dict]:
 # ============================================================================
 # NAMED ENTITY RECOGNITION
 # ============================================================================
-
-def snap_span(start: int, end: int, tokens: list[dict], full_text: str) -> tuple[int, int, str]:
-    matched = [t for t in tokens if t["byte_offset"] > start and t["byte_onset"] < end]
-    if matched:
-        s = int(matched[0]["byte_onset"])
-        e = int(matched[-1]["byte_offset"])
-        return s, e, full_text[s:e]
-    return start, end, full_text[start:end]
-
-
 def run_ner(
     sentences: list[dict],
     gliner_model: Any,
@@ -142,6 +133,8 @@ def run_ner(
         sent_text = sent["text"]
         sent_start = sent["start_char"]
         toks = sent.get("tokens", [])
+
+        print(f'SENTENCE TEXT: {sent_text}')
 
         # --- GLiNER ---
         try:

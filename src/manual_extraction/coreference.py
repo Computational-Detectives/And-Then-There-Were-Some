@@ -23,12 +23,78 @@ from .config import (
     FUZZY_AUTO_ACCEPT, RAW_TEXT, PRONOUNS 
 )
 
+MALE_PRONOUNS = {"he", "him", "his", "himself"}
+FEMALE_PRONOUNS = {"she", "her", "hers", "herself"}
+
 from .utils import (
     build_variant_index, match_name,
     print_headers, print_information,
     load_alias_dict, suppress_stdout,
-    load_text
+    load_text, snap_span
 )
+
+# =============================================================
+# --------------------- VERBOSE STATISTICS --------------------
+# =============================================================
+def print_verbose_stats(all_resolved, alias_dict, extended_dict, clean_names, all_unknown, total_dropped=0):
+    from collections import Counter
+
+    print_headers("STAGE 2 — VERBOSE STATISTICS", "-", prefix="\n")
+
+    # Span type breakdown (pronoun vs named vs nominal)
+    span_types = Counter()
+    for s in all_resolved:
+        text_lower = s["text"].lower().strip()
+        if text_lower in PRONOUNS:
+            span_types["pronoun"] += 1
+        elif s["text"] in alias_dict:
+            span_types["named_mention"] += 1
+        else:
+            span_types["nominal_reference"] += 1
+
+    total_spans = len(all_resolved)
+    print("    Resolved Span Types:")
+    for stype, count in span_types.most_common():
+        pct = count / total_spans * 100
+        print(f"      {stype:20s} {count:5d}  ({pct:5.1f}%)")
+
+    # Per-character resolution counts
+    id_to_name = dict(zip(clean_names["id"], clean_names["fullname"]))
+    char_resolved = Counter()
+    for s in all_resolved:
+        cid = s.get("canonical_id")
+        if cid is not None:
+            name = id_to_name.get(cid, f"char_{cid}")
+            char_resolved[name] += 1
+
+    print(f"\n    Per-Character Resolved Spans ({len(char_resolved)} characters):")
+    for name, count in char_resolved.most_common():
+        print(f"      {name:35s} {count:5d} spans")
+
+    # Confidence distribution
+    confidences = [s.get("confidence", 0) for s in all_resolved if s.get("confidence")]
+    if confidences:
+        print("\n    Confidence Distribution:")
+        print(f"      Min: {min(confidences):.1f}  Max: {max(confidences):.1f}  Mean: {sum(confidences)/len(confidences):.1f}")
+
+    # Alias dict growth
+    print("\n    Alias Dictionary Growth:")
+    print(f"      Stage 1 entries:   {len(alias_dict)}")
+    print(f"      Extended entries:  {len(extended_dict)}")
+    print(f"      New entries:       {len(extended_dict) - len(alias_dict)}")
+
+    # Unknown clusters summary
+    if all_unknown:
+        print(f"\n    Unknown Clusters ({len(all_unknown)}):")
+        for i, cluster in enumerate(all_unknown[:5]):
+            texts = [s["text"] for s in cluster]
+            print(f"      Cluster {i+1}: {texts}")
+        if len(all_unknown) > 5:
+            print(f"      ... and {len(all_unknown) - 5} more")
+            
+    if total_dropped > 0:
+        print("\n    Strict Dropping Statistics:")
+        print(f"      Conflicting clusters fully/partially dropped: {total_dropped}")
 
 
 # ============================================================================
@@ -386,16 +452,6 @@ def run_coref(window_input: Any, model: Any, model_name: str = "maverick") -> Li
 # ============================================================================
 # CLUSTER → CHARACTER MAPPING
 # ============================================================================
-
-def snap_span(start: int, end: int, tokens: list[dict], full_text: str) -> tuple[int, int, str]:
-    matched = [t for t in tokens if t["byte_offset"] > start and t["byte_onset"] < end]
-    if matched:
-        s = int(matched[0]["byte_onset"])
-        e = int(matched[-1]["byte_offset"])
-        return s, e, full_text[s:e]
-    return start, end, full_text[start:end]
-
-
 def map_clusters_to_characters(
     clusters: List[Any],
     alias_dict: Dict[Any],
@@ -404,7 +460,7 @@ def map_clusters_to_characters(
     tokens: List[Dict[Any]] = None,
     full_text: str = "",
     is_token_indexed: bool = False,
-) -> Tuple[List[Dict], List[List[Dict]]]:
+) -> Tuple[List[Dict], List[List[Dict]], int]:
     """
     Map coref clusters to canonical characters using the alias dict.
 
@@ -413,6 +469,7 @@ def map_clusters_to_characters(
     variant_to_ids, all_variants, id_to_gender, all_name_tokens = build_variant_index(names_df)
     resolved_spans: List[Dict] = []
     unknown_clusters: List[List[Dict]] = []
+    num_dropped_clusters = 0
 
     for cluster in clusters:
         # Snap and globalize all bounds to underlying tokens
@@ -425,10 +482,7 @@ def map_clusters_to_characters(
                 final_end = int(tokens[end_tok]["byte_offset"])
                 final_text = full_text[final_start:final_end]
 
-                print(final_text)
-                # print(f'{canonical_id=}, {fullname=}, {confidence=}')
-                # if final_text == 'Llewellyn':
-                #     prin
+                # print(final_text)
             else:
                 global_start = window_start_char + span["start_char"]
                 global_end = window_start_char + span["end_char"]
@@ -445,36 +499,35 @@ def map_clusters_to_characters(
             
         cluster = snapped_cluster
         
-        # Try to find an anchor in the alias dict
-        canonical_id = None
-        fullname = None
-        confidence = 0.0
+        # 1. Tally available explicit anchors in the cluster
+        cluster_anchors = []
 
         for span in cluster:
             span_text = span["text"]
 
             # Try direct text lookup first (named mentions, nominals)
             if span_text in alias_dict:
-                canonical_id = alias_dict[span_text]["canonical_id"]
-                fullname = alias_dict[span_text]["fullname"]
-                confidence = alias_dict[span_text]["score"]
-
-                # if span['text'] == 'Llewellyn':
-                #     print(f'{canonical_id=}, {fullname=}, {confidence=}')
-
-                break
+                cluster_anchors.append({
+                    "span": span,
+                    "canonical_id": alias_dict[span_text]["canonical_id"],
+                    "fullname": alias_dict[span_text]["fullname"],
+                    "confidence": alias_dict[span_text]["score"]
+                })
+                continue
                 
             # Try span-indexed pronoun lookup (resolved in a previous pass)
             pronoun_key = f"__pronoun__{span['start_char']}_{span['end_char']}"
             if pronoun_key in alias_dict:
-                canonical_id = alias_dict[pronoun_key]["canonical_id"]
-                fullname     = alias_dict[pronoun_key]["fullname"]
-                confidence   = alias_dict[pronoun_key]["score"]
-                break
+                cluster_anchors.append({
+                    "span": span,
+                    "canonical_id": alias_dict[pronoun_key]["canonical_id"],
+                    "fullname": alias_dict[pronoun_key]["fullname"],
+                    "confidence": alias_dict[pronoun_key]["score"]
+                })
 
         # Try fuzzy match w/ the longest available span of text 
         # in the current cluster if no anchor found
-        if canonical_id is None:
+        if not cluster_anchors:
             longest_span = max(cluster, key=lambda s: len(s["text"]))
 
             # print(f'{longest_span["text"]=}')
@@ -487,26 +540,15 @@ def map_clusters_to_characters(
             
             # Fuzzy character search successful
             if cid is not None:
-                canonical_id = cid
-                fullname = fname
-                confidence = score
-
-        if canonical_id is not None:
-            # Assign all spans in the cluster
-            # the same character
-            for span in cluster:
-                if span['text'] == 'Llewellyn':
-                    print(f'{canonical_id=}, {fullname=}, {confidence=}')
-
-                resolved_spans.append({
-                    "text": span["text"],
-                    "start_char": span["start_char"],
-                    "end_char": span["end_char"],
-                    "canonical_id": int(canonical_id),
-                    "fullname": fullname,
-                    "confidence": round(confidence, 2),
+                cluster_anchors.append({
+                    "span": longest_span,
+                    "canonical_id": cid,
+                    "fullname": fname,
+                    "confidence": score
                 })
-        else:
+
+        # 2. Assign Clusters Check conflicts
+        if not cluster_anchors:
             # Clusters cannot be resolved
             shifted_cluster = []
             for span in cluster:
@@ -516,8 +558,83 @@ def map_clusters_to_characters(
                     "end_char": span["end_char"],
                 })
             unknown_clusters.append(shifted_cluster)
+            continue
 
-    return resolved_spans, unknown_clusters
+        from collections import Counter
+        id_counts = Counter(a["canonical_id"] for a in cluster_anchors)
+        unique_ids = set(id_counts.keys())
+        majority_id, maj_count = id_counts.most_common(1)[0]
+        
+        is_conflicting = len(unique_ids) > 1
+        dropped_spans = []
+        cluster_dropped_partially = False
+
+        for span in cluster:
+            anchor_match = next((a for a in cluster_anchors if a["span"] == span), None)
+            
+            if anchor_match:
+                # Explicit match - preserve exactly as anchored
+                resolved_spans.append({
+                    "text": span["text"],
+                    "start_char": span["start_char"],
+                    "end_char": span["end_char"],
+                    "canonical_id": int(anchor_match["canonical_id"]),
+                    "fullname": anchor_match["fullname"],
+                    "confidence": round(anchor_match["confidence"], 2),
+                })
+            else:
+                span_lower = span["text"].lower().strip()
+                if is_conflicting:
+                    conflicting_genders = {id_to_gender.get(cid, 'u') for cid in unique_ids}
+                    
+                    if span_lower in MALE_PRONOUNS or span_lower in FEMALE_PRONOUNS:
+                        p_gender = 'm' if span_lower in MALE_PRONOUNS else 'f'
+                        matching_cids = [cid for cid in unique_ids if id_to_gender.get(cid, 'u') == p_gender]
+                        
+                        if len(matching_cids) == 1:
+                            assigned_id = matching_cids[0]
+                            info = next(a for a in cluster_anchors if a["canonical_id"] == assigned_id)
+                            resolved_spans.append({
+                                "text": span["text"],
+                                "start_char": span["start_char"],
+                                "end_char": span["end_char"],
+                                "canonical_id": int(assigned_id),
+                                "fullname": info["fullname"],
+                                "confidence": round(info["confidence"], 2),
+                            })
+                        else:
+                            # Conflicting genders on pronoun level. Drop.
+                            dropped_spans.append(span)
+                            cluster_dropped_partially = True
+                    else:
+                        # Nominal/unrecognized inside conflicting cluster. Drop.
+                        dropped_spans.append(span)
+                        cluster_dropped_partially = True
+                else:
+                    # Clean assignment to majority ID
+                    info = next(a for a in cluster_anchors if a["canonical_id"] == majority_id)
+                    resolved_spans.append({
+                        "text": span["text"],
+                        "start_char": span["start_char"],
+                        "end_char": span["end_char"],
+                        "canonical_id": int(majority_id),
+                        "fullname": info["fullname"],
+                        "confidence": round(info["confidence"], 2),
+                    })
+                    
+        if cluster_dropped_partially:
+            num_dropped_clusters += 1
+            if dropped_spans:
+                shifted_cluster = []
+                for span in dropped_spans:
+                    shifted_cluster.append({
+                        "text": span["text"],
+                        "start_char": span["start_char"],
+                        "end_char": span["end_char"],
+                    })
+                unknown_clusters.append(shifted_cluster)
+
+    return resolved_spans, unknown_clusters, num_dropped_clusters
 
 
 # ============================================================================
@@ -583,8 +700,6 @@ def save_stage2(
     return stage_dir
 
 
-QUOTES = {'"', '\u201c', '\u201d', "''", "``", "'"}
-
 def to_ontonotes_format_with_map(win: dict):
     """
     Convert window sentences to OntoNotes word lists, splitting at quote
@@ -592,6 +707,7 @@ def to_ontonotes_format_with_map(win: dict):
       - window_sents_words: list[list[str]] ready for Maverick
       - index_map: dict mapping pseudo_token_idx → original win["tokens"] idx
     """
+    quotes = {'"', '\u201c', '\u201d', "''", "``", "'"}
     window_sents_words = []
     index_map = {}
     pseudo_idx = 0
@@ -607,7 +723,7 @@ def to_ontonotes_format_with_map(win: dict):
 
         for t in sent_tokens:
             word = str(t["word"])
-            if word in QUOTES:
+            if word in quotes:
                 # Flush current pseudo-sentence before the quote boundary
                 if current_sent:
                     window_sents_words.append(current_sent)
@@ -654,13 +770,14 @@ def remap_clusters(clusters, index_map):
 def run_coref_pass(windows: List[Dict], already_resolved: List[Dict], alias_dict, clean_names, coref_model, coref_model_name, text):
     all_resolved: list[dict] = already_resolved
     all_unknown: list[list[dict]] = []
+    total_dropped_clusters = 0
 
     for win in tqdm(windows):
         if coref_model_name == "maverick":
             # Convert window into OntoNotes format. Remove quotation marks
-            print(*win)
+            # print(*win)
             window_sents_words, idx_map = to_ontonotes_format_with_map(win)
-            print(window_sents_words)
+            # print(window_sents_words)
 
             # Predict clusters
             clusters_token_idx = run_coref(window_sents_words, coref_model, coref_model_name)
@@ -669,10 +786,11 @@ def run_coref_pass(windows: List[Dict], already_resolved: List[Dict], alias_dict
             clusters_token_idx = remap_clusters(clusters_token_idx, idx_map)
 
             # Map clusters to characters
-            resolved, unknown = map_clusters_to_characters(
+            resolved, unknown, dropped_count = map_clusters_to_characters(
                 clusters_token_idx, alias_dict, clean_names, 
                 tokens=win.get("tokens", []), full_text=text, is_token_indexed=True
             )
+            total_dropped_clusters += dropped_count
 
         # else:
         #     # Build header for active characters
@@ -730,65 +848,7 @@ def run_coref_pass(windows: List[Dict], already_resolved: List[Dict], alias_dict
         #             span["sid"] = sent["sid"]
         #             break
 
-    return all_resolved, all_unknown
-
-
-def print_statistics(all_resolved, alias_dict, extended_dict, clean_names, all_unknown):
-    from collections import Counter
-
-    print_headers("STAGE 2 — VERBOSE STATISTICS", "-", prefix="\n")
-
-    # Span type breakdown (pronoun vs named vs nominal)
-    span_types = Counter()
-    for s in all_resolved:
-        text_lower = s["text"].lower().strip()
-        if text_lower in PRONOUNS:
-            span_types["pronoun"] += 1
-        elif s["text"] in alias_dict:
-            span_types["named_mention"] += 1
-        else:
-            span_types["nominal_reference"] += 1
-
-    total_spans = len(all_resolved)
-    print("    Resolved Span Types:")
-    for stype, count in span_types.most_common():
-        pct = count / total_spans * 100
-        print(f"      {stype:20s} {count:5d}  ({pct:5.1f}%)")
-
-    # Per-character resolution counts
-    id_to_name = dict(zip(clean_names["id"], clean_names["fullname"]))
-    char_resolved = Counter()
-    for s in all_resolved:
-        cid = s.get("canonical_id")
-        if cid is not None:
-            name = id_to_name.get(cid, f"char_{cid}")
-            char_resolved[name] += 1
-
-    print(f"\n    Per-Character Resolved Spans ({len(char_resolved)} characters):")
-    for name, count in char_resolved.most_common():
-        print(f"      {name:35s} {count:5d} spans")
-
-    # Confidence distribution
-    confidences = [s.get("confidence", 0) for s in all_resolved if s.get("confidence")]
-    if confidences:
-        print(f"\n    Confidence Distribution:")
-        print(f"      Min: {min(confidences):.1f}  Max: {max(confidences):.1f}  "
-                f"Mean: {sum(confidences)/len(confidences):.1f}")
-
-    # Alias dict growth
-    print(f"\n    Alias Dictionary Growth:")
-    print(f"      Stage 1 entries:   {len(alias_dict)}")
-    print(f"      Extended entries:  {len(extended_dict)}")
-    print(f"      New entries:       {len(extended_dict) - len(alias_dict)}")
-
-    # Unknown clusters summary
-    if all_unknown:
-        print(f"\n    Unknown Clusters ({len(all_unknown)}):")
-        for i, cluster in enumerate(all_unknown[:5]):
-            texts = [s["text"] for s in cluster]
-            print(f"      Cluster {i+1}: {texts}")
-        if len(all_unknown) > 5:
-            print(f"      ... and {len(all_unknown) - 5} more")
+    return all_resolved, all_unknown, total_dropped_clusters
 
 
 def _worker_init(model_name):
@@ -851,73 +911,79 @@ def main(
 
     print_headers("STAGE 2 — COREFERENCE RESOLUTION", "=", prefix="\n")
 
-    # Load inputs
+    # --------------------- LOAD INPUTS ---------------------
     print_information("Loading inputs...", 1, "\n")
     text = load_text(text_path) # text_path.read_text(encoding="utf-8").replace("\r\n", "\n")
     alias_dict = load_alias_dict(char_res_dir / "alias_dict.json")
     clean_names = pd.read_csv(names_csv)
     print_information(f"Alias dict has {len(alias_dict)} entries", prefix="    ")
 
-    # Stage 0 tokenisation takes care of sentence segmentation
-    # so we don't need to load spaCy here anymore.
-    # Segment sentences
+    # ------------------ SEGMENT SENTENCES ------------------
     print_information("Segmenting sentences from tokens file...", 3, "\n")
     from .character_resolution import segment_sentences
     sentences = segment_sentences(text, tokens_path)
     print_information(f"Found {len(sentences)} sentences", prefix="    ")
 
-    # Detect scene boundaries
+    # --------------- DETECT SCENE BOUNDARIES ---------------
     print_information("Detecting scene boundaries...", 4, "\n")
     scene_boundaries = detect_scene_boundaries(text)
     print_information(f"Found {len(scene_boundaries)} scene boundaries", prefix="    ")
 
-    # Build windows
+    # -------------------- BUILD WINDOWS --------------------
     print_information("Building coref windows...", 5, "\n")
     windows = build_windows(sentences, text, scene_boundary_offsets=scene_boundaries)
     print_information(f"Built {len(windows)} windows", prefix="    ")
 
-    # Load coref model
+    # ------------------ LOAD COREF MODEL -------------------
     print_information(f"Loading coref model '{coref_model_name}'...", 6, "\n")
     with suppress_stdout():
         coref_model = _load_coref_model(coref_model_name)
     print_information("Model loaded", prefix="    ")
 
-    # Process each window
+    # ----------------- RUN COREF PER WINDOW ----------------
     print_information("Running coreference resolution...", 7, "\n")
-    # all_resolved, all_unknown = run_coref_pass_parallel(windows, [], alias_dict, clean_names, coref_model, coref_model_name, text)
-
-    all_resolved, all_unknown = run_coref_pass(windows[2:5], [], alias_dict, clean_names, coref_model, coref_model_name, text)
+    all_resolved, all_unknown, dropped = run_coref_pass(windows, [], alias_dict, clean_names, coref_model, coref_model_name, text)
     print_information(f"Resolved {len(all_resolved)} spans", prefix="    ")
     print_information(f"Unknown clusters: {len(all_unknown)}", prefix="    ")
 
-    # Back-propagate to extend alias dict
+    # ---------------- BACK-PROGATE RESULTS -----------------
     print_information("Back-propagating to alias dictionary...", 8, "\n")
     extended_dict = back_propagate(alias_dict, all_resolved)
     new_entries = len(extended_dict) - len(alias_dict)
     print_information(f"Added {new_entries} new entries to alias dict", prefix="    ")
 
-    # Optional refinement pass
+    # ----------------- RUN REFINEMENT PASS -----------------
     if refine:
         print_information("Running refinement pass...", 9, "\n")
         # Re-run with extended dict
-        # all_resolved, all_unknown = run_coref_pass_parallel(windows, [], alias_dict, clean_names, coref_model, coref_model_name, text)
-        all_resolved, all_unknown = run_coref_pass(windows[-10:], all_resolved, extended_dict, clean_names, coref_model, coref_model_name, text)
+        # all_resolved, all_unknown, _ = run_coref_pass_parallel(windows, [], alias_dict, clean_names, coref_model, coref_model_name, text)
+        all_resolved, all_unknown, dropped_refine = run_coref_pass(windows, all_resolved, extended_dict, clean_names, coref_model, coref_model_name, text)
+        
+        # Back-propagate refinement pass results
         extended_dict = back_propagate(extended_dict, all_resolved)
+        
+        # Add dropped spans due to inability to resolve ambiguious spans in cluster
+        dropped += dropped_refine
         print_information(f"After refinement: {len(all_resolved)} total resolved spans", prefix="    ")
+        print_information(f"After refinement: {len(all_unknown)} spans remain unresolved", prefix="    ")
 
-    # Verbose statistics
+    # ----------------- PRINT VERBOSE STATS -----------------
     if verbose and all_resolved:
-        print_statistics(all_resolved, alias_dict, extended_dict, clean_names, all_unknown)
+        print_verbose_stats(all_resolved, alias_dict, extended_dict, clean_names, all_unknown, dropped)
 
-    # Save
-    print_information("Saving Coreference outputs...", 10, "\n")
-    # out_dir = save_stage2(all_resolved, extended_dict, all_unknown, out_dir)
+    # --------------------- SAVE RESULTS --------------------
+    print_information("Saving Coreference outputs...", symb=(10 if refine else 9), prefix="\n")
+    save_stage2(all_resolved, extended_dict, all_unknown, out_dir)
     print_information(f"Saved to → {out_dir}", "✓", col="GREEN")
 
+    # --------------- VISUALIZE COREF RESULTS ---------------
     from .viz_resolution import main as viz_main
-    print_information("Generating Coreference visualization...", 11, "\n")
-    # viz_main(text=text_path, spans_path=out_dir / "span_index.jsonl", unknown=out_dir / "unknown_clusters.json", out=out_dir / "coreference_visualization.html")
-    print_information(f"Saved to → {out_dir / 'coreference_visualization.html'}", "✓", col="GREEN")
+    print_information("Generating Coreference visualization...", symb=(11 if refine else 10), prefix="\n")
+    viz_main(text=text_path, 
+             spans_path=out_dir / "span_index.jsonl", 
+             unknown=out_dir / "unknown_clusters.json", 
+             out=out_dir / "coreference_visualization.html")
+    print_information(f"Saved to → {out_dir / 'coref_visualization.html'}", "✓", col="GREEN")
     
     # TODO: Probably remove this
     return out_dir

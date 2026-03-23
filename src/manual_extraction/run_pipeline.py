@@ -18,7 +18,7 @@ from .config import (
     COREF_OUT, VERB_OUT, OBJ_OUT
     )
 
-from .utils import print_headers, print_information, load_spacy_model
+from .utils import print_headers, print_information, load_spacy_model, suppress_stdout
 
 
 def switch_venv():
@@ -141,7 +141,8 @@ def main():
     if stages_set.intersection({1}) or (4 in stages_set and args.include_non_protagonist):
         print_information("Pre-loading global GLiNER model...", prefix="")
         from gliner import GLiNER
-        global_gliner = GLiNER.from_pretrained("urchade/gliner_multi-v2.1")
+        with suppress_stdout():
+            global_gliner = GLiNER.from_pretrained("urchade/gliner_multi-v2.1")
         
     print()
 
@@ -166,7 +167,7 @@ def main():
         t0 = time.time()
         from .character_resolution import main as character_resolution
         character_resolution(
-            text_path=text_path, # out_dir / "preproc_attwn.txt",
+            text_path=text_path,
             names_csv=names_csv,
             out_dir=out_dir,
             tokens_path=tokens_path,

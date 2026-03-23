@@ -213,8 +213,56 @@ def classify_verb(lemma: str) -> Optional[str]:
 # ============================================================================
 # VERB EXTRACTION
 # ============================================================================
+def split_on_quotes(sentence_df: pd.DataFrame) -> list[pd.DataFrame]:
+    """
+    Recursively split a sentence DataFrame on quoted spans,
+    returning a flat list of DataFrames each representing
+    a parseable unit, preserving original byte offsets throughout.
+    """
+    # Find quote token indices within this df
+    words = sentence_df["word"].tolist()
+    open_chars  = set(['"', '\u201c', '\u2018'])
+    close_chars = set(['"', '\u201d', '\u2019'])
 
-def extract_verbs_for_sentence(
+    open_idx = next(
+        (i for i, w in enumerate(words) if w in open_chars), None
+    )
+    if open_idx is None:
+        # Base case: no quotes found, return as-is
+        return [sentence_df]
+
+    # Find matching closing quote
+    close_idx = next(
+        (i for i in range(open_idx + 1, len(words)) if words[i] in close_chars),
+        None
+    )
+    if close_idx is None:
+        # Unmatched quote, return as-is
+        return [sentence_df]
+
+    # Split into three parts:
+    # 1. Main clause before the quote (exclusive of quote marks)
+    # 2. Quoted content (exclusive of quote marks)
+    # 3. Remainder after the closing quote mark
+    before = sentence_df.iloc[:open_idx]
+    quoted = sentence_df.iloc[open_idx + 1 : close_idx]
+    after  = sentence_df.iloc[close_idx + 1:]
+
+    # Combine before+after as the main clause
+    main = pd.concat([before, after]).reset_index(drop=True)
+
+    result = []
+    # Recurse into main clause (may contain further quotes)
+    if not main.empty:
+        result.extend(split_on_quotes(main))
+    # Recurse into quoted span (may itself contain nested quotes)
+    if not quoted.empty:
+        result.extend(split_on_quotes(quoted))
+
+    return result
+
+
+def extract_verbs_for_sentence_orig(
     doc: spacy.tokens.Doc,
     char_lookup: Dict[Tuple[int, int], int],
     sentence_df: pd.DataFrame,
@@ -298,11 +346,197 @@ def extract_verbs_for_sentence(
 
     return results
 
+def extract_verbs_for_sentence_rec(
+    doc: spacy.tokens.Doc,
+    char_lookup: Dict[Tuple[int, int], int],
+    sentence_df: pd.DataFrame,
+) -> list[dict]:
+    results: List[Dict] = []
+
+    def extract_from_verb(verb, visited: set) -> None:
+        """Recursively extract (subject, verb) pairs from a verb and its ccomp children."""
+        if verb.i in visited:
+            return
+        visited.add(verb.i)
+
+        # Find the subject of this specific verb
+        subject = next(
+            (c for c in verb.children if c.dep_ in ("nsubj", "nsubjpass")),
+            None
+        )
+
+        if subject is not None:
+            tok_row = sentence_df.iloc[subject.i]
+            token_start = int(tok_row["byte_onset"])
+            token_end   = int(tok_row["byte_offset"])
+
+            matched_cid = next(
+                (cid for (s, e), cid in char_lookup.items()
+                 if s <= token_start and token_end <= e),
+                None
+            )
+
+            if matched_cid is not None:
+                is_passive = subject.dep_ == "nsubjpass"
+                negated    = is_negated(verb)
+
+                # xcomp only (not ccomp) for light verb constructions
+                verb_text  = verb.text
+                verb_lemma = verb.lemma_
+                for child in verb.children:
+                    if child.dep_ == "xcomp" and child.pos_ == "VERB":
+                        verb_text  = f"{verb.text} {child.text}"
+                        verb_lemma = f"{verb.lemma_} {child.lemma_}"
+                        break
+
+                verb_tok_row = sentence_df.iloc[verb.i]
+                results.append({
+                    "canonical_id":    matched_cid,
+                    "verb_text":       verb_text,
+                    "verb_lemma":      verb_lemma,
+                    "negated":         negated,
+                    "is_passive":      is_passive,
+                    "sid":             verb_tok_row["sentence_ID"],
+                    "verb_token_idx":  verb._.global_id,
+                })
+
+                # Handle conjoined verbs
+                for child in verb.children:
+                    if child.dep_ == "conj" and child.pos_ in ("VERB", "AUX"):
+                        extract_from_verb(child, visited)
+
+        # Recurse into ccomp children regardless of whether this verb
+        # had a matched subject — the embedded clause may have its own
+        for child in verb.children:
+            if child.dep_ == "ccomp" and child.pos_ in ("VERB", "AUX"):
+                extract_from_verb(child, visited)
+
+    # Entry point: find the ROOT and recurse from there
+    for token in doc:
+        if token.dep_ == "ROOT":
+            extract_from_verb(token, visited=set())
+            break
+
+    return results
+
+
+def get_full_xcomp_chain(verb) -> tuple[str, str]:
+    """
+    Follow xcomp chain downward from a verb, returning the
+    concatenated text and lemma of the full aspectual construction.
+    e.g. "imagine wanting die" / "imagine want die"
+    """
+    texts  = [verb.text]
+    lemmas = [verb.lemma_]
+    current = verb
+    while True:
+        xcomp_child = next(
+            (c for c in current.children
+             if c.dep_ == "xcomp" and c.pos_ == "VERB"),
+            None
+        )
+        if xcomp_child is None:
+            break
+        texts.append(xcomp_child.text)
+        lemmas.append(xcomp_child.lemma_)
+        current = xcomp_child
+    return " ".join(texts), " ".join(lemmas)
+
+
+def extract_verbs_for_sentence(
+    doc: spacy.tokens.Doc,
+    char_lookup: Dict[Tuple[int, int], int],
+    sentence_df: pd.DataFrame,
+) -> list[dict]:
+    results: List[Dict] = []
+    visited_verbs: set = set()
+
+    def record_verb(verb, matched_cid, is_passive):
+        """Record a verb and follow its xcomp chain and conj children."""
+        if verb.i in visited_verbs:
+            return
+        visited_verbs.add(verb.i)
+
+        negated = is_negated(verb)
+        verb_text, verb_lemma = get_full_xcomp_chain(verb)
+        verb_tok_row = sentence_df.iloc[verb.i]
+
+        results.append({
+            "canonical_id":   matched_cid,
+            "verb_text":      verb_text,
+            "verb_lemma":     verb_lemma,
+            "negated":        negated,
+            "is_passive":     is_passive,
+            "sid":            verb_tok_row["sentence_ID"],
+            "verb_token_idx": verb._.global_id,
+        })
+
+        # Conjoined verbs share the same subject
+        for child in verb.children:
+            if child.dep_ == "conj" and child.pos_ in ("VERB", "AUX"):
+                record_verb(child, matched_cid, is_passive)
+
+    def follow_ccomp(verb):
+        """Recursively follow ccomp children, extracting their own subjects."""
+        for child in verb.children:
+            if child.dep_ != "ccomp" or child.pos_ not in ("VERB", "AUX"):
+                continue
+            # Check if the ccomp verb has its own subject
+            subject = next(
+                (c for c in child.children 
+                 if c.dep_ in ("nsubj", "nsubjpass")),
+                None
+            )
+            if subject is not None:
+                tok_row = sentence_df.iloc[subject.i]
+                token_start = int(tok_row["byte_onset"])
+                token_end   = int(tok_row["byte_offset"])
+                matched_cid = next(
+                    (cid for (s, e), cid in char_lookup.items()
+                     if s <= token_start and token_end <= e),
+                    None
+                )
+                if matched_cid is not None:
+                    record_verb(child, matched_cid, subject.dep_ == "nsubjpass")
+            # Recurse regardless — embedded clause may have further ccomp
+            follow_ccomp(child)
+
+    # Primary pass: flat iteration over all tokens, same as original
+    for token in doc:
+        if token.dep_ not in ("nsubj", "nsubjpass"):
+            continue
+
+        verb = token.head
+        if verb.pos_ not in ("VERB", "AUX"):
+            continue
+
+        tok_row = sentence_df.iloc[token.i]
+        token_start = int(tok_row["byte_onset"])
+        token_end   = int(tok_row["byte_offset"])
+
+        matched_cid = next(
+            (cid for (s, e), cid in char_lookup.items()
+             if s <= token_start and token_end <= e),
+            None
+        )
+
+        if matched_cid is None:
+            continue
+
+        is_passive = token.dep_ == "nsubjpass"
+        record_verb(verb, matched_cid, is_passive)
+
+        # Secondary pass: follow ccomp chains from this verb
+        follow_ccomp(verb)
+
+    return results
+
 
 def extract_all_verbs(
     tokens_df: pd.DataFrame,
     span_index: list[dict],
     nlp: spacy.language.Language,
+    comp: bool=False
 ) -> pd.DataFrame:
     """
     Process all sentences and extract (character, verb) pairs.
@@ -310,17 +544,33 @@ def extract_all_verbs(
     :return: DataFrame with columns: canonical_id, verb_text, verb_lemma,
              negated, is_passive, sid, verb_token_idx, verb_category.
     """
-    from .utils import make_doc_from_sentence
-
     all_verbs: list[dict] = []
     char_lookup = build_char_offset_to_canonical(span_index)
+    span_ranges = list(char_lookup.keys())
     for _, sentence_df in tqdm(tokens_df.groupby("sentence_ID")):
-        # Create spaCy.Doc object from current sentence
-        doc = make_doc_from_sentence(sentence_df, nlp)
+        # # Create spaCy.Doc object from current sentence
+        # if not comp:
+        #     doc = make_doc_from_sentence(sentence_df, nlp)
+        #     # Extract the verbs in the current sentence
+        #     verbs = extract_verbs_for_sentence(doc, char_lookup, sentence_df)
+        #     all_verbs.extend(verbs)
+        # else:
 
-        # Extract the verbs in the current sentence
-        verbs = extract_verbs_for_sentence(doc, char_lookup, sentence_df)
-        all_verbs.extend(verbs)
+        # Check if any token in this sentence falls within a character span
+        sent_onset = sentence_df["byte_onset"].min()
+        sent_offset = sentence_df["byte_offset"].max()
+
+        has_span = any(
+            s <= sent_offset and e >= sent_onset
+            for s, e in span_ranges
+        )
+
+        if not has_span:
+            continue
+        for sub_df in split_on_quotes(sentence_df):
+            doc = make_doc_from_sentence(sub_df, nlp)
+            verbs = extract_verbs_for_sentence(doc, char_lookup, sub_df)
+            all_verbs.extend(verbs)
 
     df = pd.DataFrame(all_verbs)
 
@@ -367,6 +617,7 @@ def main(
     print_information(f"Loaded {len(tokens_df)} tokens", prefix="    ")
 
     # Load spaCy
+    print_information("Loading spaCy model...", 2, "\n")
     nlp = load_spacy_model(nlp)
 
     # Extract verbs
