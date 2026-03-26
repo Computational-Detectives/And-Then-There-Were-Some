@@ -33,6 +33,9 @@ from .utils import (
     load_text, snap_span
 )
 
+
+# TODO: If multiple people in cluster, check if pronoun is plural --> use all resolved names as characters
+
 # =============================================================
 # --------------------- VERBOSE STATISTICS --------------------
 # =============================================================
@@ -679,7 +682,7 @@ def save_stage2(
     alias_dict: dict,
     unknown_clusters: list,
     out_dir: Path,
-) -> None:
+) -> Path:
     """Write Stage 2 outputs to disk."""
     stage_dir = out_dir / "coreference"
     stage_dir.mkdir(parents=True, exist_ok=True)
@@ -792,45 +795,6 @@ def run_coref_pass(windows: List[Dict], already_resolved: List[Dict], alias_dict
             )
             total_dropped_clusters += dropped_count
 
-        # else:
-        #     # Build header for active characters
-        #     active = track_active_characters(all_resolved, win["start_sid"])
-        #     header = build_window_header(active, alias_dict, clean_names)
-        #     window_text = (header + " " + win["text"]) if header else win["text"]
-            
-        #     # Run coref
-        #     clusters = run_coref(window_text, coref_model, coref_model_name)
-
-        #     # TODO: REVIEW from here -->
-        #     # If a header was prepended, the coref model's character offsets
-        #     # are relative to the header-prefixed window_text.  Shift them
-        #     # back so they are relative to the original win["text"].
-        #     header_len = (len(header) + 1) if header else 0  # +1 for the separating space
-        #     if header_len > 0:
-        #         cleaned_clusters = []
-        #         for cluster in clusters:
-        #             new_cluster = []
-        #             for span in cluster:
-        #                 s_start = span["start_char"] - header_len
-        #                 s_end = span["end_char"] - header_len
-        #                 if s_start >= 0:
-        #                     new_cluster.append({
-        #                         "text": win["text"][s_start:s_end],
-        #                         "start_char": s_start,
-        #                         "end_char": s_end
-        #                     })
-        #             if new_cluster:
-        #                 cleaned_clusters.append(new_cluster)
-        #         clusters = cleaned_clusters
-        #     # TODO: to here <--
-
-        #     # Map clusters to characters
-        #     # Adjust start_char offset: use the first sentence's start_char
-        #     win_start_char = win["sentences"][0]["start_char"] if win["sentences"] else 0
-        #     resolved, unknown = map_clusters_to_characters(
-        #         clusters, alias_dict, clean_names, win_start_char, win.get("tokens"), text, is_token_indexed=False
-        #     )
-
         all_resolved.extend(resolved)
         all_unknown.extend(unknown)
 
@@ -841,12 +805,6 @@ def run_coref_pass(windows: List[Dict], already_resolved: List[Dict], alias_dict
             if key not in existing_keys:
                 all_resolved.append(span)
                 existing_keys.add(key)
-            
-        # for span in resolved:
-        #     for sent in win["sentences"]:
-        #         if sent["start_char"] <= span.get("start_char", 0) < sent["end_char"]:
-        #             span["sid"] = sent["sid"]
-        #             break
 
     return all_resolved, all_unknown, total_dropped_clusters
 
@@ -858,13 +816,15 @@ def _worker_init(model_name):
 
 def _process_window(args):
     win, alias_dict, clean_names, coref_model_name, text = args
-    window_sents_words = [[str(t["word"]) for t in s.get("tokens", [])] for s in win["sentences"]]
-    clusters = run_coref(window_sents_words, _worker_model, coref_model_name)
-    resolved, unknown = map_clusters_to_characters(
-        clusters, alias_dict, clean_names,
-        tokens=win.get("tokens", []), full_text=text, is_token_indexed=True
-    )
-    return resolved, unknown
+    window_sents_words, idx_map = to_ontonotes_format_with_map(win)
+    # window_sents_words = [[str(t["word"]) for t in s.get("tokens", [])] for s in win["sentences"]]
+    clusters_token_idx = run_coref(window_sents_words, _worker_model, coref_model_name)
+    clusters_token_idx = remap_clusters(clusters_token_idx, idx_map)
+    resolved, unknown, dropped_count = map_clusters_to_characters(
+                clusters_token_idx, alias_dict, clean_names, 
+                tokens=win.get("tokens", []), full_text=text, is_token_indexed=True
+            )
+    return resolved, unknown, dropped_count
 
 def run_coref_pass_parallel(windows, already_resolved, alias_dict, clean_names,
                              coref_model, coref_model_name, text, n_workers=4):
@@ -879,8 +839,10 @@ def run_coref_pass_parallel(windows, already_resolved, alias_dict, clean_names,
 
     all_resolved = list(already_resolved)
     all_unknown = []
+    total_dropped_clusters = 0
     seen = {(s["start_char"], s["end_char"]) for s in all_resolved}
-    for resolved, unknown in results:
+    for resolved, unknown, dropped in results:
+        total_dropped_clusters += dropped
         for span in resolved:
             key = (span.get("start_char", 0), span.get("end_char", 0))
             if key not in seen:
@@ -888,7 +850,7 @@ def run_coref_pass_parallel(windows, already_resolved, alias_dict, clean_names,
                 seen.add(key)
         all_unknown.extend(unknown)
 
-    return all_resolved, all_unknown
+    return all_resolved, all_unknown, total_dropped_clusters
 
 # ============================================================================
 # MAIN
@@ -903,6 +865,7 @@ def main(
     coref_model_name: str = "maverick",
     refine: bool = False,
     verbose: bool = False,
+    threaded: bool = False
 ) -> Tuple[List[Dict], Dict]:
     """Run Stage 2: coreference resolution → span index."""
 
@@ -942,7 +905,11 @@ def main(
 
     # ----------------- RUN COREF PER WINDOW ----------------
     print_information("Running coreference resolution...", 7, "\n")
-    all_resolved, all_unknown, dropped = run_coref_pass(windows, [], alias_dict, clean_names, coref_model, coref_model_name, text)
+    params = {"windows": windows, "already_resolved": [], "alias_dict": alias_dict, "clean_names": clean_names, "coref_model": coref_model, "coref_model_name": coref_model_name, "text": text}
+    if not threaded:
+        all_resolved, all_unknown, dropped = run_coref_pass(windows, [], alias_dict, clean_names, coref_model, coref_model_name, text)
+    else:
+        all_resolved, all_unknown, dropped = run_coref_pass_parallel(**params)
     print_information(f"Resolved {len(all_resolved)} spans", prefix="    ")
     print_information(f"Unknown clusters: {len(all_unknown)}", prefix="    ")
 
@@ -973,7 +940,7 @@ def main(
 
     # --------------------- SAVE RESULTS --------------------
     print_information("Saving Coreference outputs...", symb=(10 if refine else 9), prefix="\n")
-    save_stage2(all_resolved, extended_dict, all_unknown, out_dir)
+    out_dir = save_stage2(all_resolved, extended_dict, all_unknown, out_dir)
     print_information(f"Saved to → {out_dir}", "✓", col="GREEN")
 
     # --------------- VISUALIZE COREF RESULTS ---------------
@@ -1002,6 +969,7 @@ if __name__ == "__main__":
     parser.add_argument("--coref-model", type=str, default="maverick")
     parser.add_argument("--refine", action="store_true")
     parser.add_argument("-v", "--verbose", action="store_true")
+    parser.add_argument("-t", "--threaded", action="store_true")
 
     args = parser.parse_args()
 
@@ -1014,4 +982,5 @@ if __name__ == "__main__":
         coref_model_name=args.coref_model,
         refine=args.refine,
         verbose=args.verbose,
+        threaded=args.threaded
     )
