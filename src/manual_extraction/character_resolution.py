@@ -92,7 +92,6 @@ def segment_sentences(text: str, tokens_path: Path) -> list[dict]:
     :return: List of ``{ sid, text, start_char, end_char }``.
     """
     import pandas as pd
-    print(f'TOKEN PATH: {tokens_path}')
     df = pd.read_csv(tokens_path, sep="\t", keep_default_na=False)
     
     sentences = []
@@ -133,8 +132,6 @@ def run_ner(
         sent_text = sent["text"]
         sent_start = sent["start_char"]
         toks = sent.get("tokens", [])
-
-        print(f'SENTENCE TEXT: {sent_text}')
 
         # --- GLiNER ---
         try:

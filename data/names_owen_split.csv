@@ -7,8 +7,8 @@ id,fullname,firstname,middlename,surname,gender,aka,profession,prot_status
 5,Emily Brent,Emily,,Brent,f,,,main
 6,John Gordon Macarthur,John,Gordon,Macarthur,m,General Macarthur,General,main
 7,Anthony James Marston,Anthony,James,Marston,m,Tony Marston,,main
-8,Ethel Rogers,Ethel,,Rogers,f,Rogerses;Mother Rogers,,main
-9,Thomas Rogers,Thomas,,Rogers,m,Rogerses,Butler,main
+8,Thomas Rogers,Thomas,,Rogers,m,Rogerses,Butler,main
+9,Ethel Rogers,Ethel,,Rogers,f,Rogerses;Mother Rogers,,main
 10,Isaac Morris,Isaac,,Morris,m,,,supp
 11,Fred Narracott,Fred,,Narracott,m,,,supp
 12,Thomas Legge,Thomas,,Legge,m,A.C.;Sir Thomas Legge,Assistant Commissioner,supp
@@ -26,7 +26,7 @@ id,fullname,firstname,middlename,surname,gender,aka,profession,prot_status
 24,John Combes,John,,Combes,m,,,backstry
 25,Constance Culmington,Constance,,Culmington,f,Lady Constance Culmington;Lady Constance,,backstry
 26,Gabrielle Turl,Gabrielle,,Turl,f,,,backstry
-27,Elmer Robson,Elmer,,Robson,f,,,backstry
+27,Elmer Robson,Elmer,,Robson,m,,,backstry
 28,Armitage,Armitage,,,m,,,backstry
 29,Matthews,,,Matthews,m,,K.C.;King's Counsel,supp
 30,Badger Berkeley,Badger,,Berkeley,m,,,backstry

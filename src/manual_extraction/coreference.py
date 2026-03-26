@@ -771,16 +771,15 @@ def remap_clusters(clusters, index_map):
 
 
 def run_coref_pass(windows: List[Dict], already_resolved: List[Dict], alias_dict, clean_names, coref_model, coref_model_name, text):
-    all_resolved: list[dict] = already_resolved
+    all_resolved: list[dict] = list(already_resolved)
     all_unknown: list[list[dict]] = []
     total_dropped_clusters = 0
+    seen_keys = {(s["start_char"], s["end_char"]) for s in all_resolved}
 
     for win in tqdm(windows):
         if coref_model_name == "maverick":
             # Convert window into OntoNotes format. Remove quotation marks
-            # print(*win)
             window_sents_words, idx_map = to_ontonotes_format_with_map(win)
-            # print(window_sents_words)
 
             # Predict clusters
             clusters_token_idx = run_coref(window_sents_words, coref_model, coref_model_name)
@@ -795,16 +794,18 @@ def run_coref_pass(windows: List[Dict], already_resolved: List[Dict], alias_dict
             )
             total_dropped_clusters += dropped_count
 
-        all_resolved.extend(resolved)
+        # Fix 1: Proper deduplication (no double-append)
+        for span in resolved:
+            key = (span["start_char"], span["end_char"])
+            if key not in seen_keys:
+                all_resolved.append(span)
+                seen_keys.add(key)
         all_unknown.extend(unknown)
 
-        # Add sentence IDs to resolved spans
-        existing_keys = {(s["start_char"], s["end_char"]) for s in all_resolved}
-        for span in resolved:
-            key = (span.get("start_char", 0), span.get("end_char", 0))
-            if key not in existing_keys:
-                all_resolved.append(span)
-                existing_keys.add(key)
+        # Fix 2: Inter-window back-propagation — feed newly resolved
+        # spans back into the alias dict so subsequent windows can
+        # resolve pronouns/nominals that reference earlier mentions.
+        alias_dict = back_propagate(alias_dict, resolved)
 
     return all_resolved, all_unknown, total_dropped_clusters
 

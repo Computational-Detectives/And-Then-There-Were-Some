@@ -12,13 +12,12 @@ from __future__ import annotations
 
 import argparse
 import csv
+import math
 import html
 import json
 import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
-
-import pandas as pd
 
 from .config import OUT_DIR, RAW_TEXT, TOKENS, COREF_OUT, PRONOUNS
 from .utils import load_text, load_span_index, print_information, print_headers
@@ -30,12 +29,14 @@ from .utils import load_text, load_span_index, print_information, print_headers
 
 def load_triples(triples_path: Path) -> pd.DataFrame:
     """Load triples.csv (TSV)."""
+    import pandas as pd
     df = pd.read_csv(triples_path, sep="\t", keep_default_na=False)
     return df
 
 
 def load_tokens(tokens_path: Path) -> pd.DataFrame:
     """Load the .tokens file as a DataFrame."""
+    import pandas as pd
     df = pd.read_csv(tokens_path, sep="\t", keep_default_na=False)
     return df
 
@@ -70,6 +71,74 @@ def build_sentence_boundaries(tokens_df: pd.DataFrame) -> Dict[int, Tuple[int, i
         end = int(group["byte_offset"].max())
         boundaries[sid] = (start, end)
     return boundaries
+
+
+# ============================================================================
+# CHAPTER BOUNDARIES & SPLIT LOGIC
+# ============================================================================
+
+def find_chapter_boundaries(text: str) -> List[int]:
+    """
+    Find byte offsets of every `# Chapter` heading in the text.
+    Returns a sorted list of byte positions where each chapter starts.
+    The list always starts with 0 (beginning of text).
+    """
+    boundaries = [0]
+    for m in re.finditer(r'^# .+', text, re.MULTILINE):
+        pos = m.start()
+        if pos not in boundaries:
+            boundaries.append(pos)
+    boundaries.sort()
+    return boundaries
+
+
+def compute_split_ranges(
+    enriched_triples: List[Dict],
+    chapter_bounds: List[int],
+    text_len: int,
+    n_splits: int,
+) -> List[Tuple[int, int, List[Dict]]]:
+    """
+    Split triples into `n_splits` groups (sorted by verb position),
+    then expand each group's range to chapter boundaries.
+
+    Returns list of (text_start, text_end, triples_in_split).
+    """
+    if n_splits <= 1:
+        return [(0, text_len, enriched_triples)]
+
+    # Sort triples by verb byte position
+    sorted_triples = sorted(enriched_triples, key=lambda t: t["verb_onset"])
+    chunk_size = math.ceil(len(sorted_triples) / n_splits)
+
+    ranges = []
+    for i in range(n_splits):
+        chunk = sorted_triples[i * chunk_size : (i + 1) * chunk_size]
+        if not chunk:
+            continue
+
+        first_byte = chunk[0]["sent_start"]
+        last_byte = chunk[-1]["sent_end"]
+
+        # Snap to chapter boundaries:
+        # Start = largest chapter boundary <= first_byte
+        chap_start = 0
+        for cb in chapter_bounds:
+            if cb <= first_byte:
+                chap_start = cb
+            else:
+                break
+
+        # End = next chapter boundary after last_byte (or end of text)
+        chap_end = text_len
+        for cb in chapter_bounds:
+            if cb > last_byte:
+                chap_end = cb
+                break
+
+        ranges.append((chap_start, chap_end, chunk))
+
+    return ranges
 
 
 # ============================================================================
@@ -329,9 +398,10 @@ def _build_triple_graph_html(triples_in_sentence: List[Dict]) -> str:
     parts = []
     for vid, group in sorted(by_verb.items()):
         # Check if we can draw a multi-edge graph (same agent, same verb)
-        agents = set(t["agent_name"] for t in group)
-        patients = set(t["patient_name"] for t in group)
+        agents = {t["agent_name"] for t in group}
+        patients = {t["patient_name"] for t in group}
         verb_text = group[0]["verb_text"]
+        verb_lemma = group[0]["verb_lemma"]
         negated = group[0]["negated"]
 
         neg_prefix = "¬" if negated else ""
@@ -344,7 +414,7 @@ def _build_triple_graph_html(triples_in_sentence: List[Dict]) -> str:
             for t in group:
                 parts.append(
                     f'<span class="triple-edge" data-triplekey="{html.escape(t["triple_key"])}" data-field="verb">'
-                    f'—{neg_prefix}{html.escape(verb_text)}→</span> '
+                    f'—{neg_prefix}{html.escape(verb_text)}&nbsp[{html.escape(verb_lemma)}]→</span> '
                     f'<span class="triple-node patient-node" data-triplekey="{html.escape(t["triple_key"])}" data-field="patient">'
                     f'{html.escape(t["patient_name"])}</span><br>'
                 )
@@ -358,7 +428,7 @@ def _build_triple_graph_html(triples_in_sentence: List[Dict]) -> str:
                     f'<span class="triple-node agent-node" data-triplekey="{html.escape(t["triple_key"])}" data-field="agent">'
                     f'{html.escape(t["agent_name"])}</span> '
                     f'<span class="triple-edge" data-triplekey="{html.escape(t["triple_key"])}" data-field="verb">'
-                    f'—{neg_prefix}{html.escape(verb_text)}→</span> '
+                    f'—{neg_prefix}{html.escape(verb_text)}&nbsp[{html.escape(verb_lemma)}]→</span> '
                 )
             parts.append(
                 f'<span class="triple-node patient-node" data-triplekey="{html.escape(group[0]["triple_key"])}" data-field="patient">'
@@ -374,7 +444,7 @@ def _build_triple_graph_html(triples_in_sentence: List[Dict]) -> str:
                     f'<span class="triple-node agent-node" data-triplekey="{html.escape(t["triple_key"])}" data-field="agent">'
                     f'{html.escape(t["agent_name"])}</span> '
                     f'<span class="triple-edge" data-triplekey="{html.escape(t["triple_key"])}" data-field="verb">'
-                    f'—{neg_p}{html.escape(t["verb_text"])}→</span> '
+                    f'—{neg_p}{html.escape(t["verb_text"])}&nbsp[{html.escape(verb_lemma)}]→</span> '
                     f'<span class="triple-node patient-node" data-triplekey="{html.escape(t["triple_key"])}" data-field="patient">'
                     f'{html.escape(t["patient_name"])}</span>'
                     f'</div>'
@@ -383,8 +453,21 @@ def _build_triple_graph_html(triples_in_sentence: List[Dict]) -> str:
     return "\n".join(parts)
 
 
-def build_full_html(text: str, enriched_triples: List[Dict], triples_df: pd.DataFrame) -> str:
-    """Build the complete HTML document."""
+def build_full_html(
+    text: str,
+    enriched_triples: List[Dict],
+    triples_df: pd.DataFrame,
+    text_range: Optional[Tuple[int, int]] = None,
+    split_label: str = "",
+) -> str:
+    """
+    Build the complete HTML document.
+
+    :param text_range: If provided, only render text in [start, end) byte range.
+    :param split_label: Label for the split (e.g. "Split 1 of 3").
+    """
+    range_start = text_range[0] if text_range else 0
+    range_end = text_range[1] if text_range else len(text)
 
     # Group triples by sentence
     by_sentence: Dict[int, List[Dict]] = {}
@@ -405,7 +488,7 @@ def build_full_html(text: str, enriched_triples: List[Dict], triples_df: pd.Data
     for sid, tlist in by_sentence.items():
         all_highlights[sid] = _resolve_highlight_spans(tlist)
 
-    # --- We render the full text, splitting by paragraphs ---
+    # --- We render text in range, splitting by paragraphs ---
     # Find all paragraph breaks (double newlines)
     paragraphs = text.split("\n\n")
 
@@ -420,6 +503,10 @@ def build_full_html(text: str, enriched_triples: List[Dict], triples_df: pd.Data
             para_start = current_byte
         para_end = para_start + len(para_text)
         current_byte = para_end + 2  # skip \n\n
+
+        # Skip paragraphs outside the text range
+        if para_end <= range_start or para_start >= range_end:
+            continue
 
         # Check for markdown headings
         heading_match = re.match(r"^(#+)\s+(.*)$", para_text.strip(), re.DOTALL)
@@ -537,11 +624,14 @@ def build_full_html(text: str, enriched_triples: List[Dict], triples_df: pd.Data
 
     triples_data_js = json.dumps(original_triples_json, ensure_ascii=False)
 
+    title_suffix = f" — {split_label}" if split_label else ""
+    subtitle_extra = f'<br><strong>{html.escape(split_label)}</strong>' if split_label else ""
+
     html_content = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Triple Verification</title>
+    <title>Triple Verification{html.escape(title_suffix)}</title>
     <style>
         * {{ box-sizing: border-box; }}
         body {{
@@ -679,6 +769,22 @@ def build_full_html(text: str, enriched_triples: List[Dict], triples_df: pd.Data
         }}
         .edited {{
             border-bottom: 2px solid #e83e8c !important;
+            position: relative;
+        }}
+        .undo-btn {{
+            display: inline-block;
+            margin-left: 3px;
+            cursor: pointer;
+            color: #dc3545;
+            font-size: 0.75em;
+            font-weight: bold;
+            vertical-align: super;
+            opacity: 0.7;
+            user-select: none;
+        }}
+        .undo-btn:hover {{
+            opacity: 1;
+            color: #a71d2a;
         }}
         /* Collapsible chapters */
         details {{
@@ -715,12 +821,13 @@ def build_full_html(text: str, enriched_triples: List[Dict], triples_df: pd.Data
     </style>
 </head>
 <body>
-    <h1>Triple Verification</h1>
+    <h1>Triple Verification{html.escape(title_suffix)}</h1>
     <p class="subtitle">
         Double-click any <span style="background:#d4edda; padding:2px 6px; border-radius:3px;">agent</span> /
         <span style="background:#fff3cd; padding:2px 6px; border-radius:3px; text-decoration:underline; text-decoration-color:#e8a0b5;">verb</span> /
         <span style="background:#d4edda; padding:2px 6px; border-radius:3px;">patient</span>
         in the right column to edit. Download corrections when done.
+        {subtitle_extra}
     </p>
     <div class="controls">
         <button onclick="downloadCorrections()">⬇ Download Corrections TSV</button>
@@ -795,6 +902,9 @@ document.addEventListener('dblclick', function(e) {{
                 const negPrefix = (triple && triple.negated) ? '¬' : '';
                 node.textContent = '—' + negPrefix + newText + '→';
             }}
+
+            // Add undo button
+            addUndoBtn(node, tripleKey, field, original);
         }} else {{
             // Restore original formatting for verb edge
             if (field === 'verb') {{
@@ -813,6 +923,48 @@ document.addEventListener('dblclick', function(e) {{
         }}
     }});
 }});
+
+// ============================
+// Undo edits
+// ============================
+function addUndoBtn(node, tripleKey, field, originalValue) {{
+    // Remove existing undo btn for this node if any
+    const existing = node.parentElement.querySelector(`.undo-btn[data-triplekey="${{tripleKey}}"][data-field="${{field}}"]`);
+    if (existing) existing.remove();
+
+    const btn = document.createElement('span');
+    btn.className = 'undo-btn';
+    btn.textContent = '✕';
+    btn.title = 'Revert this edit';
+    btn.dataset.triplekey = tripleKey;
+    btn.dataset.field = field;
+    btn.addEventListener('click', function(e) {{
+        e.stopPropagation();
+        // Restore original value
+        if (field === 'verb') {{
+            const triple = allTriples.find(t => t.triple_key === tripleKey);
+            const negPrefix = (triple && triple.negated) ? '¬' : '';
+            node.textContent = '—' + negPrefix + originalValue + '→';
+        }} else {{
+            node.textContent = originalValue;
+        }}
+        node.classList.remove('edited');
+
+        // Remove edit from tracking
+        if (edits[tripleKey] && edits[tripleKey][field]) {{
+            delete edits[tripleKey][field];
+            if (Object.keys(edits[tripleKey]).length === 0) {{
+                delete edits[tripleKey];
+            }}
+            editCount = Math.max(0, editCount - 1);
+            document.getElementById('edit-stats').textContent = editCount + ' edit(s) made';
+        }}
+
+        // Remove the undo button itself
+        btn.remove();
+    }});
+    node.after(btn);
+}}
 
 // ============================
 // Download corrections
@@ -889,6 +1041,7 @@ def main(
     coref_dir: Path = COREF_OUT,
     out_dir: Path = OUT_DIR,
     out_html: Path = None,
+    n_splits: int = 1,
 ):
     """Run the triple verification HTML generator."""
     print_headers("TRIPLE VERIFICATION — HTML GENERATOR", "=", prefix="\n")
@@ -941,12 +1094,45 @@ def main(
     # Step 4: Build HTML
     print_information("Generating HTML...", 4, "\n")
 
-    html_content = build_full_html(text, enriched, triples_df)
+    if n_splits <= 1:
+        # Single file mode
+        html_content = build_full_html(text, enriched, triples_df)
+        out_html.parent.mkdir(parents=True, exist_ok=True)
+        out_html.write_text(html_content, encoding="utf-8")
+        print_information(f"Written to → {out_html}", "✓", col="GREEN")
+        print_information(f"Open in browser: file://{out_html.absolute()}", prefix="    ")
+    else:
+        # Split mode
+        chapter_bounds = find_chapter_boundaries(text)
+        print_information(f"Found {len(chapter_bounds)} chapter boundaries", prefix="    ")
 
-    out_html.parent.mkdir(parents=True, exist_ok=True)
-    out_html.write_text(html_content, encoding="utf-8")
-    print_information(f"Written to → {out_html}", "✓", col="GREEN")
-    print_information(f"Open in browser: file://{out_html.absolute()}", prefix="    ")
+        split_ranges = compute_split_ranges(enriched, chapter_bounds, len(text), n_splits)
+        print_information(f"Computed {len(split_ranges)} splits", prefix="    ")
+
+        out_html.parent.mkdir(parents=True, exist_ok=True)
+        stem = out_html.stem
+        suffix = out_html.suffix or ".html"
+
+        for i, (rng_start, rng_end, split_triples) in enumerate(split_ranges, 1):
+            split_label = f"Split {i} of {len(split_ranges)}"
+
+            # Build a DataFrame subset for the triples in this split
+            split_row_idxs = {t["row_idx"] for t in split_triples}
+            split_df = triples_df.loc[triples_df.index.isin(split_row_idxs)]
+
+            html_content = build_full_html(
+                text, split_triples, split_df,
+                text_range=(rng_start, rng_end),
+                split_label=split_label,
+            )
+
+            split_path = out_html.parent / f"{stem}_{i}{suffix}"
+            split_path.write_text(html_content, encoding="utf-8")
+            print_information(
+                f"Split {i}: {len(split_triples)} triples, "
+                f"text range [{rng_start}:{rng_end}] → {split_path.name}",
+                "✓", col="GREEN"
+            )
 
 
 if __name__ == "__main__":
@@ -963,6 +1149,8 @@ if __name__ == "__main__":
                         help="Output directory")
     parser.add_argument("--out-html", type=Path, default=None,
                         help="Output HTML file path")
+    parser.add_argument("--split", type=int, default=1,
+                        help="Number of splits to divide triples into (default: 1 = no split)")
     args = parser.parse_args()
 
     main(
@@ -972,4 +1160,5 @@ if __name__ == "__main__":
         coref_dir=args.coref_dir,
         out_dir=args.out_dir,
         out_html=args.out_html,
+        n_splits=args.split,
     )

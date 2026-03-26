@@ -8,31 +8,20 @@ import sys
 from .utils import print_information, load_text, load_span_index
 from src.manual_extraction.config import RAW_TEXT, OUT_DIR
 
-# # Attempt to import config
-# try:
-#     sys.path.append(str(Path(__file__).parent.parent.parent))
-    
-# except ImportError:
-#     RAW_TEXT = Path("data/book/attwn_2_chpts.md")
-#     OUT_DIR = Path("out_manual")
-
 
 def main(text: Path, spans_path: Path, unknown: Path, out: Path):
     # Load original text
-    # print(f"Loading text from {text}")
-    text = load_text(text) # .read_text(encoding="utf-8").replace("\r\n", "\n")
+    text = load_text(text)
 
     spans = []
 
     # Load resolved spans
-    # print(f"Loading resolved spans from {spans_path}")
     if spans_path.exists():
         known_spans = load_span_index(spans_path)       
         spans = [(s.get("start_char"), s.get("end_char"), s.get("fullname", "RESOLVED"), True) 
                  for s in known_spans if s.get("start_char") is not None and s.get("end_char") is not None]
 
     # Load unknown clusters
-    # print(f"Loading unknown clusters from {unknown}")
     if unknown.exists():
         with open(unknown, "r", encoding="utf-8") as f:
             clusters = json.load(f)
@@ -64,11 +53,9 @@ def main(text: Path, spans_path: Path, unknown: Path, out: Path):
     resolved_count = 0
     for start, end, label, is_resolved in final_spans:
         # Text before span
-        # print(text[current_idx:start])
         html_parts.append(html.escape(text[current_idx:start]))
         
         # Span text
-        # print(text[start:end])
         span_text = html.escape(text[start:end])
         escaped_label = html.escape(label)
         
@@ -112,6 +99,18 @@ def main(text: Path, spans_path: Path, unknown: Path, out: Path):
         formatted_paragraphs.append(f"<p>{p_html}</p>")
 
     final_html_body = "\n".join(formatted_paragraphs)
+    # final_html_body = final_html_body.replace('<h1>', '</details><details><h1>')[len('</details>'):] + '</details>'
+    final_html_body = final_html_body.replace(
+        '<h1>',
+        '</details><details open><summary><span class="chapter-heading">'
+    )[len('</details>'):] + '</details>'
+
+    # And replace closing </h1> with </summary>
+    final_html_body = final_html_body.replace(
+        '</h1>',
+        '</span></summary>',
+        # only h1s — h2..h6 stay as-is inside the open details
+    )
 
     html_content = f"""<!DOCTYPE html>
 <html lang="en">
@@ -139,6 +138,38 @@ def main(text: Path, spans_path: Path, unknown: Path, out: Path):
         mark {{
             box-decoration-break: clone;
             -webkit-box-decoration-break: clone;
+        }}
+        details {{
+            margin-bottom: 1em;
+            border-top: 1px solid #ddd;
+        }}
+        details[open] {{
+            padding-bottom: 0.5em;
+        }}
+        summary {{
+            list-style: none;
+            cursor: pointer;
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }}
+        summary::-webkit-details-marker {{ display: none; }}
+        summary::before {{
+            content: "▶";
+            font-size: 0.65em;
+            color: #888;
+            transition: transform 0.2s;
+            flex-shrink: 0;
+        }}
+        details[open] > summary::before {{
+            transform: rotate(90deg);
+        }}
+        .chapter-heading {{
+            /* Copy your h1 styles here */
+            font-size: 2em;
+            font-weight: bold;
+            color: #444;
         }}
     </style>
 </head>
