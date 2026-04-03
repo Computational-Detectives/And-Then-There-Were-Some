@@ -55,6 +55,18 @@ deaths={'1_marston':[(),(1,1292)],
         '10_claythorne':[(),(4456,4544)]
         }
 
+new_deaths={'1_marston':[(0, 17462),()],    
+        '2_ethel_rogers':[(17463, 21069),()],
+        '3_macarthur':[(21076, 32904),()],
+        '4_thomas_rogers':[(32905, 41437),()],
+        '5_brent':[(41444, 45356),()],
+        '6_wargrave':[(45362, 50820),()],
+        '7_blore':[(50821, 58126),()],
+        '8_armstrong':[(58127, 59105),()],
+        '9_lombard':[(59111, 59935),()],
+        '10_claythorne':[(59941, 60963),()]
+        }
+
 main_characters=["Philip Lombard",
                  "Vera Elizabeth Claythorne",
                  "William Henry Blore",
@@ -69,20 +81,44 @@ main_characters=["Philip Lombard",
 
 def estrai_grafo(path, section, only_main=False, sentiment=False):
 
-    if 'avp_triples' in path:
+    if 'triples' in path:
         block=blocks[section][0]
         dataf=pd.read_csv(path, sep='\t', dtype={'index':int})
+        dataf=dataf[~dataf["is_new"]]
         dataf=dataf[(dataf['role_left'] == 'agent')&(dataf['role_right'] == 'patient')&(block[0] <= dataf['index'])&(dataf['index'] <= block[1])]
-        dataf=dataf[["name_left","lemma","name_right", "negated"]]
+        dataf=dataf[["name_left","lemma","name_right", "negated", "index"]]
         triplestore = list(dataf.itertuples(index=False, name=None))
         G = nx.MultiDiGraph()
-        G.add_edges_from((s, o, {'label': p}) for s, p, o, n in triplestore)
+        G.add_edges_from((s, o, {'label': p, 'index': i}) for s, p, o, n, i in triplestore)
         print('Graph Created!!!')
 
         if only_main==True:
             G=G.subgraph(main_characters)
             print("Subgraph with only the ten main characters created!!!")
+    
 
+        if sentiment==True:
+            tokens=pd.read_csv('network_analysis\data\\attwn_new.tokens.csv', sep='\t')[["token_ID_within_document","sentence_ID","word"]]
+            tokens['word'] = tokens['word'].fillna('')
+            sia=SentimentIntensityAnalyzer()
+            G_sent = nx.Graph()
+            for u, v, data in G.edges(data=True):
+                index_value = data.get('index', None)
+                corresponding_sentence_ID=tokens[tokens['token_ID_within_document']==index_value]
+                sentence_ID=corresponding_sentence_ID['sentence_ID'].values[0]  #prendo l'id della frase corrispondente al token dell'arco
+                sentence=tokens[tokens['sentence_ID']==sentence_ID]
+                sentence_text=' '.join(list(sentence['word']))
+                sent=sia.polarity_scores(sentence_text)['compound']
+                if (u,v) in G_sent.edges:
+                    G_sent.edges[u, v]['sentiment']+=sent
+                else:
+                    G_sent.add_edge(u,v, sentiment=sent)
+            print(G)
+            print(G_sent)
+            return G_sent    
+
+
+        '''
         net = Network(notebook=True, height="1000px", width="100%", directed=False)
 
         for node, attrs in G.nodes(data=True):
@@ -105,7 +141,7 @@ def estrai_grafo(path, section, only_main=False, sentiment=False):
             os.makedirs('graphs')
 
         net.save_graph(str(f'graphs/{section}.html'))
-
+        '''
 
         return G
     
@@ -211,8 +247,31 @@ def network_analysis(G):
     print('\n\nBETWEENNESS CENTRALITY')
     display_results(nx.betweenness_centrality(G))
 
+
     print('\n\nCLOSENESS CENTRALITY')
     display_results(nx.closeness_centrality(G))
+
+
+    print('\n\nWEIGHTED CLOSENESS CENTRALITY')
+
+    # Converti multigraph a grafo pesato semplice per closeness
+    if isinstance(G, nx.MultiGraph) or isinstance(G, nx.MultiDiGraph):
+        G_simple = nx.Graph()
+        for u, v in G.edges():
+            if G_simple.has_edge(u, v):
+                G_simple[u][v]['weight'] += 1
+            else:
+                G_simple.add_edge(u, v, weight=1)
+    else:
+        G_simple = G
+
+    # Aggiungi distanza invertita per closeness corretta
+    for u, v, d in G_simple.edges(data=True):
+        d['distance'] = 1 / d['weight']
+
+    display_results(nx.closeness_centrality(G_simple, distance='distance'))
+
+
 
     if type(G)==nx.MultiDiGraph:
         G = nx.DiGraph(G)   #we convert the multidigraph to a simple digraph to perform the following measures
@@ -230,6 +289,8 @@ def network_analysis(G):
         display_results(eig_cent)
     except nx.PowerIterationFailedConvergence:
         print('Analysis Failed: Eigenvector centrality failed to converge.')
+    except nx.NetworkXPointlessConcept:
+            print("Analysis Failed. PointlessConcept. Cannot compute centrality for the null graph")
 
     print('\n\nKATZ CENTRALITY (changing to simple digraph)')
     try:
@@ -238,6 +299,8 @@ def network_analysis(G):
         display_results(katz_cent)
     except nx.PowerIterationFailedConvergence:
         print('Analysis Failed: Katz centrality failed to converge.')
+    except nx.NetworkXPointlessConcept:
+            print("Analysis Failed. PointlessConcept. Cannot compute centrality for the null graph")
     except Exception as e:
         # Catches other potential mathematical errors (e.g., alpha too large)
         print(f'Analysis Failed: An error occurred during Katz calculation ({e})')
@@ -340,7 +403,8 @@ def visualize_degree_and_betwenness(G, title):
     if not os.path.isdir('networks'):
         os.makedirs('networks')
 
-    plt.savefig(f'networks/{title}.png', dpi=300, bbox_inches='tight')  #otherwise we can choose .pdf or .svg format
+    plt.savefig(f'network_analysis/networks/{title}.png', dpi=300, bbox_inches='tight')  #otherwise we can choose .pdf or .svg format
+
 
 def visualize_closeness(G, title):
     # Converti multigraph a grafo pesato semplice
@@ -522,7 +586,7 @@ def calculate_closeness_evolution(graphs_list):    # the graph_list must be base
         characters_closeness_centralities[ch]=[]
         for step in weighted_graphs_list:
             if ch in step.nodes:
-                cl=nx.closeness_centrality(step, distance='weight')[ch]    
+                cl=nx.closeness_centrality(step, distance='weight')[ch]            
             else:
                 cl=0
             characters_closeness_centralities[ch].append(cl)
@@ -633,7 +697,7 @@ def visualize_sentiment_graph(G: nx.Graph, title: str = "sentiment_graph"):
 
 def calculate_sentiment_evolution(graphs_list):
     
-    #main_characters=["Lawrence John Wargrave",'Owen']   #if we want to specify only some characters
+    main_characters=["Lawrence John Wargrave",'Owen']   #if we want to specify only some characters
 
     characters_sentiment_evolution={}
     for ch in main_characters:
