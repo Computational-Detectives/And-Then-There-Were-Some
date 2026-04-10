@@ -57,14 +57,14 @@ deaths={'1_marston':[(),(1,1292)],
 
 new_deaths={'1_marston':[(0, 17462),()],    
         '2_ethel_rogers':[(17463, 21069),()],
-        '3_macarthur':[(21076, 32904),()],
-        '4_thomas_rogers':[(32905, 41437),()],
-        '5_brent':[(41444, 45356),()],
-        '6_wargrave':[(45362, 50820),()],
+        '3_macarthur':[(21071, 32904),()],
+        '4_thomas_rogers':[(32905, 41438),()],
+        '5_brent':[(41439, 45357),()],
+        '6_wargrave':[(45358, 50820),()],
         '7_blore':[(50821, 58126),()],
-        '8_armstrong':[(58127, 59105),()],
-        '9_lombard':[(59111, 59935),()],
-        '10_claythorne':[(59941, 60963),()]
+        '8_armstrong':[(58127, 59107),()],
+        '9_lombard':[(59108, 59936),()],
+        '10_claythorne':[(59937, 60964),()]
         }
 
 main_characters=["Philip Lombard",
@@ -598,6 +598,32 @@ def calculate_closeness_evolution(graphs_list):    # the graph_list must be base
 
 
 GREEN     = "#2ca02c"
+
+
+def create_png_multidigraph(G, filename='graph.png'):
+    """
+    Crea un'immagine PNG del multidigraph con etichette sugli edges basate sull'attributo 'label'.
+
+    Parametri:
+    - G: networkx.MultiDiGraph
+    - filename: str, percorso del file PNG da salvare
+    """
+    pos = nx.spring_layout(G, k=1.5, iterations=50, seed=42)
+    fig, ax = plt.subplots(figsize=(14, 10))
+    nx.draw(G, pos, with_labels=True, node_size=800, font_size=10, node_color='skyblue', edge_color='gray', ax=ax)
+    
+    edge_labels = {}
+    for u, v, key, data in G.edges(keys=True, data=True):
+        label = data.get('label', '')
+        edge_labels[(u, v, key)] = label
+    
+    nx.draw_networkx_edge_labels(G, pos, edge_labels, font_size=7, ax=ax)
+    
+    plt.title('Multidigraph Visualization with Edge Labels')
+    plt.axis('off')
+    plt.savefig(filename, dpi=300, bbox_inches='tight')
+    plt.close()
+    print(f"Grafo salvato come {filename}")
 RED       = "#d62728"
 GRAY      = "#999999"
 WIDTH_MIN = 0.5
