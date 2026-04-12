@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import ast
 import networkx as nx
 from networkx.drawing.nx_pydot import write_dot
@@ -8,6 +9,10 @@ import matplotlib.cm as cm
 import matplotlib.colors as mcolors
 from pyvis.network import Network
 import os
+import nltk
+nltk.download('vader_lexicon')
+from nltk.tokenize import sent_tokenize, word_tokenize
+from nltk.sentiment import SentimentIntensityAnalyzer
 
 blocks={'entire_book':[(3,66980),(1,5021)],    #the whole book, from the very beginning to the very end
         'entire_story':[(3,59218),(1,4544)],   #the whole story, except the epilogues
@@ -50,6 +55,18 @@ deaths={'1_marston':[(),(1,1292)],
         '10_claythorne':[(),(4456,4544)]
         }
 
+new_deaths={'1_marston':[(0, 17462),()],    
+        '2_ethel_rogers':[(17463, 21069),()],
+        '3_macarthur':[(21071, 32904),()],
+        '4_thomas_rogers':[(32905, 41438),()],
+        '5_brent':[(41439, 45357),()],
+        '6_wargrave':[(45358, 50820),()],
+        '7_blore':[(50821, 58126),()],
+        '8_armstrong':[(58127, 59107),()],
+        '9_lombard':[(59108, 59936),()],
+        '10_claythorne':[(59937, 60964),()]
+        }
+
 main_characters=["Philip Lombard",
                  "Vera Elizabeth Claythorne",
                  "William Henry Blore",
@@ -62,22 +79,46 @@ main_characters=["Philip Lombard",
                  "Thomas Rogers",
                  "Owen"]
 
-def estrai_grafo(path, section, only_main=False):
+def estrai_grafo(path, section, only_main=False, sentiment=False):
 
-    if 'avp_triples' in path:
+    if 'triples' in path:
         block=blocks[section][0]
         dataf=pd.read_csv(path, sep='\t', dtype={'index':int})
+        dataf=dataf[~dataf["is_new"]]
         dataf=dataf[(dataf['role_left'] == 'agent')&(dataf['role_right'] == 'patient')&(block[0] <= dataf['index'])&(dataf['index'] <= block[1])]
-        dataf=dataf[["name_left","lemma","name_right", "negated"]]
+        dataf=dataf[["name_left","lemma","name_right", "negated", "index"]]
         triplestore = list(dataf.itertuples(index=False, name=None))
         G = nx.MultiDiGraph()
-        G.add_edges_from((s, o, {'label': p}) for s, p, o, n in triplestore)
+        G.add_edges_from((s, o, {'label': p, 'index': i}) for s, p, o, n, i in triplestore)
         print('Graph Created!!!')
 
         if only_main==True:
             G=G.subgraph(main_characters)
             print("Subgraph with only the ten main characters created!!!")
+    
 
+        if sentiment==True:
+            tokens=pd.read_csv('network_analysis\data\\attwn_new.tokens.csv', sep='\t')[["token_ID_within_document","sentence_ID","word"]]
+            tokens['word'] = tokens['word'].fillna('')
+            sia=SentimentIntensityAnalyzer()
+            G_sent = nx.Graph()
+            for u, v, data in G.edges(data=True):
+                index_value = data.get('index', None)
+                corresponding_sentence_ID=tokens[tokens['token_ID_within_document']==index_value]
+                sentence_ID=corresponding_sentence_ID['sentence_ID'].values[0]  #prendo l'id della frase corrispondente al token dell'arco
+                sentence=tokens[tokens['sentence_ID']==sentence_ID]
+                sentence_text=' '.join(list(sentence['word']))
+                sent=sia.polarity_scores(sentence_text)['compound']
+                if (u,v) in G_sent.edges:
+                    G_sent.edges[u, v]['sentiment']+=sent
+                else:
+                    G_sent.add_edge(u,v, sentiment=sent)
+            print(G)
+            print(G_sent)
+            return G_sent    
+
+
+        '''
         net = Network(notebook=True, height="1000px", width="100%", directed=False)
 
         for node, attrs in G.nodes(data=True):
@@ -100,7 +141,7 @@ def estrai_grafo(path, section, only_main=False):
             os.makedirs('graphs')
 
         net.save_graph(str(f'graphs/{section}.html'))
-
+        '''
 
         return G
     
@@ -121,6 +162,28 @@ def estrai_grafo(path, section, only_main=False):
         for st in real_edges:
             if block[0] <= int(st[2]) <= block[1] :
                 filtered_edges.append(st)
+
+        if sentiment==True:
+
+            tokens=pd.read_csv('network_analysis\data\preproc_attwn.tokens', sep='\t')[["sentence_ID","word"]]
+            tokens['word'] = tokens['word'].fillna('')
+            sia=SentimentIntensityAnalyzer()
+            G = nx.Graph()
+            for x,y,s in filtered_edges:
+                filtered_tokens=tokens[tokens['sentence_ID']==int(s)]
+                filtered_tokens_list=list(filtered_tokens['word'])
+                sentence=' '.join(filtered_tokens_list)
+                sent=sia.polarity_scores(sentence)['compound']
+                if (x,y) in G.edges:
+                    G.edges[x, y]['sentiment']+=sent
+                else:
+                    G.add_edge(x,y, sentiment=sent)
+
+            if only_main==True:
+                G=G.subgraph(main_characters)
+                print("Subgraph with only the ten main characters created!!!")
+
+            return G
 
         G = nx.MultiGraph()
         G.add_edges_from((x, y) for x,y,s in filtered_edges)
@@ -184,8 +247,50 @@ def network_analysis(G):
     print('\n\nBETWEENNESS CENTRALITY')
     display_results(nx.betweenness_centrality(G))
 
+    print('\n\nWEIGHTED BETWEENNESS CENTRALITY')
+
+    # Converti multigraph a grafo pesato semplice per closeness
+    if isinstance(G, nx.MultiGraph) or isinstance(G, nx.MultiDiGraph):
+        G_betw = nx.Graph()
+        for u, v in G.edges():
+            if G_betw.has_edge(u, v):
+                G_betw[u][v]['weight'] += 1
+            else:
+                G_betw.add_edge(u, v, weight=1)
+    else:
+        G_betw = G
+
+    for u, v, d in G_betw.edges(data=True):
+        d['weight'] = 1 / d['weight']
+
+
+    display_results(nx.betweenness_centrality(G_betw, weight='weight'))
+
+
     print('\n\nCLOSENESS CENTRALITY')
     display_results(nx.closeness_centrality(G))
+
+
+    print('\n\nWEIGHTED CLOSENESS CENTRALITY')
+
+    # Converti multigraph a grafo pesato semplice per closeness
+    if isinstance(G, nx.MultiGraph) or isinstance(G, nx.MultiDiGraph):
+        G_simple = nx.Graph()
+        for u, v in G.edges():
+            if G_simple.has_edge(u, v):
+                G_simple[u][v]['weight'] += 1
+            else:
+                G_simple.add_edge(u, v, weight=1)
+    else:
+        G_simple = G
+
+    # Aggiungi distanza invertita per closeness corretta
+    for u, v, d in G_simple.edges(data=True):
+        d['distance'] = 1 / d['weight']
+
+    display_results(nx.closeness_centrality(G_simple, distance='distance'))
+
+
 
     if type(G)==nx.MultiDiGraph:
         G = nx.DiGraph(G)   #we convert the multidigraph to a simple digraph to perform the following measures
@@ -203,6 +308,8 @@ def network_analysis(G):
         display_results(eig_cent)
     except nx.PowerIterationFailedConvergence:
         print('Analysis Failed: Eigenvector centrality failed to converge.')
+    except nx.NetworkXPointlessConcept:
+            print("Analysis Failed. PointlessConcept. Cannot compute centrality for the null graph")
 
     print('\n\nKATZ CENTRALITY (changing to simple digraph)')
     try:
@@ -211,9 +318,32 @@ def network_analysis(G):
         display_results(katz_cent)
     except nx.PowerIterationFailedConvergence:
         print('Analysis Failed: Katz centrality failed to converge.')
+    except nx.NetworkXPointlessConcept:
+            print("Analysis Failed. PointlessConcept. Cannot compute centrality for the null graph")
     except Exception as e:
         # Catches other potential mathematical errors (e.g., alpha too large)
         print(f'Analysis Failed: An error occurred during Katz calculation ({e})')
+
+
+
+    print('\n\nWEIGHTED KATZ CENTRALITY')
+
+    # Converti multigraph a grafo pesato semplice per closeness
+    for u, v, d in G_betw.edges(data=True):
+        d['weight'] = 1 / d['weight']
+
+    try:
+        # Katz is sensitive to the alpha parameter
+        katz_cent = nx.katz_centrality(G_betw, max_iter=800, alpha=0.005, weight='weight')
+        display_results(katz_cent)
+    except nx.PowerIterationFailedConvergence:
+        print('Analysis Failed: Katz centrality failed to converge.')
+    except nx.NetworkXPointlessConcept:
+            print("Analysis Failed. PointlessConcept. Cannot compute centrality for the null graph")
+    except Exception as e:
+        # Catches other potential mathematical errors (e.g., alpha too large)
+        print(f'Analysis Failed: An error occurred during Katz calculation ({e})')
+
 
 def visualize(G):
     # Converti multigraph a grafo semplice se necessario
@@ -313,7 +443,8 @@ def visualize_degree_and_betwenness(G, title):
     if not os.path.isdir('networks'):
         os.makedirs('networks')
 
-    plt.savefig(f'networks/{title}.png', dpi=300, bbox_inches='tight')  #otherwise we can choose .pdf or .svg format
+    plt.savefig(f'network_analysis/networks/{title}.png', dpi=300, bbox_inches='tight')  #otherwise we can choose .pdf or .svg format
+
 
 def visualize_closeness(G, title):
     # Converti multigraph a grafo pesato semplice
@@ -385,7 +516,7 @@ def visualize_closeness(G, title):
     plt.savefig(f'network_analysis/networks/{title}.png', dpi=300, bbox_inches='tight')
 
 
-def full_analysis(file, division, only_main_characters, visualization, analysis):
+def full_analysis(file, division, only_main_characters, visualization, analysis, sentiment):
     
     global blocks
     blocks=division.copy()    
@@ -397,11 +528,15 @@ def full_analysis(file, division, only_main_characters, visualization, analysis)
 
         print('\n\n\n***', se.upper(), '***\n\n\n')
 
-        G=estrai_grafo(file, section=se, only_main=only_main_characters)  #only_main means if you want to take into account only the ten protagonists
+        G=estrai_grafo(file, section=se, only_main=only_main_characters, sentiment=sentiment)  #only_main means if you want to take into account only the ten protagonists
         #G.remove_node('Lawrence John Wargrave')            #if we are interested in removing some characters to see what happens
         
         if visualization==True:
-            visualize_closeness(G, se)
+
+            if sentiment==True:
+                visualize_sentiment_graph(G, se)
+            else:
+                visualize_simple_network(G, se)
 
         if analysis==True:
             network_analysis(G)
@@ -439,7 +574,7 @@ def simplify_multigraph(mg):
     # Crea un grafo semplice (Graph) partendo dai nodi del multigrafo
     g = nx.Graph()
     # Calcola la molteplicità di ogni coppia (u, v) e imposta il peso come 1/molteplicità
-    g.add_edges_from((u, v, {'weight': 1/mg.number_of_edges(u, v)}) for u, v in mg.edges())
+    g.add_edges_from((u, v, {'weight': mg.number_of_edges(u, v)}) for u, v in mg.edges())    # {'weight': 1/mg.number_of_edges(u, v)}
     return g
 
 def print_graph_summary(g):
@@ -491,10 +626,388 @@ def calculate_closeness_evolution(graphs_list):    # the graph_list must be base
         characters_closeness_centralities[ch]=[]
         for step in weighted_graphs_list:
             if ch in step.nodes:
-                cl=nx.closeness_centrality(step, distance='weight')[ch]
+                cl=nx.closeness_centrality(step, distance='weight')[ch]            
             else:
                 cl=0
             characters_closeness_centralities[ch].append(cl)
 
     labels=list(deaths.keys())
     plot_centrality_evolution(labels, characters_closeness_centralities)
+
+
+def calculate_closeness_evolution(graphs_list):    # the graph_list must be based on deaths
+    # this list is useful to calculate closeness based on distance:
+    weighted_graphs_list=[]
+    for mg in graphs_list:
+        weighted_graphs_list.append(simplify_multigraph(mg))
+
+    characters_closeness_centralities={}
+    for ch in main_characters:
+        characters_closeness_centralities[ch]=[]
+        for step in weighted_graphs_list:
+            if ch in step.nodes:
+                cl=nx.closeness_centrality(step, distance='weight')[ch]            
+            else:
+                cl=0
+            characters_closeness_centralities[ch].append(cl)
+
+    labels=list(deaths.keys())
+    plot_centrality_evolution(labels, characters_closeness_centralities)
+
+
+GREEN     = "#2ca02c"
+RED       = "#d62728"
+GRAY      = "#999999"
+WIDTH_MIN = 0.5
+WIDTH_MAX = 6.0
+
+
+def visualize_sentiment_graph(G: nx.Graph, title: str = "sentiment_graph"):
+    """
+    Visualize a graph coloring edges by their 'sentiment' attribute:
+      - Green (thicker = stronger positive) if sentiment > 0
+      - Gray  (thin)                        if sentiment == 0
+      - Red   (thicker = stronger negative) if sentiment < 0
+
+    The image is saved to 'networks/{title}.png'.
+
+    Args:
+        G:     NetworkX graph with a 'sentiment' attribute on every edge.
+        title: Output filename (no extension).
+    """
+    # Collapse multigraphs by averaging sentiment on parallel edges
+    if isinstance(G, (nx.MultiGraph, nx.MultiDiGraph)):
+        G_simple = nx.Graph()
+        for u, v, data in G.edges(data=True):
+            s = data.get("sentiment", 0)
+            if G_simple.has_edge(u, v):
+                G_simple[u][v]["sentiment"] += s
+                G_simple[u][v]["count"] += 1
+            else:
+                G_simple.add_edge(u, v, sentiment=s, count=1)
+        for u, v, d in G_simple.edges(data=True):
+            d["sentiment"] = d["sentiment"] / d["count"]
+    else:
+        G_simple = G
+
+    pos = nx.spring_layout(G_simple, k=2, iterations=50, seed=42)
+
+    # --- Edges: fixed color per sign, width scaled by intensity ---
+    sentiments = np.array(
+        [d.get("sentiment", 0) for _, _, d in G_simple.edges(data=True)],
+        dtype=float,
+    )
+
+    if sentiments.size == 0:
+        fig, ax = plt.subplots(figsize=(14, 10))
+        nx.draw_networkx_nodes(G_simple, pos, ax=ax, node_size=800, node_color="#D9D9D9")
+        nx.draw_networkx_labels(G_simple, pos, ax=ax, font_size=9, font_weight="bold")
+        ax.set_title('Before death: '+title, fontsize=14, fontweight="bold")
+        ax.axis("off")
+        plt.tight_layout()
+        os.makedirs("networks", exist_ok=True)
+        plt.savefig(os.path.join("networks", f"{title}.png"), dpi=300, bbox_inches="tight")
+        plt.close(fig)
+        print(f"Image saved to: networks/{title}.png (single node, no edges)")
+        return
+
+    pos_max = float(sentiments.max()) if sentiments.max() > 0 else 1.0
+    neg_min = float(sentiments.min()) if sentiments.min() < 0 else -1.0
+
+    edge_colors, edge_widths = [], []
+    for s in sentiments:
+        if s > 0:
+            edge_colors.append(GREEN)
+            edge_widths.append(WIDTH_MIN + (s / pos_max) * (WIDTH_MAX - WIDTH_MIN))
+        elif s < 0:
+            edge_colors.append(RED)
+            edge_widths.append(WIDTH_MIN + (s / neg_min) * (WIDTH_MAX - WIDTH_MIN))
+        else:
+            edge_colors.append(GRAY)
+            edge_widths.append(WIDTH_MIN)
+
+    # --- Figure ---
+    fig, ax = plt.subplots(figsize=(14, 10))
+
+    nx.draw_networkx_nodes(G_simple, pos, ax=ax, node_size=800, node_color="#D9D9D9")
+    nx.draw_networkx_labels(G_simple, pos, ax=ax, font_size=9, font_weight="bold")
+    nx.draw_networkx_edges(G_simple, pos, ax=ax, edge_color=edge_colors, width=edge_widths)
+
+    legend_elements = [
+        Line2D([0], [0], color=GREEN, linewidth=WIDTH_MIN, label="Positive sentiment (low)"),
+        Line2D([0], [0], color=GREEN, linewidth=WIDTH_MAX,  label="Positive sentiment (high)"),
+        Line2D([0], [0], color=GRAY,  linewidth=WIDTH_MIN, label="Neutral sentiment (0)"),
+        Line2D([0], [0], color=RED,   linewidth=WIDTH_MIN, label="Negative sentiment (low)"),
+        Line2D([0], [0], color=RED,   linewidth=WIDTH_MAX,  label="Negative sentiment (high)"),
+    ]
+    ax.legend(handles=legend_elements, loc="upper left", title="Edge Sentiment")
+    ax.set_title('Before death: '+title, fontsize=14, fontweight="bold")
+    ax.axis("off")
+    plt.tight_layout()
+
+    os.makedirs("networks", exist_ok=True)
+    out_path = os.path.join("networks", f"{title}.png")
+    plt.savefig(out_path, dpi=300, bbox_inches="tight")
+    plt.close(fig)
+    print(f"Image saved to: {out_path}")
+
+
+
+def calculate_sentiment_evolution(graphs_list):
+    
+    #main_characters=["Lawrence John Wargrave",'Owen']   #if we want to specify only some characters
+
+    characters_sentiment_evolution={}
+    for ch in main_characters:
+        characters_sentiment_evolution[ch]=[]
+        for step in graphs_list:
+            if ch in step.nodes:
+                sentiment=0
+                n=0
+                connected_edges=step.edges(ch, data=True)
+                for u, v, attributes in connected_edges:
+                    value = attributes.get('sentiment', 0.0)
+                    sentiment += value
+                    n +=1                        
+            else:
+                sentiment=0
+            
+            if n==0:
+                n=1
+            sentiment=sentiment/n   #we keep this line if we want to calculate the average sentiment, otherwise we calculate the total sentiment
+            characters_sentiment_evolution[ch].append(sentiment)
+
+    #print(characters_sentiment_evolution)
+    labels=list(deaths.keys())
+    plot_sentiment_evolution(labels, characters_sentiment_evolution)
+
+
+
+def vecchia_plot_sentiment_evolution(labels, characters_data):
+    """
+    Plots sentiment evolution for multiple characters with background color coding.
+    """
+    x_ticks = list(range(len(labels)))
+    # Centriamo i punti tra le tacche se necessario, 
+    # ma solitamente x_ticks va bene per la timeline
+    x_points = x_ticks 
+    
+    fig, ax = plt.subplots(figsize=(12, 7))
+
+    for name, scores in characters_data.items():
+        ax.plot(x_points, scores, marker='o', label=name, linewidth=2, markersize=6)
+
+    # Linea marcata sullo zero per separare Positivo/Negativo
+    ax.axhline(0, color='black', linewidth=1.5, linestyle='-')
+
+    # Colorazione dello sfondo: Verde (positivo) e Rosso (negativo)
+    # Calcoliamo i limiti attuali per coprire tutto lo sfondo
+    ymin, ymax = ax.get_ylim()
+    limit = max(abs(ymin), abs(ymax), 0.1) # Assicura un range minimo
+    
+    ax.axhspan(0, limit, facecolor='green', alpha=0.1)  # Verde tenue sopra
+    ax.axhspan(-limit, 0, facecolor='red', alpha=0.1)    # Rosso tenue sotto
+    ax.set_ylim(-limit, limit) # Centra il grafico sullo zero
+
+    # Formattazione assi
+    ax.set_xticks(x_ticks)
+    ax.set_xticklabels(labels, rotation=45)
+    ax.set_xlabel("Timeline (Deaths)")
+    ax.set_ylabel("Average Sentiment Score")
+    ax.set_title("Character Sentiment Evolution - And Then There Were None")
+    
+    ax.grid(True, linestyle='--', alpha=0.3)
+    ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+    
+    plt.tight_layout()
+    plt.show()
+
+
+
+def plot_sentiment_evolution(labels, characters_data):
+    # Usiamo lo stesso sfasamento della tua funzione originale
+    x_ticks = list(range(len(labels)))
+    x_points = [x - 0.5 for x in x_ticks]
+    
+    fig, ax = plt.subplots(figsize=(12, 7))
+
+    for name, scores in characters_data.items():
+        # I punti ora cadono "tra" le etichette delle X
+        ax.plot(x_points, scores, marker='o', label=name, linewidth=2)
+
+    # Linea dello zero
+    ax.axhline(0, color='black', linewidth=1.2, linestyle='-', alpha=0.8)
+
+    # Gestione dinamica dei limiti per le aree colorate
+    # Prendiamo il valore massimo assoluto per rendere il grafico simmetrico
+    all_scores = [s for sublist in characters_data.values() for s in sublist]
+    max_val = max([abs(s) for s in all_scores]) * 1.1 if all_scores else 1.0
+
+    # Aree colorate: Verde sopra, Rosso sotto
+    ax.axhspan(0, max_val, facecolor='green', alpha=0.08)
+    ax.axhspan(-max_val, 0, facecolor='red', alpha=0.08)
+    ax.set_ylim(-max_val, max_val)
+
+    # Formattazione assi (mantenendo la tua logica dei ticks)
+    ax.set_xticks(x_ticks)
+    ax.set_xticklabels(labels, rotation=45)
+    ax.set_xlim(-1, len(labels) - 1)
+    
+    ax.set_xlabel("Timeline (Deaths)")
+    ax.set_ylabel("Sentiment Score")
+    ax.set_title("Character Sentiment Evolution - And Then There Were None")
+    
+    ax.grid(True, linestyle='--', alpha=0.3)
+    ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+    
+    plt.tight_layout()
+    plt.show()
+
+
+def create_png_multidigraph(G, filename='graph.png'):
+    """
+    Crea un'immagine PNG del multidigraph con etichette sugli edges basate sull'attributo 'label'.
+
+    Parametri:
+    - G: networkx.MultiDiGraph
+    - filename: str, percorso del file PNG da salvare
+    """
+    pos = nx.spring_layout(G, k=1.5, iterations=50, seed=42)
+    fig, ax = plt.subplots(figsize=(14, 10))
+    nx.draw(G, pos, with_labels=True, node_size=800, font_size=10, node_color='skyblue', edge_color='gray', ax=ax)
+    
+    edge_labels = {}
+    for u, v, key, data in G.edges(keys=True, data=True):
+        label = data.get('label', '')
+        edge_labels[(u, v, key)] = label
+    
+    nx.draw_networkx_edge_labels(G, pos, edge_labels, font_size=7, ax=ax)
+    
+    plt.title('Multidigraph Visualization with Edge Labels')
+    plt.axis('off')
+    plt.savefig(filename, dpi=300, bbox_inches='tight')
+    plt.close()
+    print(f"Grafo salvato come {filename}")
+
+
+def plot_degrees(G):
+
+    print(type(G))
+    # 1. Estrai e ordina i dati (dal personaggio con più archi a quello con meno)
+    # G.degree() restituisce una vista (nodo, grado) che tiene conto degli archi multipli
+    dati_ordinati = sorted(G.degree(), key=lambda x: x[1], reverse=True)
+    nomi, gradi = zip(*dati_ordinati)
+
+    # 2. Configura il grafico
+    plt.figure(figsize=(10, 6))
+    barre = plt.bar(nomi, gradi, color='skyblue', edgecolor='navy')
+
+    # 3. Aggiungi il numero esatto sopra ogni barra
+    for barra in barre:
+        yval = barra.get_height()
+        plt.text(barra.get_x() + barra.get_width()/2, yval + 0.05, int(yval), ha='center', va='bottom')
+
+    # 4. Estetica e labels
+    plt.title("Number of Edges", fontsize=14)
+    plt.ylabel("Count of Edges")
+    plt.xticks(rotation=90)
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+
+    plt.tight_layout()
+
+    # Salvataggio
+    output_dir = 'network_analysis/networks'
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    
+    plt.savefig(f'{output_dir}/degrees.png', dpi=300, bbox_inches='tight')
+
+
+def disegna_grafo_indiani(G):
+    # Calcoliamo lo spessore in base a quante connessioni ci sono tra i nodi
+    # Creiamo un grafo semplice per la visualizzazione, salvando il conteggio
+    display_graph = nx.Graph()
+    for u, v, data in G.edges(data=True):
+        if display_graph.has_edge(u, v):
+            display_graph[u][v]['weight'] += 1
+        else:
+            display_graph.add_edge(u, v, weight=1)
+
+    plt.figure(figsize=(12, 8))
+    pos = nx.spring_layout(display_graph, seed=42) # Layout circolare o a molla
+    
+    # Estraiamo i pesi per definire lo spessore degli archi
+    weights = [display_graph[u][v]['weight'] * 2 for u, v in display_graph.edges()]
+
+    nx.draw(
+        display_graph, pos, 
+        with_labels=True, 
+        node_color='skyblue', 
+        node_size=3000, 
+        font_size=10, 
+        font_weight='bold', 
+        width=weights,  # Qui applichiamo lo spessore variabile
+        edge_color='gray'
+    )
+    
+    plt.title("Rapporti tra i personaggi di 'Dieci Piccoli Indiani'")
+    plt.show()
+
+
+def visualize_simple_network(G, title):
+    # 1. Conversione a grafo pesato semplice (stessa logica precedente)
+    if isinstance(G, (nx.MultiGraph, nx.MultiDiGraph)):
+        G_simple = nx.Graph()
+        for u, v in G.edges():
+            if G_simple.has_edge(u, v):
+                G_simple[u][v]['weight'] += 1
+            else:
+                G_simple.add_edge(u, v, weight=1)
+    else:
+        G_simple = G
+
+    # 2. Layout
+    pos = nx.spring_layout(G_simple, k=2, iterations=50, seed=42)
+
+    # 3. Configurazione Archi (spessore e colore in base al peso)
+    edge_weights = [G_simple[u][v]['weight'] for u, v in G_simple.edges()]
+    max_w = max(edge_weights) if edge_weights else 1
+    edge_widths = [0.5 + (w / max_w) * 3 for w in edge_weights]
+    
+    # Scala di grigi per gli archi
+    edge_colors = [(1 - w/max_w * 0.85, 1 - w/max_w * 0.85, 1 - w/max_w * 0.85) for w in edge_weights]
+
+    # 4. Figura
+    fig, ax = plt.subplots(figsize=(14, 10))
+
+    # --- DISEGNO NODI (Colore e dimensione fissi) ---
+    nx.draw_networkx_nodes(G_simple, pos,
+                           node_size=800,
+                           node_color='skyblue', # Colore unico
+                           edgecolors='navy',    # Bordo del nodo
+                           linewidths=1,
+                           ax=ax)
+
+    # --- DISEGNO LABELS ---
+    nx.draw_networkx_labels(G_simple, pos,
+                            font_size=9,
+                            font_weight='bold',
+                            ax=ax)
+
+    # --- DISEGNO ARCHI ---
+    nx.draw_networkx_edges(G_simple, pos,
+                           edge_color=edge_colors,
+                           width=edge_widths,
+                           alpha=0.7,
+                           ax=ax)
+
+    ax.set_title(title, fontsize=16)
+    ax.axis('off')
+    plt.tight_layout()
+
+    # Salvataggio
+    output_dir = 'network_analysis/networks'
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    
+    plt.savefig(f'{output_dir}/{title}.png', dpi=300, bbox_inches='tight')
