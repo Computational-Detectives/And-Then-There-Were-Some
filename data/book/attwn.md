@@ -154,7 +154,7 @@ Should he stop here for a drink, or push on? Heaps of time! Only another hundred
 
 This island place ought to be rather good fun——if the weather lasted. Who were these Owens, he wondered? Rich and stinking, probably. Badger was rather good at nosing people like that out. Of course, he had to, poor old chap, with no money of his own. ...
 
-Hope they'd do one well in drinks. Never knew with these fellows who'd madetheir money and weren't born to it. Pity that story about Gabrielle Turl having bought Indian Island wasn't true. He'd like to have been in with that film star crowd.
+Hope they'd do one well in drinks. Never knew with these fellows who'd made their money and weren't born to it. Pity that story about Gabrielle Turl having bought Indian Island wasn't true. He'd like to have been in with that film star crowd.
 
 Oh, well, he supposed there'd be a few girls there. ..
 
@@ -185,7 +185,7 @@ He went over things carefully and conscientiously in his mind.
 
 He stood up and scrutinized himself anxiously in the glass. The face reflected there was of a slightly military cast with a moustache. There was very little expression in it. The eyes were grey and set rather close together.
 
-"Might be a Major," said Mr. Blore. "No, I forgot. There's that old military gent.He'd spot me at once." "South Africa," said Mr. Blore, "that's my line! None of these people have anything to do with South Africa, and I've just been reading that travel folder so I can talk about it all right."
+"Might be a Major," said Mr. Blore. "No, I forgot. There's that old military gent. He'd spot me at once." "South Africa," said Mr. Blore, "that's my line! None of these people have anything to do with South Africa, and I've just been reading that travel folder so I can talk about it all right."
 
 Fortunately there were all sorts and types of colonials.
 
@@ -231,7 +231,7 @@ The porters were piling luggage on the taxi. Inside, Mr. Justice Wargrave said w
 
 A very distinguished old gentleman, she thought to herself. Quite unlike the usual type of man in seaside guest houses. Evidently Mrs. or Miss Oliver had good connections. ...
 
-Mr. Justice Wargrave inquired: "Do you know this part of the world well?" "I have been to Cornwall and to Torquay, but this is my first visit to this part of Devon." The judge said: "I also am unacquainted with this part of the world." The taxi drove off. The driver of the second taxi said: "Like to sit inside while you're waiting?" Vera said decisively: "Not at all." Captain Lombard smiled. He said: "That sunny wall looks more attractive. Unless you'd rather go inside the station?" "No, indeed. It's so delightful to get out of that stuffy train." He answered: "Yes, travelling by train is rather trying in this weather." Vera said onventionally: "I do hope it lasts——the weather, I mean. Our English summers are so treacherous." With a slight lack of originality Lombard asked: "Do you know this part of the world well?" "No, I've never been here before." She added quickly, conscientiously determined to make her position clear at once, "I haven't even seen my employer yet." "Your employer?" "Yes, I'm Mrs. Owen's secretary." "Oh, I see."
+Mr. Justice Wargrave inquired: "Do you know this part of the world well?" "I have been to Cornwall and to Torquay, but this is my first visit to this part of Devon." The judge said: "I also am unacquainted with this part of the world." The taxi drove off. The driver of the second taxi said: "Like to sit inside while you're waiting?" Vera said decisively: "Not at all." Captain Lombard smiled. He said: "That sunny wall looks more attractive. Unless you'd rather go inside the station?" "No, indeed. It's so delightful to get out of that stuffy train." He answered: "Yes, travelling by train is rather trying in this weather." Vera said conventionally: "I do hope it lasts——the weather, I mean. Our English summers are so treacherous." With a slight lack of originality Lombard asked: "Do you know this part of the world well?" "No, I've never been here before." She added quickly, conscientiously determined to make her position clear at once, "I haven't even seen my employer yet." "Your employer?" "Yes, I'm Mrs. Owen's secretary." "Oh, I see."
 
 Just imperceptibly his manner changed. It was slightly more assured, easier in tone. He said: "Isn't that rather unusual?" Vera laughed. "Oh, no, I don't think so. Her own secretary was suddenly taken ill and she wired to an agency for a substitute and they sent me." "So that was it. And suppose you don't like the post when you've got there?" Vera laughed again. "Oh, it's only temporary——a holiday post. I've got a permanent job at a girls' school. As a matter of fact I'm rightfully thrilled at the prospect of seeing Indian Island. There's been such a lot about it in the papers. Is it really very fascinating?" Lombard said: "I don't know. I haven't seen it." "Oh, really? The Owens are frightfully keen on it, I suppose. What are they like? Do tell me." Lombard thought: Awkward, this——am I supposed to have met them or not? He said quickly: "There's a wasp crawling up your arm. No——keep quite still." He made a convincing pounce. "There. It's gone!" "Oh, thank you. There are a lot of wasps about this summer." "Yes, I suppose it's the heat. Who are we waiting for, do you know?" "I haven't the least idea."
 
@@ -296,7 +296,7 @@ Fred Narracott sat by the engine thinking to himself that this was a queer lot. 
 
 Not at all like Mr. Elmer Robson's parties. A faint grin came to Fred Narracott's lips as he remembered the millionaire's guests. That had been a party——if you like and the drink they'd got through!
 
-This Mr. Owen must be a very different sort of gentleman. Funny it was, thought Fred, that he'd never yet set eyes on Owen——or his Missus either. Never been down here yet, he hadn't. Everything ordered and paid for by that Mr. Morris.Instructions always very clear and payment prompt, but it was odd, all the same. The papers said there was some mystery about Owen. Mr. Narracott agreed with them.
+This Mr. Owen must be a very different sort of gentleman. Funny it was, thought Fred, that he'd never yet set eyes on Owen——or his Missus either. Never been down here yet, he hadn't. Everything ordered and paid for by that Mr. Morris. Instructions always very clear and payment prompt, but it was odd, all the same. The papers said there was some mystery about Owen. Mr. Narracott agreed with them.
 
 Perhaps, after all, it was Miss Gabrielle Turl who had bought the island. But that theory departed from him as he surveyed his passengers. Not this lot——none of them looked likely to have anything to do with a film star.
 
@@ -557,7 +557,7 @@ Dr. Armstrong re-entered the room. "She's all right," he said. "I've given her a
 
 Several of the men refilled their glasses. A moment or two later Rogers re-entered the room.
 
-Mr. Justice Wargrave took charge of the proceedings. The room became an impromptu court of law.The judge said: "Now then, Rogers, we must get to the bottom of this. Who is this Mr. Owen?" Rogers stared. "He owns this place, sir." "I am aware of that fact. What I want you to tell me is what you yourself know about the man." Rogers shook his head. "I can't say, sir. You see, I've never seen him." There was a faint stir in the room.
+Mr. Justice Wargrave took charge of the proceedings. The room became an impromptu court of law. The judge said: "Now then, Rogers, we must get to the bottom of this. Who is this Mr. Owen?" Rogers stared. "He owns this place, sir." "I am aware of that fact. What I want you to tell me is what you yourself know about the man." Rogers shook his head. "I can't say, sir. You see, I've never seen him." There was a faint stir in the room.
 
 General Macarthur said: "You've never seen him? What d'yer mean?" "We've only been here just under a week, sir, my wife and I. We were engaged by letter, through an agency. The Regina Agency in Plymouth."
 
@@ -656,7 +656,7 @@ He stood erect, squaring his shoulders. He barked out: "Best really to leave thi
 
 General Macarthur sat down. His shaking hand pulled at his moustache. The effort to speak had cost him a good deal.
 
-Lombard spoke. His eyes were amused. He said: "About those natives——-" Marston said: "What about them?" Philip Lombard grinned. "Story's quite true! I left 'em! Matter of self-preservation. We were lost in the bush. I and a couple of other fellows took what food there was and cleared out."
+Lombard spoke. His eyes were amused. He said: "About those natives——." Marston said: "What about them?" Philip Lombard grinned. "Story's quite true! I left 'em! Matter of self-preservation. We were lost in the bush. I and a couple of other fellows took what food there was and cleared out."
 
 General Macarthur said sternly: "You abandoned your men——left them to starve?" Lombard said: "Not quite the act of a pukka sahib, I'm afraid. But self-preservation's a man's first duty. And natives don't mind dying, you know. They don't feel about it as Europeans do."
 

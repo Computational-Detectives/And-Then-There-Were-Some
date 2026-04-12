@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 .env
 .venv/
+.venv_coref/
 .DS_Store
 .idea/
 .vscode/
@@ -10,9 +11,12 @@ lib/
 
 # Ignore auxiliary directories
 data/book/scan
+data/llm_config
+data/models/
 archive/
 gen/
 webapp/
+artefacts/
 
 
 # Ignore Jupyter Notebooks
@@ -21,11 +25,23 @@ webapp/
 
 # Ignore all md-files except for README.md
 *.md
-README.md
+!README.md
 
 # Ignore other files
-# *.txt
+*.txt
+*.zip
 src/svo_graph_creation_deprecated.py
+src/extraction_old
+src/analysis
+resolve_triple_conflicts.py
+run_analysis_orig.py
+download_spacy_models.py
+model_server.py
+model_server.log
+src/verification/adjust_shift.py
 
 # Ignore BookNLP Output files
 # out/
+out_latest/
+out_new_coref/
+out_owen/
