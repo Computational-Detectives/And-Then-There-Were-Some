@@ -29,7 +29,7 @@ pip install -r requirements_coref.txt
 ```
 
 ## Run Extraction Pipeline
-To run the whole extraction pipeline from the project root with the main VENV activated as shown below. This will store the results in `out/`.
+To run the whole extraction pipeline from the project root with the main VENV activated as shown below. This will store the results in `out/`. Source files for data extraction are located in `src/extraction`.
 
 ```bash
 # Run script (can be run as-is, no arguments need to be passed)
@@ -105,9 +105,9 @@ options:
   -v, --verbose      Verbose output
 ```
 
-## Run Analysis Pipeline
+## Run Ego-Network Analysis
 To reproduce the results obtained in the study, run `run_analysis.py`. This will run `ego_network.py`,
-`ego_borda.py`, and `ego_borda_viz.py` at once to get the full suite of results.
+`ego_borda.py`, and `ego_borda_viz.py` at once to get the full suite of results. The source files for the ego-network analysis are located in `src/analysis`.
 
 *Note: Currently, only the `ego` option is available. The option `timeline` will not produce any results.*
 

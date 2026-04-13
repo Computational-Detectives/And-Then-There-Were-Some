@@ -82,7 +82,7 @@ INTERVALS = [
 # MODEL SETTINGS
 # ============================
 # SPACY_MODEL = "data/models/en_core_web_trf"
-SPACY_MODEL = "data/models/en_core_web_sm"
+SPACY_MODEL = "en_core_web_sm" # "data/models/en_core_web_sm"
 
 # ============================
 # COREF WINDOW SETTINGS

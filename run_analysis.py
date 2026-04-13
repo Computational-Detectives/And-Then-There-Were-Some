@@ -30,15 +30,15 @@ from src.extraction.utils import (
     print_information
 )
 
-from src.analysis.timeline_data import (
-    load_victims as tl_load_victims,
-    build_mention_series,
-)
+# from src.analysis.timeline_data import (
+#     load_victims as tl_load_victims,
+#     build_mention_series,
+# )
 
-from src.analysis.character_timeline import (
-    run_mode,
-    run_hierarchy,
-)
+# from src.analysis.character_timeline import (
+#     run_mode,
+#     run_hierarchy,
+# )
 
 from src.analysis.ego_network import (
     load_victims as ego_load_victims,
@@ -132,6 +132,7 @@ def add_timeline_args(parser: argparse.ArgumentParser) -> None:
 
 def run_timeline(args: argparse.Namespace) -> None:
     """Execute the character-timeline analysis."""
+    return
     victims = tl_load_victims(DATA_DIR, OUT_DIR)
 
     # Filter characters if requested
