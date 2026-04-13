@@ -15,7 +15,7 @@ from .utils import (
     build_variant_index, match_name,
     print_headers, print_information,
     load_spacy_model, load_gliner_model,
-    load_text, snap_span
+    load_text, snap_span, log_print
 )
 
 
@@ -57,10 +57,10 @@ def print_verbose_stats(all_spans, alias_dict, review_items, clean_names):
 
     # NER source breakdown
     source_counts = Counter(s["source"] for s in all_spans)
-    print("    NER Source Breakdown:")
+    log_print("    NER Source Breakdown:")
     for src, count in source_counts.most_common():
         pct = count / len(all_spans) * 100 if all_spans else 0
-        print(f"      {src:15s} {count:5d} spans  ({pct:5.1f}%)")
+        log_print(f"      {src:15s} {count:5d} spans  ({pct:5.1f}%)")
 
     # Per-character coverage: how many spans matched each canonical ID
     char_counts = Counter()
@@ -68,40 +68,40 @@ def print_verbose_stats(all_spans, alias_dict, review_items, clean_names):
         char_counts[info["fullname"]] += sum(
             1 for s in all_spans if s["text"] == form
         )
-    print("\n    Per-Character Span Counts (auto-accepted):")
+    log_print("\n    Per-Character Span Counts (auto-accepted):")
     for name, count in char_counts.most_common():
-        print(f"      {name:35s} {count:5d} spans")
+        log_print(f"      {name:35s} {count:5d} spans")
 
     # Canonical coverage check
     all_canonical = set(clean_names["fullname"].tolist())
     matched_canonical = {info["fullname"] for info in alias_dict.values()}
     missing = all_canonical - matched_canonical
     if missing:
-        print(f"\n    ⚠ Missing canonical characters ({len(missing)}):")
+        log_print(f"\n    ⚠ Missing canonical characters ({len(missing)}):")
         for name in sorted(missing):
-            print(f"      - {name}")
+            log_print(f"      - {name}")
     else:
-        print(f"\n    ✓ All {len(all_canonical)} canonical characters found in alias dict")
+        log_print(f"\n    ✓ All {len(all_canonical)} canonical characters found in alias dict")
 
     # Match score distribution
     scores = [info["score"] for info in alias_dict.values()]
     if scores:
-        print(f"\n    Match Score Distribution:")
-        print(f"      Min: {min(scores):.1f}  Max: {max(scores):.1f}  "
+        log_print(f"\n    Match Score Distribution:")
+        log_print(f"      Min: {min(scores):.1f}  Max: {max(scores):.1f}  "
                 f"Mean: {sum(scores)/len(scores):.1f}  "
                 f"Median: {sorted(scores)[len(scores)//2]:.1f}")
 
     # Review items summary
     review_statuses = Counter(r["status"] for r in review_items)
     if review_items:
-        print(f"\n    Review Items by Status:")
+        log_print(f"\n    Review Items by Status:")
         for status, count in review_statuses.most_common():
-            print(f"      {status:15s} {count:5d}")
+            log_print(f"      {status:15s} {count:5d}")
 
     # Full alias dictionary
     print_headers("ALIAS DICTIONARY", "-", prefix="\n")
     for form, info in sorted(alias_dict.items(), key=lambda x: x[1]["canonical_id"]):
-        print(f"    {form:30s} → {info['fullname']:30s} (score: {info['score']:.1f})")
+        log_print(f"    {form:30s} → {info['fullname']:30s} (score: {info['score']:.1f})")
 
 
 # ============================================================================

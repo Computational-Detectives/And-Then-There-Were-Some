@@ -39,9 +39,18 @@ download_spacy_models.py
 model_server.py
 model_server.log
 src/verification/adjust_shift.py
+src/analysis/ego_network_latest_but_dep.py
+src/analysis/timeline_data.py
+src/analysis/character_timeline.py
+src/analysis/visualization/timeline_viz.py
+
 
 # Ignore BookNLP Output files
 # out/
 out_latest/
 out_new_coref/
 out_owen/
+out/ego_network/rank
+out/*.csv
+out/*.html
+out/*.png

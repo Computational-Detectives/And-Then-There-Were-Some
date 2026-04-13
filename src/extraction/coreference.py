@@ -955,15 +955,13 @@ def run_coref_pass(
     """
     Run coreference resolution over all windows sequentially.
 
-    Improvements vs. original
-    -------------------------
-    * active_char_ids is computed before each window and passed to
-      map_clusters_to_characters() as a hard constraint on fuzzy-only
+    Notes
+    -----
+    * `active_char_ids` is computed before each window and passed to
+      `map_clusters_to_characters()` as a hard constraint on fuzzy-only
       attributions.
-    * Deduplication bug fixed: all_resolved.extend() is removed.
-      Spans are inserted only through the seen-key guard (IMPROVEMENT 5).
-    * Window-level sentence IDs are tracked so track_active_characters()
-      receives meaningful current_sid values.
+    * Window-level sentence IDs are tracked so `track_active_characters()`
+      receives meaningful `current_sid` values.
     """
     all_resolved:  List[Dict[Any]]       = list(already_resolved)
     all_unknown:   List[List[Dict[Any]]] = []
@@ -1032,7 +1030,7 @@ def main(
     log_path = out_dir / "pipeline.log"
     setup_pipeline_logger(log_path=log_path)
 
-    print_headers("STAGE 2 — COREFERENCE RESOLUTION (revised)", "=", prefix="\n")
+    print_headers("STAGE 2 — COREFERENCE RESOLUTION", "=", prefix="\n")
 
     # --------------------- LOAD INPUTS ---------------------
     print_information("Loading inputs...", 1, "\n")

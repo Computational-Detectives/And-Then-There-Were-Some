@@ -1,0 +1,87 @@
+triple_key	row_idx	canonical_id_left	name_left	role_left	word	lemma	index	negated	gender_left	canonical_id_right	name_right	role_right	gender_right	corrected_agent	corrected_verb	corrected_patient	changed	changes_applied	is_new	agent_byte_start	agent_byte_end	verb_byte_start	verb_byte_end	patient_byte_start	patient_byte_end
+0_9_31071_give	172	0	Lawrence John Wargrave	agent	give	give	31071	false	m	9	Ethel Rogers	patient	f	Edward George Armstrong	give	Ethel Rogers	true	agent: "Lawrence John Wargrave" → "Edward George Armstrong"	false						
+3_4_31081_stared	173	3	Edward George Armstrong	agent	stared	star	31081	false	m	4	William Henry Blore	patient	m	Edward George Armstrong	stared	William Henry Blore	false		false						
+10_2_31099_said	174	10	Isaac Morris	agent	said	say	31099	false	m	2	Philip Lombard	patient	m	INCORRECT_TRIPLE	said	Philip Lombard	true	agent: "" → "INCORRECT_TRIPLE"	false						
+0_9_31103_give	175	0	Lawrence John Wargrave	agent	give	give	31103	false	m	9	Ethel Rogers	patient	f	Edward George Armstrong	give	Ethel Rogers	true	agent: "Lawrence John Wargrave" → "Edward George Armstrong"	false						
+4_9_31133_gave	176	4	William Henry Blore	agent	gave	give	31133	false	m	9	Ethel Rogers	patient	f	Edward George Armstrong	gave	Ethel Rogers	true	agent: "William Henry Blore" → "Edward George Armstrong"	false						
+0_9_31167_give	177	0	Lawrence John Wargrave	agent	give	give	31167	true	m	9	Ethel Rogers	patient	f	Edward George Armstrong	give	Ethel Rogers	true	agent: "Lawrence John Wargrave" → "Edward George Armstrong"	false						
+3_9_31255_gave	178	3	Edward George Armstrong	agent	gave	give	31255	false	m	9	Ethel Rogers	patient	f	Edward George Armstrong	gave	Ethel Rogers	false		false						
+2_4_31373_said	179	2	Philip Lombard	agent	said	say	31373	false	m	4	William Henry Blore	patient	m	Philip Lombard	said	William Henry Blore	false		false						
+10_4_31448_shut	180	10	Isaac Morris	agent	shut	shut	31448	false	m	4	William Henry Blore	patient	m	Philip Lombard	shut	William Henry Blore	true	agent: "Isaac Morris" → "Philip Lombard"	false						
+10_0_31468_is	181	10	Isaac Morris	agent	is	be	31468	false	m	0	Lawrence John Wargrave	patient	m	INCORRECT_TRIPLE	is	Lawrence John Wargrave	true	agent: "Isaac Morris" → "INCORRECT_TRIPLE"	false						
+10_2_31684_offered	182	10	Isaac Morris	agent	offered	offer	31684	false	m	2	Philip Lombard	patient	m	Isaac Morris	offered	Philip Lombard	false		false						
+10_0_31744_told	183	10	Isaac Morris	agent	told	tell	31744	false	m	0	Lawrence John Wargrave	patient	m	Isaac Morris	told	Philip Lombard	true	patient: "Lawrence John Wargrave" → "Philip Lombard"	false						
+8_1_32004_standing	184	8	Thomas Rogers	agent	standing	stand	32004	false	m	1	Vera Elizabeth Claythorne	patient	f	INCORRECT_TRIPLE	standing	Vera Elizabeth Claythorne	true	agent: "I" → "INCORRECT_TRIPLE"	false						
+8_1_32143_followed	185	8	Thomas Rogers	agent	followed	follow	32143	false	m	1	Vera Elizabeth Claythorne	patient	f	Thomas Rogers	followed	Vera Elizabeth Claythorne	false		false						
+5_1_32195_came	186	5	Emily Brent	agent	came	come	32195	false	f	1	Vera Elizabeth Claythorne	patient	f	INCORRECT_TRIPLE	came	Vera Elizabeth Claythorne	true	agent: "Emily Brent" → "INCORRECT_TRIPLE"	false						
+8_5_32361_addressed	187	8	Thomas Rogers	agent	addressed	address	32361	false	m	5	Emily Brent	patient	f	Thomas Rogers	addressed	Emily Brent	false		false						
+8_6_32431_inform	188	8	Thomas Rogers	agent	inform	inform	32431	false	m	6	John Gordon Macarthur	patient	m	Thomas Rogers	inform	John Gordon Macarthur	false		false						
+0_1_32460_left	189	0	Lawrence John Wargrave	agent	left	leave	32460	false	m	1	Vera Elizabeth Claythorne	patient	f	INCORRECT_TRIPLE	left	Vera Elizabeth Claythorne	true	agent: "Lawrence John Wargrave" → "INCORRECT_TRIPLE"	false						
+0_8_32467_heard	190	0	Lawrence John Wargrave	agent	heard	hear	32467	false	m	8	Thomas Rogers	patient	m	Edward George Armstrong	heard	Thomas Rogers	true	agent: "" → "Edward George Armstrong"	false						
+8_1_32832_saw	191	8	Thomas Rogers	agent	saw	see	32832	false	m	1	Vera Elizabeth Claythorne	patient	f	Thomas Rogers	saw	Vera Elizabeth Claythorne	false		false						
+3_0_33353_tell	192	3	Edward George Armstrong	agent	tell	tell	33353	false	m	0	Lawrence John Wargrave	patient	m	Edward George Armstrong	tell	Lawrence John Wargrave	false		false						
+0_1_33528_turned	193	0	Lawrence John Wargrave	agent	turned	turn	33528	false	m	1	Vera Elizabeth Claythorne	patient	f	Lawrence John Wargrave	turned	Vera Elizabeth Claythorne	false		false						
+0_4_33683_ask	194	0	Lawrence John Wargrave	agent	ask	ask	33683	false	m	4	William Henry Blore	patient	m	Lawrence John Wargrave	ask	William Henry Blore	false		false						
+0_2_33784_said	195	0	Lawrence John Wargrave	agent	said	say	33784	false	m	2	Philip Lombard	patient	m	Lawrence John Wargrave	said	Philip Lombard	false		false						
+0_1_34369_seeing	196	0	Lawrence John Wargrave	agent	seeing	see	34369	false	m	1	Vera Elizabeth Claythorne	patient	f	Lawrence John Wargrave	seeing	Vera Elizabeth Claythorne	false		false						
+6_1_34394_like	197	6	John Gordon Macarthur	agent	like	like	34394	true	m	1	Vera Elizabeth Claythorne	patient	f	Lawrence John Wargrave	like	Vera Elizabeth Claythorne	true	agent: "John Gordon Macarthur" → "Lawrence John Wargrave"	false						
+0_5_34428_bowed	198	0	Lawrence John Wargrave	agent	bowed	bow	34428	false	m	5	Emily Brent	patient	f	Lawrence John Wargrave	bowed	Emily Brent	false		false						
+2_8_34589_said	199	2	Philip Lombard	agent	said	say	34589	false	m	8	Thomas Rogers	patient	m	Philip Lombard	said	Thomas Rogers	false		false						
+0_2_34599_looked	200	0	Lawrence John Wargrave	agent	looked	look	34599	false	m	2	Philip Lombard	patient	m	Lawrence John Wargrave	looked	Philip Lombard	false		false						
+8_2_34621_seems	201	8	Thomas Rogers	agent	seems	seem	34621	false	m	2	Philip Lombard	patient	m	INCORRECT_TRIPLE	seems	Philip Lombard	true	agent: "Thomas Rogers" → "INCORRECT_TRIPLE"	false						
+4_0_34691_come	202	4	William Henry Blore	agent	come	come	34691	false	m	0	Lawrence John Wargrave	patient	m	INCORRECT_TRIPLE	come	Lawrence John Wargrave	true	agent: "William Henry Blore" → "INCORRECT_TRIPLE"	false						
+2_9_34759_taken	203	2	Philip Lombard	agent	taken	take	34759	false	m	9	Ethel Rogers	patient	f	Thomas Rogers	taken	Ethel Rogers	true	agent: "Philip Lombard" → "Thomas Rogers"	false						
+8_9_34739_killing	204	8	Thomas Rogers	agent	killing	kill	34739	false	m	9	Ethel Rogers	patient	f	Thomas Rogers	killing	Ethel Rogers	false		false						
+9_8_34751_giving	205	9	Ethel Rogers	agent	giving	give	34751	false	f	8	Thomas Rogers	patient	m	Ethel Rogers	giving	Thomas Rogers	false		false						
+2_8_34788_see	206	2	Philip Lombard	agent	see	see	34788	true	m	8	Thomas Rogers	patient	m	Philip Lombard	see	Thomas Rogers	false		false						
+3_9_35198_gave	207	3	Edward George Armstrong	agent	gave	give	35198	false	m	9	Ethel Rogers	patient	f	Edward George Armstrong	gave	Ethel Rogers	false		false						
+3_8_35409_sent	208	3	Edward George Armstrong	agent	sent	send	35409	false	m	8	Thomas Rogers	patient	m	Edward George Armstrong	sent	Thomas Rogers	false		false						
+0_9_35504_bending	209	0	Lawrence John Wargrave	agent	bending	bend	35504	false	m	9	Ethel Rogers	patient	f	Emily Brent	bending	Ethel Rogers	true	agent: "Lawrence John Wargrave" → "Emily Brent"	false						
+0_9_35504_bending	210	0	Lawrence John Wargrave	agent	bending	bend	35504	false	m	9	Ethel Rogers	patient	f	Emily Brent	bending	Ethel Rogers	true	agent: "Lawrence John Wargrave" → "Emily Brent"	false						
+3_9_35585_gave	211	3	Edward George Armstrong	agent	gave	give	35585	false	m	9	Ethel Rogers	patient	f	Edward George Armstrong	gave	Ethel Rogers	false		false						
+4_0_35667_get	212	4	William Henry Blore	agent	get	get	35667	true	m	0	Lawrence John Wargrave	patient	m	William Henry Blore	get	Lawrence John Wargrave	false		false						
+3_9_35695_given	213	3	Edward George Armstrong	agent	given	give	35695	false	m	9	Ethel Rogers	patient	f	Edward George Armstrong	given	Ethel Rogers	false		false						
+0_6_36364_kill	214	0	Lawrence John Wargrave	agent	kill	kill	36364	false	m	6	John Gordon Macarthur	patient	m	Lawrence John Wargrave	kill	John Gordon Macarthur	false		false						
+4_2_36408_was	215	4	William Henry Blore	agent	was	be	36408	false	m	2	Philip Lombard	patient	m	INCORRECT_TRIPLE	was	Philip Lombard	true	agent: "William Henry Blore" → "INCORRECT_TRIPLE"	false						
+0_4_36549_were	216	0	Lawrence John Wargrave	agent	were	be	36549	false	m	4	William Henry Blore	patient	m	INCORRECT_TRIPLE	were	William Henry Blore	true	agent: "Lawrence John Wargrave" → "INCORRECT_TRIPLE"	false						
+0_5_36692_turned	217	0	Lawrence John Wargrave	agent	turned	turn	36692	false	m	5	Emily Brent	patient	f	Lawrence John Wargrave	turned	Emily Brent	false		false						
+5_1_36718_took	218	5	Emily Brent	agent	took	take	36718	false	f	1	Vera Elizabeth Claythorne	patient	f	Emily Brent	took	Vera Elizabeth Claythorne	false		false						
+1_5_36809_was	219	1	Vera Elizabeth Claythorne	agent	was	be	36809	false	f	5	Emily Brent	patient	f	Vera Elizabeth Claythorne	was	Emily Brent	false		false						
+2_1_36965_frightened	220	2	Philip Lombard	agent	frightened	frighten	36965	false	m	1	Vera Elizabeth Claythorne	patient	f	John Gordon Macarthur	frightened	Vera Elizabeth Claythorne	true	agent: "" → "John Gordon Macarthur"	false						
+2_1_37175_murmured	221	2	Philip Lombard	agent	murmured	murmur	37175	false	m	1	Vera Elizabeth Claythorne	patient	f	Philip Lombard	murmured	Vera Elizabeth Claythorne	false		false						
+10_2_37802_strike	222	10	Isaac Morris	agent	strike	strike	37802	false	m	2	Philip Lombard	patient	m	Vera Elizabeth Claythorne	strike	Philip Lombard	true	agent: "Isaac Morris" → "Vera Elizabeth Claythorne"	false						
+1_0_37900_see	223	1	Vera Elizabeth Claythorne	agent	see	see	37900	true	f	0	Lawrence John Wargrave	patient	m	Vera Elizabeth Claythorne	see	Philip Lombard	true	patient: "Lawrence John Wargrave" → "Philip Lombard"	false						
+2_0_37991_plump	224	2	Philip Lombard	agent	plump	plump	37991	false	m	0	Lawrence John Wargrave	patient	m	Philip Lombard	plump	Lawrence John Wargrave	false		false						
+1_3_38148_answered	225	1	Vera Elizabeth Claythorne	agent	answered	answer	38148	false	f	3	Edward George Armstrong	patient	m	Vera Elizabeth Claythorne	answered	Edward George Armstrong	false		false						
+2_3_38173_put	226	2	Philip Lombard	agent	put	put	38173	false	m	3	Edward George Armstrong	patient	m	Philip Lombard	put	Edward George Armstrong	false		false						
+3_9_38231_gave	227	3	Edward George Armstrong	agent	gave	give	38231	false	m	9	Ethel Rogers	patient	f	Edward George Armstrong	gave	Ethel Rogers	false		false						
+2_3_38306_left	228	2	Philip Lombard	agent	left	leave	38306	true	m	3	Edward George Armstrong	patient	m	Philip Lombard	left	Edward George Armstrong	false		false						
+2_1_38446_looked	229	2	Philip Lombard	agent	looked	look	38446	false	m	1	Vera Elizabeth Claythorne	patient	f	Philip Lombard	looked	Vera Elizabeth Claythorne	false		false						
+10_0_38604_got	230	10	Isaac Morris	agent	got	get	38604	false	m	0	Lawrence John Wargrave	patient	m	INCORRECT_TRIPLE	got	Lawrence John Wargrave	true	agent: "Isaac Morris" → "INCORRECT_TRIPLE"	false						
+3_0_39130_stared	231	3	Edward George Armstrong	agent	stared	star	39130	false	m	0	Lawrence John Wargrave	patient	m	Edward George Armstrong	stared	Lawrence John Wargrave	false		false						
+3_0_39196_stared	232	3	Edward George Armstrong	agent	stared	star	39196	false	m	0	Lawrence John Wargrave	patient	m	Edward George Armstrong	stared	Lawrence John Wargrave	false		false						
+2_3_40887_found	233	2	Philip Lombard	agent	found	find	40887	false	m	3	Edward George Armstrong	patient	m	Philip Lombard	found	Edward George Armstrong	false		false						
+0_4_40901_had roused	234	0	Lawrence John Wargrave	agent	had roused	have rouse	40901	false	m	4	William Henry Blore	patient	m	INCORRECT_TRIPLE	had roused	William Henry Blore	true	agent: "Lawrence John Wargrave" → "INCORRECT_TRIPLE"	false						
+5_0_41157_assure	235	5	Emily Brent	agent	assure	assure	41157	false	f	0	Lawrence John Wargrave	patient	m	Emily Brent	assure	William Henry Blore	true	agent: "" → "Emily Brent"; patient: "" → "William Henry Blore"	false						
+5_8_41199_seen	236	5	Emily Brent	agent	seen	see	41199	true	f	8	Thomas Rogers	patient	m	Emily Brent	seen	Thomas Rogers	false		false						
+1_0_41310_caught	237	1	Vera Elizabeth Claythorne	agent	caught	catch	41310	false	f	0	Lawrence John Wargrave	patient	m	Vera Elizabeth Claythorne	caught	Lawrence John Wargrave	false		false						
+1_0_41322_made	238	1	Vera Elizabeth Claythorne	agent	made	make	41322	false	f	0	Lawrence John Wargrave	patient	m	Vera Elizabeth Claythorne	made	Lawrence John Wargrave	false		false						
+0_1_41691_stared	239	0	Lawrence John Wargrave	agent	stared	star	41691	false	m	1	Vera Elizabeth Claythorne	patient	f	INCORRECT_TRIPLE	stared	Vera Elizabeth Claythorne	true	agent: "Lawrence John Wargrave" → "INCORRECT_TRIPLE"	false						
+3_1_41873_struck	240	3	Edward George Armstrong	agent	struck	strike	41873	false	m	1	Vera Elizabeth Claythorne	patient	f	Edward George Armstrong	struck	Vera Elizabeth Claythorne	false		false						
+0_4_42409_ask	241	0	Lawrence John Wargrave	agent	ask	ask	42409	false	m	4	William Henry Blore	patient	m	INCORRECT_TRIPLE	ask	William Henry Blore	true	agent: "Lawrence John Wargrave" → "INCORRECT_TRIPLE"	false						
+0_5_42409_ask	242	0	Lawrence John Wargrave	agent	ask	ask	42409	false	m	5	Emily Brent	patient	f	Lawrence John Wargrave	ask	Emily Brent	false		false						
+0_4_42584_ask	243	0	Lawrence John Wargrave	agent	ask	ask	42584	false	m	4	William Henry Blore	patient	m	INCORRECT_TRIPLE	ask	William Henry Blore	true	agent: "Lawrence John Wargrave" → "INCORRECT_TRIPLE"	false						
+0_2_42698_suspect	244	0	Lawrence John Wargrave	agent	suspect	suspect	42698	true	m	2	Philip Lombard	patient	m	William Henry Blore	suspect	Philip Lombard	true	agent: "Lawrence John Wargrave" → "William Henry Blore"	false						
+2_0_42809_take	245	2	Philip Lombard	agent	take	take	42809	false	m	0	Lawrence John Wargrave	patient	m	Philip Lombard	take	William Henry Blore	true	patient: "Lawrence John Wargrave" → "William Henry Blore"	false						
+4_2_43075_stared	246	4	William Henry Blore	agent	stared	star	43075	false	m	2	Philip Lombard	patient	m	William Henry Blore	stared	Philip Lombard	false		false						
+4_0_43112_tell	247	4	William Henry Blore	agent	tell	tell	43112	false	m	0	Lawrence John Wargrave	patient	m	William Henry Blore	tell	Philip Lombard	true	patient: "Lawrence John Wargrave" → "Philip Lombard"	false						
+0_2_43180_got	248	0	Lawrence John Wargrave	agent	got	get	43180	true	m	2	Philip Lombard	patient	m	INCORRECT_TRIPLE	got	Philip Lombard	true	agent: "Lawrence John Wargrave" → "INCORRECT_TRIPLE"	false						
+4_0_43235_demanded	249	4	William Henry Blore	agent	demanded	demand	43235	false	m	0	Lawrence John Wargrave	patient	m	William Henry Blore	demanded	Philip Lombard	true	patient: "Lawrence John Wargrave" → "Philip Lombard"	false						
+14_1_43464_looked	250	14	Hugo Hamilton	agent	looked	look	43464	false	m	1	Vera Elizabeth Claythorne	patient	f	Hugo Hamilton	looked	Vera Elizabeth Claythorne	false		false						
+5_17_43882_dreamed	251	5	Emily Brent	agent	dreamed	dream	43882	false	f	17	Beatrice Taylor	patient	f	Emily Brent	dreamed	Beatrice Taylor	false		false						
+3_5_44420_came	252	3	Edward George Armstrong	agent	came	come	44420	false	m	5	Emily Brent	patient	f	Edward George Armstrong	came	Emily Brent	false		false						
+3_0_44433_give	253	3	Edward George Armstrong	agent	give	give	44433	false	m	0	Lawrence John Wargrave	patient	m	Edward George Armstrong	give	Emily Brent	true	patient: "Lawrence John Wargrave" → "Emily Brent"	false						
+0_5_44489_please	254	0	Lawrence John Wargrave	agent	please	please	44489	false	m	5	Emily Brent	patient	f	INCORRECT_TRIPLE	please	Emily Brent	true	agent: "Lawrence John Wargrave" → "INCORRECT_TRIPLE"	false						
+5_17_44726_see	255	5	Emily Brent	agent	see	see	44726	false	f	17	Beatrice Taylor	patient	f	Emily Brent	see	Beatrice Taylor	false		false						
+1_5_44857_fetch	256	1	Vera Elizabeth Claythorne	agent	fetch	fetch	44857	false	f	5	Emily Brent	patient	f	Vera Elizabeth Claythorne	fetch	Emily Brent	false		false						
+4_5_44919_take	257	4	William Henry Blore	agent	take	take	44919	false	m	5	Emily Brent	patient	f	INCORRECT_TRIPLE	take	Emily Brent	true	agent: "William Henry Blore" → "INCORRECT_TRIPLE"	false						

@@ -121,14 +121,6 @@ def main(args: argparse.Namespace):
     out_dir.mkdir(parents=True, exist_ok=True)
 
     # Configure pipeline logger → file
-    # import logging
-    # pipeline_logger = logging.getLogger("pipeline")
-    # pipeline_logger.setLevel(logging.DEBUG)
-    # fh = logging.FileHandler(log_path, mode="w", encoding="utf-8")
-    # # fh.setFormatter(logging.Formatter("%(asctime)s %(message)s", datefmt="%H:%M:%S"))
-    # fh.setFormatter(logging.Formatter("%(message)s"))
-    # pipeline_logger.addHandler(fh)
-
     log_path = out_dir / "pipeline.log"
     setup_pipeline_logger(log_path=log_path)
 
@@ -276,7 +268,7 @@ def main(args: argparse.Namespace):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="4-Stage Manual Triple Extraction Pipeline",
+        description="4-Stage Custom Triple Extraction Pipeline",
     )
     
     parser.add_argument(

@@ -1,0 +1,12 @@
+Stats	metric	0
+0	total_num_triples_start	374
+1	invalid_triples_total	{'count': 33, '%': '11.00'}
+2	invalid_triples_agent	{'count': 30, '%': '10.00'}
+3	invalid_triples_patient	{'count': 3, '%': '1.00'}
+4	total_triples_corrected	{'count': 22, '%': '7.33'}
+5	total_corrections	{'count': 27, '%': '9.00'}
+6	changes_agent	{'count': 11, '%': '3.67'}
+7	changes_verb	{'count': 7, '%': '2.33'}
+8	changes_patient	{'count': 9, '%': '3.00'}
+9	correct_triples	{'count': 245, '%': '81.67'}
+10	new_triples	{'count': 74, '%': '24.67'}

@@ -1,11 +1,3 @@
-"""
-Visualisation helpers for ego-network analysis.
-
-Functions:
-    visualise_ego         – Interactive pyvis HTML for a single ego-network
-    visualise_shared_alters – Subgraph of shared alters as interactive HTML
-    visualise_heatmap     – Pairwise-overlap heatmap as PNG
-"""
 from __future__ import annotations
 
 import os
@@ -36,6 +28,7 @@ def visualise_ego(
         notebook=False, height="700px", width="100%",
         directed=ego.is_directed(),
     )
+   
     # Use repulsion so alter-alter edges still look tidy, but keep
     # central_gravity at 0 so the pinned ego stays put.
     net.repulsion(
@@ -107,6 +100,7 @@ def visualise_shared_alters(
         node_distance=200, central_gravity=0.2,
         spring_length=250, spring_strength=0.05, damping=0.09,
     )
+    print("PASSED")
 
     for node, attrs in sub.nodes(data=True):
         label = short_name(attrs.get("name", str(node)))
@@ -116,7 +110,10 @@ def visualise_shared_alters(
         else:
             color = ALTER_COLOR
             size = 20
-        net.add_node(node, label=label, color=color, size=size,
+
+        print(f'{node=}, {type(node)=}')
+        print(f'{label=}, {color=}, {size=}, {attrs.get("name", str(node))=}')
+        net.add_node(int(node), label=label, color=color, size=size,
                      title=attrs.get("name", str(node)))
 
     for u, v, attrs in sub.edges(data=True):

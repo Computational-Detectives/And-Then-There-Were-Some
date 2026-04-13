@@ -1,0 +1,967 @@
+{
+  "Mr. Justice Wargrave": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 91.43
+  },
+  "Mr. Owen": {
+    "canonical_id": 37,
+    "fullname": "Owen",
+    "score": 100.0
+  },
+  "Miss Gabrielle Turl": {
+    "canonical_id": 26,
+    "fullname": "Gabrielle Turl",
+    "score": 100.0
+  },
+  "Mr. Merryweather": {
+    "canonical_id": 35,
+    "fullname": "Merryweather",
+    "score": 100.0
+  },
+  "Constance Culmington": {
+    "canonical_id": 25,
+    "fullname": "Constance Culmington",
+    "score": 100.0
+  },
+  "Lady Constance Culmington": {
+    "canonical_id": 25,
+    "fullname": "Constance Culmington",
+    "score": 100.0
+  },
+  "Vera Claythorne": {
+    "canonical_id": 1,
+    "fullname": "Vera Elizabeth Claythorne",
+    "score": 100.0
+  },
+  "Una Nancy Owen": {
+    "canonical_id": 37,
+    "fullname": "Owen",
+    "score": 100.0
+  },
+  "Mrs. Hamilton": {
+    "canonical_id": 16,
+    "fullname": "Mrs. Hamilton",
+    "score": 100.0
+  },
+  "Hugo": {
+    "canonical_id": 14,
+    "fullname": "Hugo Hamilton",
+    "score": 100.0
+  },
+  "Cyril": {
+    "canonical_id": 15,
+    "fullname": "Cyril Ogilvie Hamilton",
+    "score": 100.0
+  },
+  "Philip Lombard": {
+    "canonical_id": 2,
+    "fullname": "Philip Lombard",
+    "score": 100.0
+  },
+  "Captain Lombard": {
+    "canonical_id": 2,
+    "fullname": "Philip Lombard",
+    "score": 100.0
+  },
+  "Mr. Isaac Morris": {
+    "canonical_id": 10,
+    "fullname": "Isaac Morris",
+    "score": 100.0
+  },
+  "Lombard": {
+    "canonical_id": 2,
+    "fullname": "Philip Lombard",
+    "score": 100.0
+  },
+  "Mr. Morris": {
+    "canonical_id": 10,
+    "fullname": "Isaac Morris",
+    "score": 100.0
+  },
+  "Miss Emily Brent": {
+    "canonical_id": 5,
+    "fullname": "Emily Brent",
+    "score": 100.0
+  },
+  "Miss Brent": {
+    "canonical_id": 5,
+    "fullname": "Emily Brent",
+    "score": 100.0
+  },
+  "Emily Brent": {
+    "canonical_id": 5,
+    "fullname": "Emily Brent",
+    "score": 100.0
+  },
+  "Oliver": {
+    "canonical_id": 31,
+    "fullname": "Oliver",
+    "score": 100.0
+  },
+  "General Macarthur": {
+    "canonical_id": 6,
+    "fullname": "John Gordon Macarthur",
+    "score": 100.0
+  },
+  "Owen": {
+    "canonical_id": 37,
+    "fullname": "Owen",
+    "score": 100.0
+  },
+  "Armstrong": {
+    "canonical_id": 3,
+    "fullname": "Edward George Armstrong",
+    "score": 100.0
+  },
+  "Young Elmer Robson": {
+    "canonical_id": 27,
+    "fullname": "Elmer Robson",
+    "score": 100.0
+  },
+  "Dr. Armstrong": {
+    "canonical_id": 3,
+    "fullname": "Edward George Armstrong",
+    "score": 100.0
+  },
+  "was driving his Morris": {
+    "canonical_id": 10,
+    "fullname": "Isaac Morris",
+    "score": 90.0
+  },
+  "Owens": {
+    "canonical_id": 37,
+    "fullname": "Owen",
+    "score": 100.0
+  },
+  "of seeing a doctor": {
+    "canonical_id": 3,
+    "fullname": "Edward George Armstrong",
+    "score": 90.0
+  },
+  "The doctor": {
+    "canonical_id": 3,
+    "fullname": "Edward George Armstrong",
+    "score": 100.0
+  },
+  "Tony Marston": {
+    "canonical_id": 7,
+    "fullname": "Anthony James Marston",
+    "score": 100.0
+  },
+  "Badger": {
+    "canonical_id": 30,
+    "fullname": "Badger Berkeley",
+    "score": 100.0
+  },
+  "Gabrielle Turl": {
+    "canonical_id": 26,
+    "fullname": "Gabrielle Turl",
+    "score": 100.0
+  },
+  "Anthony Marston": {
+    "canonical_id": 7,
+    "fullname": "Anthony James Marston",
+    "score": 100.0
+  },
+  "Mr. Blore": {
+    "canonical_id": 4,
+    "fullname": "William Henry Blore",
+    "score": 100.0
+  },
+  "old Justice Wargrave": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 100.0
+  },
+  "Claythorne": {
+    "canonical_id": 1,
+    "fullname": "Vera Elizabeth Claythorne",
+    "score": 100.0
+  },
+  "Vera": {
+    "canonical_id": 1,
+    "fullname": "Vera Elizabeth Claythorne",
+    "score": 100.0
+  },
+  "Miss Oliver": {
+    "canonical_id": 31,
+    "fullname": "Oliver",
+    "score": 100.0
+  },
+  "The judge": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 100.0
+  },
+  "Mrs. Owen": {
+    "canonical_id": 37,
+    "fullname": "Owen",
+    "score": 100.0
+  },
+  "The Owens": {
+    "canonical_id": 37,
+    "fullname": "Owen",
+    "score": 100.0
+  },
+  "Mr. Lombard": {
+    "canonical_id": 2,
+    "fullname": "Philip Lombard",
+    "score": 100.0
+  },
+  "the judge": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 100.0
+  },
+  "Mr. Davis": {
+    "canonical_id": 4,
+    "fullname": "William Henry Blore",
+    "score": 100.0
+  },
+  "Fred Narracott": {
+    "canonical_id": 11,
+    "fullname": "Fred Narracott",
+    "score": 100.0
+  },
+  "Mr. Elmer Robson": {
+    "canonical_id": 27,
+    "fullname": "Elmer Robson",
+    "score": 100.0
+  },
+  "Fred": {
+    "canonical_id": 11,
+    "fullname": "Fred Narracott",
+    "score": 100.0
+  },
+  "Mr. Narracott": {
+    "canonical_id": 11,
+    "fullname": "Fred Narracott",
+    "score": 100.0
+  },
+  "Narracott": {
+    "canonical_id": 11,
+    "fullname": "Fred Narracott",
+    "score": 100.0
+  },
+  "correct butler": {
+    "canonical_id": 8,
+    "fullname": "Thomas Rogers",
+    "score": 90.0
+  },
+  "The butler": {
+    "canonical_id": 8,
+    "fullname": "Thomas Rogers",
+    "score": 100.0
+  },
+  "old Badger": {
+    "canonical_id": 30,
+    "fullname": "Badger Berkeley",
+    "score": 100.0
+  },
+  "the butler chap": {
+    "canonical_id": 8,
+    "fullname": "Thomas Rogers",
+    "score": 100.0
+  },
+  "Mrs. Rogers": {
+    "canonical_id": 9,
+    "fullname": "Ethel Rogers",
+    "score": 100.0
+  },
+  "people, these Owens": {
+    "canonical_id": 37,
+    "fullname": "Owen",
+    "score": 90.0
+  },
+  "Rogers": {
+    "canonical_id": 8,
+    "fullname": "Thomas Rogers",
+    "score": 100.0
+  },
+  "absence of the Owens": {
+    "canonical_id": 37,
+    "fullname": "Owen",
+    "score": 90.0
+  },
+  "old Wargrave": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 100.0
+  },
+  "A hanging judge": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 90.0
+  },
+  "Wargrave": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 100.0
+  },
+  "Rogers woman": {
+    "canonical_id": 8,
+    "fullname": "Thomas Rogers",
+    "score": 100.0
+  },
+  "Judge": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 100.0
+  },
+  "Anthony": {
+    "canonical_id": 7,
+    "fullname": "Anthony James Marston",
+    "score": 100.0
+  },
+  "That fellow Lombard": {
+    "canonical_id": 2,
+    "fullname": "Philip Lombard",
+    "score": 100.0
+  },
+  "Mrs. Oliver": {
+    "canonical_id": 31,
+    "fullname": "Oliver",
+    "score": 100.0
+  },
+  "Blore": {
+    "canonical_id": 4,
+    "fullname": "William Henry Blore",
+    "score": 100.0
+  },
+  "Edward George Armstrong": {
+    "canonical_id": 3,
+    "fullname": "Edward George Armstrong",
+    "score": 100.0
+  },
+  "Louisa Mary Clees": {
+    "canonical_id": 21,
+    "fullname": "Louisa Mary Clees",
+    "score": 100.0
+  },
+  "Beatrice Taylor": {
+    "canonical_id": 17,
+    "fullname": "Beatrice Taylor",
+    "score": 100.0
+  },
+  "William Henry Blore": {
+    "canonical_id": 4,
+    "fullname": "William Henry Blore",
+    "score": 100.0
+  },
+  "James Stephen Landor": {
+    "canonical_id": 18,
+    "fullname": "James Stephen Landor",
+    "score": 100.0
+  },
+  "Vera Elizabeth Claythorne": {
+    "canonical_id": 1,
+    "fullname": "Vera Elizabeth Claythorne",
+    "score": 100.0
+  },
+  "Cyril Ogilvie Hamilton": {
+    "canonical_id": 15,
+    "fullname": "Cyril Ogilvie Hamilton",
+    "score": 100.0
+  },
+  "John Gordon Macarthur": {
+    "canonical_id": 6,
+    "fullname": "John Gordon Macarthur",
+    "score": 100.0
+  },
+  "Arthur Richmond": {
+    "canonical_id": 19,
+    "fullname": "Arthur Richmond",
+    "score": 100.0
+  },
+  "Anthony James Marston": {
+    "canonical_id": 7,
+    "fullname": "Anthony James Marston",
+    "score": 100.0
+  },
+  "Thomas Rogers": {
+    "canonical_id": 8,
+    "fullname": "Thomas Rogers",
+    "score": 100.0
+  },
+  "Ethel Rogers": {
+    "canonical_id": 9,
+    "fullname": "Ethel Rogers",
+    "score": 100.0
+  },
+  "Jennifer Brady": {
+    "canonical_id": 22,
+    "fullname": "Jennifer Brady",
+    "score": 100.0
+  },
+  "Lawrence John Wargrave": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 100.0
+  },
+  "Edward Seton": {
+    "canonical_id": 13,
+    "fullname": "Edward Seton",
+    "score": 100.0
+  },
+  "Marston": {
+    "canonical_id": 7,
+    "fullname": "Anthony James Marston",
+    "score": 100.0
+  },
+  "Like the judge,": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 90.0
+  },
+  "The hand of the judge": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 90.0
+  },
+  "Ethel": {
+    "canonical_id": 9,
+    "fullname": "Ethel Rogers",
+    "score": 100.0
+  },
+  "doctor": {
+    "canonical_id": 3,
+    "fullname": "Edward George Armstrong",
+    "score": 100.0
+  },
+  "Ulick Norman Owen": {
+    "canonical_id": 37,
+    "fullname": "Owen",
+    "score": 100.0
+  },
+  "The old judge": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 100.0
+  },
+  "Mr. Marston": {
+    "canonical_id": 7,
+    "fullname": "Anthony James Marston",
+    "score": 100.0
+  },
+  "Ogden": {
+    "canonical_id": 32,
+    "fullname": "Ogden",
+    "score": 100.0
+  },
+  "Miss Ogden": {
+    "canonical_id": 31,
+    "fullname": "Oliver",
+    "score": 100.0
+  },
+  "Miss Claythorne": {
+    "canonical_id": 1,
+    "fullname": "Vera Elizabeth Claythorne",
+    "score": 100.0
+  },
+  "Badger Berkeley": {
+    "canonical_id": 30,
+    "fullname": "Badger Berkeley",
+    "score": 100.0
+  },
+  "General": {
+    "canonical_id": 6,
+    "fullname": "John Gordon Macarthur",
+    "score": 100.0
+  },
+  "Lady Constance": {
+    "canonical_id": 25,
+    "fullname": "Constance Culmington",
+    "score": 100.0
+  },
+  "Seton": {
+    "canonical_id": 13,
+    "fullname": "Edward Seton",
+    "score": 100.0
+  },
+  "The Seton case!": {
+    "canonical_id": 13,
+    "fullname": "Edward Seton",
+    "score": 90.0
+  },
+  "Matthews": {
+    "canonical_id": 29,
+    "fullname": "Matthews",
+    "score": 100.0
+  },
+  "Old Wargrave": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 100.0
+  },
+  "the doctor": {
+    "canonical_id": 3,
+    "fullname": "Edward George Armstrong",
+    "score": 100.0
+  },
+  "judge": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 100.0
+  },
+  "Cyril Hamilton": {
+    "canonical_id": 15,
+    "fullname": "Cyril Ogilvie Hamilton",
+    "score": 100.0
+  },
+  "Richmond": {
+    "canonical_id": 19,
+    "fullname": "Arthur Richmond",
+    "score": 100.0
+  },
+  "Miss Brady": {
+    "canonical_id": 22,
+    "fullname": "Jennifer Brady",
+    "score": 100.0
+  },
+  "n't get the doctor": {
+    "canonical_id": 3,
+    "fullname": "Edward George Armstrong",
+    "score": 90.0
+  },
+  "Landor": {
+    "canonical_id": 18,
+    "fullname": "James Stephen Landor",
+    "score": 100.0
+  },
+  "Clees": {
+    "canonical_id": 21,
+    "fullname": "Louisa Mary Clees",
+    "score": 100.0
+  },
+  "Llewellyn": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 100.0
+  },
+  "Arthur": {
+    "canonical_id": 19,
+    "fullname": "Arthur Richmond",
+    "score": 100.0
+  },
+  "Leslie": {
+    "canonical_id": 20,
+    "fullname": "Leslie Macarthur",
+    "score": 100.0
+  },
+  "Macarthur": {
+    "canonical_id": 6,
+    "fullname": "John Gordon Macarthur",
+    "score": 100.0
+  },
+  "young Armitage": {
+    "canonical_id": 28,
+    "fullname": "Armitage",
+    "score": 100.0
+  },
+  "Armitage": {
+    "canonical_id": 28,
+    "fullname": "Armitage",
+    "score": 100.0
+  },
+  "Old Macarthur": {
+    "canonical_id": 6,
+    "fullname": "John Gordon Macarthur",
+    "score": 100.0
+  },
+  "Maurice": {
+    "canonical_id": 33,
+    "fullname": "Maurice Hamilton",
+    "score": 100.0
+  },
+  "Doctor": {
+    "canonical_id": 3,
+    "fullname": "Edward George Armstrong",
+    "score": 100.0
+  },
+  "\"Any doctor been": {
+    "canonical_id": 3,
+    "fullname": "Edward George Armstrong",
+    "score": 90.0
+  },
+  "The ex-Inspector": {
+    "canonical_id": 4,
+    "fullname": "William Henry Blore",
+    "score": 100.0
+  },
+  "frenzied butler": {
+    "canonical_id": 8,
+    "fullname": "Thomas Rogers",
+    "score": 90.0
+  },
+  "Rogerses": {
+    "canonical_id": 8,
+    "fullname": "Thomas Rogers",
+    "score": 100.0
+  },
+  "Vera thought: \"": {
+    "canonical_id": 1,
+    "fullname": "Vera Elizabeth Claythorne",
+    "score": 90.0
+  },
+  "Philip": {
+    "canonical_id": 2,
+    "fullname": "Philip Lombard",
+    "score": 100.0
+  },
+  "as to the general": {
+    "canonical_id": 6,
+    "fullname": "John Gordon Macarthur",
+    "score": 100.0
+  },
+  "to fetch a doctor": {
+    "canonical_id": 3,
+    "fullname": "Edward George Armstrong",
+    "score": 90.0
+  },
+  "Mother Rogers": {
+    "canonical_id": 9,
+    "fullname": "Ethel Rogers",
+    "score": 100.0
+  },
+  "U.N. Owen": {
+    "canonical_id": 37,
+    "fullname": "Owen",
+    "score": 100.0
+  },
+  "better rope in Blore": {
+    "canonical_id": 4,
+    "fullname": "William Henry Blore",
+    "score": 90.0
+  },
+  "The General": {
+    "canonical_id": 6,
+    "fullname": "John Gordon Macarthur",
+    "score": 100.0
+  },
+  "Mr. Unknown Owen": {
+    "canonical_id": 37,
+    "fullname": "Owen",
+    "score": 100.0
+  },
+  "When Vera looked at": {
+    "canonical_id": 1,
+    "fullname": "Vera Elizabeth Claythorne",
+    "score": 90.0
+  },
+  "ex-Inspector": {
+    "canonical_id": 4,
+    "fullname": "William Henry Blore",
+    "score": 100.0
+  },
+  "first-class butler": {
+    "canonical_id": 8,
+    "fullname": "Thomas Rogers",
+    "score": 90.0
+  },
+  "Morris": {
+    "canonical_id": 10,
+    "fullname": "Isaac Morris",
+    "score": 100.0
+  },
+  "the execution of justice": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 90.0
+  },
+  "Judges": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 90.91
+  },
+  "dealing out crazy justice": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 90.0
+  },
+  "young Marston": {
+    "canonical_id": 7,
+    "fullname": "Anthony James Marston",
+    "score": 100.0
+  },
+  "Inspector Blore": {
+    "canonical_id": 4,
+    "fullname": "William Henry Blore",
+    "score": 100.0
+  },
+  "lets out the judge": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 90.0
+  },
+  "the General": {
+    "canonical_id": 6,
+    "fullname": "John Gordon Macarthur",
+    "score": 100.0
+  },
+  "Judge Extraordinary": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 90.0
+  },
+  "Ex-Inspector Blore": {
+    "canonical_id": 4,
+    "fullname": "William Henry Blore",
+    "score": 100.0
+  },
+  "These doctors": {
+    "canonical_id": 3,
+    "fullname": "Edward George Armstrong",
+    "score": 92.31
+  },
+  "Elsie MacPherson": {
+    "canonical_id": 36,
+    "fullname": "Elsie MacPherson",
+    "score": 100.0
+  },
+  "BEATRICE TAYLOR": {
+    "canonical_id": 17,
+    "fullname": "Beatrice Taylor",
+    "score": 100.0
+  },
+  "great force, doctor": {
+    "canonical_id": 3,
+    "fullname": "Edward George Armstrong",
+    "score": 90.0
+  },
+  "The Brent woman": {
+    "canonical_id": 5,
+    "fullname": "Emily Brent",
+    "score": 100.0
+  },
+  "Emily": {
+    "canonical_id": 5,
+    "fullname": "Emily Brent",
+    "score": 100.0
+  },
+  "Beatrice": {
+    "canonical_id": 17,
+    "fullname": "Beatrice Taylor",
+    "score": 100.0
+  },
+  "You can't judge": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 90.0
+  },
+  "ex-Inspector Blore": {
+    "canonical_id": 4,
+    "fullname": "William Henry Blore",
+    "score": 100.0
+  },
+  "isn't a doctor": {
+    "canonical_id": 3,
+    "fullname": "Edward George Armstrong",
+    "score": 90.0
+  },
+  "Vera rose": {
+    "canonical_id": 1,
+    "fullname": "Vera Elizabeth Claythorne",
+    "score": 90.0
+  },
+  "Where's the judge": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 90.0
+  },
+  "Mr. Bloody Justice Wargrave": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 91.43
+  },
+  "the old judge": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 100.0
+  },
+  "air——the judge": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 90.0
+  },
+  "Dressing up the judge": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 90.0
+  },
+  "Absolute Justice": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 90.0
+  },
+  "Vera thought:\n\"": {
+    "canonical_id": 1,
+    "fullname": "Vera Elizabeth Claythorne",
+    "score": 90.0
+  },
+  "Sir Thomas Legge": {
+    "canonical_id": 12,
+    "fullname": "Thomas Legge",
+    "score": 100.0
+  },
+  "Inspector Maine": {
+    "canonical_id": 34,
+    "fullname": "Maine",
+    "score": 100.0
+  },
+  "The A.C.": {
+    "canonical_id": 12,
+    "fullname": "Thomas Legge",
+    "score": 100.0
+  },
+  "helpful in the doctor": {
+    "canonical_id": 3,
+    "fullname": "Edward George Armstrong",
+    "score": 90.0
+  },
+  "Miss Brent and Marston": {
+    "canonical_id": 5,
+    "fullname": "Emily Brent",
+    "score": 90.0
+  },
+  "Isaac Morris": {
+    "canonical_id": 10,
+    "fullname": "Isaac Morris",
+    "score": 100.0
+  },
+  "Maine": {
+    "canonical_id": 34,
+    "fullname": "Maine",
+    "score": 100.0
+  },
+  "Elmer Robson": {
+    "canonical_id": 27,
+    "fullname": "Elmer Robson",
+    "score": 100.0
+  },
+  "The Assistant Commissioner": {
+    "canonical_id": 12,
+    "fullname": "Thomas Legge",
+    "score": 100.0
+  },
+  "Maine said: \"": {
+    "canonical_id": 34,
+    "fullname": "Maine",
+    "score": 90.0
+  },
+  "Mr. Robson": {
+    "canonical_id": 27,
+    "fullname": "Elmer Robson",
+    "score": 100.0
+  },
+  "Legge": {
+    "canonical_id": 12,
+    "fullname": "Thomas Legge",
+    "score": 100.0
+  },
+  "The Claythorne girl": {
+    "canonical_id": 1,
+    "fullname": "Vera Elizabeth Claythorne",
+    "score": 100.0
+  },
+  "A.C.": {
+    "canonical_id": 12,
+    "fullname": "Thomas Legge",
+    "score": 100.0
+  },
+  "Maine took a deep": {
+    "canonical_id": 34,
+    "fullname": "Maine",
+    "score": 90.0
+  },
+  "Maine went stolidly on": {
+    "canonical_id": 34,
+    "fullname": "Maine",
+    "score": 90.0
+  },
+  "Young Marston": {
+    "canonical_id": 7,
+    "fullname": "Anthony James Marston",
+    "score": 100.0
+  },
+  "Maine hesitated.": {
+    "canonical_id": 34,
+    "fullname": "Maine",
+    "score": 90.0
+  },
+  "Assistant Commissioner": {
+    "canonical_id": 12,
+    "fullname": "Thomas Legge",
+    "score": 100.0
+  },
+  "I think, Maine": {
+    "canonical_id": 34,
+    "fullname": "Maine",
+    "score": 90.0
+  },
+  "Maine coughed.": {
+    "canonical_id": 34,
+    "fullname": "Maine",
+    "score": 90.0
+  },
+  "his bonnet about justice": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 90.0
+  },
+  "Maine went on:": {
+    "canonical_id": 34,
+    "fullname": "Maine",
+    "score": 90.0
+  },
+  "you know, Maine": {
+    "canonical_id": 34,
+    "fullname": "Maine",
+    "score": 90.0
+  },
+  "desire for abstract justice": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 90.0
+  },
+  "strong sense of justice": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 90.0
+  },
+  "hanging judge": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 90.0
+  },
+  "instead of to judge": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 90.0
+  },
+  "innate sense of justice": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 90.0
+  },
+  "brethren discussing the Landor": {
+    "canonical_id": 18,
+    "fullname": "James Stephen Landor",
+    "score": 90.0
+  },
+  "Hugo Hamilton": {
+    "canonical_id": 14,
+    "fullname": "Hugo Hamilton",
+    "score": 100.0
+  },
+  "not tell the doctor": {
+    "canonical_id": 3,
+    "fullname": "Edward George Armstrong",
+    "score": 90.0
+  },
+  "Lawrence Wargrave": {
+    "canonical_id": 0,
+    "fullname": "Lawrence John Wargrave",
+    "score": 100.0
+  }
+}

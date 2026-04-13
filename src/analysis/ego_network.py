@@ -1,32 +1,99 @@
-# Lazily bind type annotations
 from __future__ import annotations
 
 import os
+import math
+import json
 import argparse
+
 from pathlib import Path
-
-from ..config import (
-    BASE_DATA_DIR,
-    BASE_OUT_DIR,
-    TRIPLE_OUT,
-    EGO_OUT,
-)
-
-from ..auxiliary import int_list, make_windows
+from typing import NamedTuple, List, Tuple, Dict, Any
 
 
-# ─────────────────────────────────────────────
-# 1. DATA LOADING
-# ─────────────────────────────────────────────
+# ============================================================================
+# DEATH INTERVAL CONSTANTS
+# ============================================================================
+class DeathInterval(NamedTuple):
+    """
+    Encodes one narrative interval between two consecutive deaths.
+
+    Fields
+    ------
+    label         : human-readable label, e.g. 'Chapter 1', '#1 Marston'
+    sentence_start: first sentence ID of the interval (inclusive)
+    sentence_end  : last  sentence ID of the interval (inclusive)
+    token_start   : first token ID of the interval (inclusive)
+    token_end     : last  token ID of the interval (inclusive)
+    n_alive       : number of protagonists alive throughout this interval
+    victim_name   : canonical fullname of the character who dies *at the end*
+                    of this interval (absent from the *next* one).
+                    None for the final survivor's interval.
+    """
+    label:          str
+    sentence_start: int
+    sentence_end:   int
+    token_start:    int
+    token_end:      int
+    n_alive:        int
+    victim_name:    str | None
+
+
+DEATH_INTERVALS: List[DeathInterval] = [
+    DeathInterval("#1 Marston",        1,    1484,     0,  17462, 10, "Anthony James Marston"),
+    DeathInterval("#2 E.Rogers",    1485,    1841,  17463, 21070,  9, "Ethel Rogers"),
+    DeathInterval("#3 Macarthur",   1842,    2904, 21071, 32904,  8, "John Gordon Macarthur"),
+    DeathInterval("#4 T.Rogers",    2905,    3583, 32905, 41438,  7, "Thomas Rogers"),
+    DeathInterval("#5 Brent",       3584,    3933, 41439, 45357,  6, "Emily Brent"),
+    DeathInterval("#6 Wargrave",    3934,    4416, 45358, 50820,  5, "Lawrence John Wargrave"),
+    DeathInterval("#7 Blore",       4417,    5096, 50821, 58126,  4, "William Henry Blore"),
+    DeathInterval("#8 Armstrong",   5097,    5195, 58127, 59107,  3, "Edward George Armstrong"),
+    DeathInterval("#9 Lombard",     5196,    5279, 59108, 59936,  2, "Philip Lombard"),
+    DeathInterval("#10 Claythorne", 5280,    5386, 59937, 60964,  1, None),
+]
+
+
+# Convenience mapping: window_lo → victim name for that window.
+VICTIM_BY_WINDOW_LO: Dict[int, str | None] = {
+    iv.token_start: iv.victim_name for iv in DEATH_INTERVALS
+}
+# Sentence-ID version for edges format
+VICTIM_BY_WINDOW_LO_SENTENCES: Dict[int, str | None] = {
+    iv.sentence_start: iv.victim_name for iv in DEATH_INTERVALS
+}
+
+
+def death_cutpoints(fmt: str = "triples") -> List[int]:
+    if fmt == "triples":
+        return [iv.token_start for iv in DEATH_INTERVALS]
+    return [iv.sentence_start for iv in DEATH_INTERVALS]
+
+
+def death_schedule_from_intervals(
+    intervals: List[DeathInterval],
+    fmt: str = "triples",
+) -> Dict[str, int]:
+    schedule: Dict[str, int] = {}
+    for interval in intervals:
+        if interval.victim_name is not None:
+            last = interval.token_end if fmt == "triples" else interval.sentence_end
+            schedule[interval.victim_name] = last
+    return schedule
+
+
+# ============================================================================
+# LOADING
+# ============================================================================
 
 def _detect_format(path: Path) -> str:
-    """Heuristic: if the filename contains 'edge_list' treat as edges, else triples."""
     if "edge_list" in path.stem:
         return "edges"
     return "triples"
 
 
-def load_victims(base_data_dir: str, base_out_dir: str) -> dict[int, str]:
+def filter_triples_temporal(df, lo: int, hi: int):
+    return df[(df["index"] >= lo) & (df["index"] <= hi)].copy()
+
+
+def load_victims(base_data_dir: str) -> Dict[int, str]:
     """
     Return {canonical_id: fullname} for every main-protagonist character.
 
@@ -35,28 +102,33 @@ def load_victims(base_data_dir: str, base_out_dir: str) -> dict[int, str]:
     """
     import pandas as pd
     names = pd.read_csv(os.path.join(base_data_dir, "names_owen_split.csv"))
-    canonical = pd.read_csv(os.path.join(base_out_dir, "canonical_mappings.csv"))
+    # canonical = pd.read_csv(os.path.join(base_out_dir, "canonical_mappings.csv"))
 
-    main_names = set(names.loc[names["prot_status"] == "main", "fullname"])
-    victims = canonical[canonical["fullname"].isin(main_names)]
+    # main_names = set(names.loc[names["prot_status"] == "main", "fullname"])
+    # victims = canonical[canonical["fullname"].isin(main_names)]
+    victims: pd.DataFrame = names.loc[names["prot_status"] == "main", ["id", "fullname"]]
+    victims.rename(columns={"id": "canonical_id"}, inplace=True)
 
     return dict(zip(victims["canonical_id"], victims["fullname"]))
 
 
-def load_graph_from_triples(path: Path) -> nx.DiGraph:
+def load_graph_from_triples(path: Path, include_new_triples: bool = False) -> nx.DiGraph:
     """Build a directed graph from AVP or SVO triples TSV."""
     import pandas as pd
     df = pd.read_csv(path, sep="\t")
 
+    if include_new_triples and 'is_new' in df.columns.to_list():
+        df = df[~df['is_new']]
+
     # Normalise column names (SVO uses canonical_subj_id / canonical_obj_id)
-    col_map = {
-        "canonical_subj_id": "canonical_id_left",
-        "canonical_obj_id": "canonical_id_right",
-        "subject_text": "name_left",
-        "object_text": "name_right",
-        "verb_id": "index",
-    }
-    df.rename(columns={k: v for k, v in col_map.items() if k in df.columns}, inplace=True)
+    # col_map = {
+    #     "canonical_subj_id": "canonical_id_left",
+    #     "canonical_obj_id": "canonical_id_right",
+    #     "subject_text": "name_left",
+    #     "object_text": "name_right",
+    #     "verb_id": "index",
+    # }
+    # df.rename(columns={k: v for k, v in col_map.items() if k in df.columns}, inplace=True)
 
     # Remove self-loops
     df = df[df["canonical_id_left"] != df["canonical_id_right"]].copy()
@@ -64,42 +136,83 @@ def load_graph_from_triples(path: Path) -> nx.DiGraph:
     return df
 
 
-def load_graph_from_edges(path: Path) -> pd.DataFrame:
-    """Load the co-occurrence edge list CSV."""
-    import ast
-    import pandas as pd
-    df = pd.read_csv(path)
+# ============================================================================
+# HELPERS
+# ============================================================================
 
-    # Parse sentence_ids from string to list
-    if "sentence_ids" in df.columns:
-        df["sentence_ids"] = df["sentence_ids"].apply(
-            lambda x: ast.literal_eval(x) if isinstance(x, str) else x
-        )
-
-    return df
+def _get_node_names(G) -> Dict[Any]:
+    """Collect {node_id: name} from graph node attributes."""
+    return {n: d.get("name", str(n)) for n, d in G.nodes(data=True)}
 
 
-# ─────────────────────────────────────────────
-# 2. TEMPORAL FILTERING
-# ─────────────────────────────────────────────
-def filter_triples_temporal(df: pd.DataFrame, lo: int, hi: int) -> pd.DataFrame:
-    """Keep rows whose token-index falls in [lo, hi]."""
-    return df[(df["index"] >= lo) & (df["index"] <= hi)].copy()
+def _n_alive_for_window(lo: int, hi: int, fmt: str = "triples") -> int:
+    """
+    Look up the n_alive count for a window [lo, hi] from DEATH_INTERVALS.
+
+    Returns 0 if no interval matches exactly, signalling the caller to
+    fall back to counting living victims directly.
+    """
+    for interval in DEATH_INTERVALS:
+        if fmt == "triples":
+            if interval.token_start == lo and interval.token_end == hi:
+                return interval.n_alive
+        else:
+            if interval.sentence_start == lo and interval.sentence_end == hi:
+                return interval.n_alive
+    return 0
 
 
-def filter_edges_temporal(df: pd.DataFrame, lo: int, hi: int) -> pd.DataFrame:
-    """Keep edges whose sentence_ids list has at least one ID in [lo, hi]."""
-    mask = df["sentence_ids"].apply(
-        lambda ids: any(lo <= s <= hi for s in ids)
-    )
-    return df[mask].copy()
+def living_victims_in_window(
+    victims: Dict[int, str],
+    death_schedule: Dict[str, int],
+    lo: int,
+    hi: int,
+) -> Dict[int, str]:
+    living = {}
+    for vid, name in victims.items():
+        last_alive = death_schedule.get(name)
+        if last_alive is None or last_alive >= lo:
+            living[vid] = name
+    return living
 
 
-# ─────────────────────────────────────────────
-# 3. GRAPH BUILDING
-# ─────────────────────────────────────────────
-def build_nx_graph_triples(df: pd.DataFrame) -> nx.DiGraph:
-    """Build a weighted DiGraph from filtered triples DataFrame."""
+# ============================================================================
+# GRAPH CREATION
+# ============================================================================
+
+# =========== GRAPH CREATION HELPERS ===========
+def to_undirected_symmetric(G: nx.DiGraph) -> nx.Graph:
+    """
+    Convert a DiGraph to an undirected Graph by summing reciprocal edge
+    weights explicitly.
+    """
+    import networkx as nx
+    U = nx.Graph()
+    U.add_nodes_from(G.nodes(data=True))
+    for u, v, data in G.edges(data=True):
+        # Skip if we already processed this undirected pair (from the v->u direction)
+        if U.has_edge(u, v):
+            continue
+        w_uv = data.get("weight", 1.0)
+        w_vu = G[v][u].get("weight", 0.0) if G.has_edge(v, u) else 0.0
+        U.add_edge(u, v, weight=w_uv + w_vu)
+    return U
+
+
+def _alter_only_subgraph(ego_u: nx.Graph, ego_id: int) -> nx.Graph:
+    """
+    Return the ego-subgraph with ego removed, leaving only alter-alter ties.
+
+    Used for density (Burt defines density over alter-alter ties only) and
+    for any calculation that must exclude ego from proportional weights.
+    """
+    sub = ego_u.copy()
+    sub.remove_node(ego_id)
+    return sub
+
+
+# =========== GRAPH CREATION MAIN ===========
+def build_nx_graph_triples(df) -> nx.DiGraph:
     import networkx as nx
     agg = (
         df.groupby(["canonical_id_left", "canonical_id_right"])
@@ -119,40 +232,15 @@ def build_nx_graph_triples(df: pd.DataFrame) -> nx.DiGraph:
         create_using=nx.DiGraph(),
     )
 
-    # Node labels
     for _, row in agg.iterrows():
         G.nodes[row["canonical_id_left"]].setdefault("name", row["name_left"])
         G.nodes[row["canonical_id_right"]].setdefault("name", row["name_right"])
-
     return G
 
-
-def build_nx_graph_edges(df: pd.DataFrame) -> nx.Graph:
-    """Build a weighted undirected Graph from the co-occurrence edge list."""
-    import networkx as nx
-    G = nx.from_pandas_edgelist(
-        df,
-        source="source_id",
-        target="target_id",
-        edge_attr=["weight"],
-        create_using=nx.Graph(),
-    )
-
-    for _, row in df.iterrows():
-        G.nodes[row["source_id"]].setdefault("name", row["source_name"])
-        G.nodes[row["target_id"]].setdefault("name", row["target_name"])
-
-    return G
-
-
-# ─────────────────────────────────────────────
-# 4. EGO-NETWORK EXTRACTION & METRICS
-# ─────────────────────────────────────────────
 
 def extract_ego_networks(
-    G: nx.Graph | nx.DiGraph, victims: dict[int, str]
-) -> dict[int, nx.Graph | nx.DiGraph]:
-    """Return {victim_id: ego_subgraph} for every victim present in G."""
+    G, victims: Dict[int, str]
+) -> Dict[int, nx.Graph]:
     import networkx as nx
     egos = {}
     for vid in victims:
@@ -161,49 +249,110 @@ def extract_ego_networks(
     return egos
 
 
-def _dyadic_constraint(G_u: nx.Graph, ego_id: int) -> dict[int, float]:
+# ============================================================================
+# ALTER OVERLAP COMPUTATION
+# ============================================================================
+
+# =========== ALTER OVERLAP HELPERS ===========
+
+def compute_alter_sets(egos):
+    return {vid: set(ego.nodes()) - {vid} for vid, ego in egos.items()}
+
+
+# =========== ALTER OVERLAP MAIN ===========
+
+def pairwise_overlap_matrix(alter_sets, victims):
+    import pandas as pd
+    ids = sorted(alter_sets.keys())
+    labels = [victims.get(v, str(v)) for v in ids]
+    mat = pd.DataFrame(0, index=labels, columns=labels)
+    for i, vi in enumerate(ids):
+        for j, vj in enumerate(ids):
+            mat.iloc[i, j] = len(alter_sets[vi] & alter_sets[vj])
+    return mat
+
+
+def compute_k_overlap(alter_sets, victims, node_names, min_k=2):
+    from collections import Counter
+    import pandas as pd
+    counter: Counter = Counter()
+    alter_to_victims: Dict[Any] = {}
+    for vid, alters in alter_sets.items():
+        for a in alters:
+            counter[a] += 1
+            alter_to_victims.setdefault(a, []).append(victims.get(vid, str(vid)))
+    rows = []
+    for alter_id, count in counter.most_common():
+        if count < min_k:
+            continue
+        rows.append({
+            "canonical_id":        alter_id,
+            "name":                node_names.get(alter_id, str(alter_id)),
+            "victim_overlap_count": count,
+            "shared_with_victims": "; ".join(alter_to_victims[alter_id]),
+        })
+    return pd.DataFrame(rows)
+
+
+# ============================================================================
+# EGO NETWORK METRICS
+# ============================================================================
+
+# =========== EGO NETWORK METRICS HELPERS ===========
+
+def _dyadic_constraint(ego_u: nx.Graph, ego_id: int) -> Dict[int, float]:
     """
-    Compute Burt's dyadic constraint c_ij for each alter j of ego i.
+    Compute Burt's dyadic constraint `c_ij` for each alter `j` of ego `i`.
 
-    c_ij = (p_ij + Σ_q p_iq * p_qj)²
+        ``c_ij = (p_ij + Σ_q p_iq * p_qj)²``
 
-    where p_ij = w_ij / Σ_k w_ik  (proportional tie strength).
+    where `p_ij = w_ij / Σ_k w_ik`  (proportional tie strength, ego-relative)
+    and   `p_qj = w_qj / Σ_r w_qr`  (proportional tie strength, alter-relative,
+                                     computed excluding ego from `q`'s neighbours)
 
-    Returns {alter_id: c_ij} for every neighbour j of ego_id.
+    Essentially equivalent to ``networkx.local_constraint``, but excludes ego 
+    when computing alter-alter tie strengths i.e., indirect path of constraint.
+
+    It also collects the distribution over all ego-alter constraint values.
+
+    :return: ``{alter_id: c_ij}`` for every neighbour `j` of `ego_id`.
     """
-    neighbours = list(G_u.neighbors(ego_id))
+    neighbours = [n for n in ego_u.neighbors(ego_id)]
     if not neighbours:
         return {}
 
-    # Proportional tie strengths  p_ij
-    weights = {}
-    total_w = 0.0
+    # --- p_ij: ego's proportional tie strengths to each alter ---
+    raw_weights = {j: ego_u[ego_id][j].get("weight", 1.0) for j in neighbours}
+    total_w = sum(raw_weights.values())
+    p_ego = {j: w / total_w for j, w in raw_weights.items()} if total_w > 0 else {}
+
+    # --- Precompute p_qj for every (q, j) pair: q's proportion to j,
+    #     excluding ego from q's neighbour list ---
+    # p_alter[q][j] = proportion of q's tie strength going to j (ego excluded)
+    p_alter: Dict[int, Dict[int, float]] = {}
+    for q in neighbours:
+        q_neighbours = [r for r in ego_u.neighbors(q) if r != ego_id]  # FIX 1
+        total_q = sum(ego_u[q][r].get("weight", 1.0) for r in q_neighbours)
+        if total_q > 0:
+            p_alter[q] = {
+                r: ego_u[q][r].get("weight", 1.0) / total_q
+                for r in q_neighbours
+            }
+        else:
+            p_alter[q] = {}
+
+    # --- Dyadic constraint ---
+    dyadic: Dict[int, float] = {}
     for j in neighbours:
-        w = G_u[ego_id][j].get("weight", 1.0)
-        weights[j] = w
-        total_w += w
+        direct = p_ego.get(j, 0.0)
 
-    p = {j: w / total_w for j, w in weights.items()} if total_w > 0 else {}
-
-    # Dyadic constraint
-    dyadic = {}
-    for j in neighbours:
-        # Direct proportion
-        direct = p.get(j, 0.0)
-
-        # Indirect paths through mutual alters q (q ≠ i, q ≠ j)
+        # Indirect: sum over mutual alters q (q ≠ j)
         indirect = 0.0
         for q in neighbours:
             if q == j:
                 continue
-            p_iq = p.get(q, 0.0)
-            # p_qj: proportion of q's ties going to j
-            q_neighbours = list(G_u.neighbors(q))
-            total_q = sum(G_u[q][r].get("weight", 1.0) for r in q_neighbours)
-            if total_q > 0 and G_u.has_edge(q, j):
-                p_qj = G_u[q][j].get("weight", 1.0) / total_q
-            else:
-                p_qj = 0.0
+            p_iq = p_ego.get(q, 0.0)
+            p_qj = p_alter.get(q, {}).get(j, 0.0)
             indirect += p_iq * p_qj
 
         dyadic[j] = (direct + indirect) ** 2
@@ -211,21 +360,32 @@ def _dyadic_constraint(G_u: nx.Graph, ego_id: int) -> dict[int, float]:
     return dyadic
 
 
-def _hierarchy(dyadic: dict[int, float]) -> float:
+def _hierarchy(dyadic: Dict[int, float]) -> float:
     """
-    Burt's hierarchy: how concentrated the constraint is in one alter.
+    Burt's hierarchy: concentration of constraint across alters.
 
-    H = (Σ_j (c_ij / C_i) * ln(c_ij / C_i)) / (N * ln(1/N))
+        `H = (Σ_j s_j * ln(s_j)) / (N * ln(1/N))`
 
-    Returns a value in [0, 1].  1 = all constraint from one alter,
-    0 = constraint evenly spread.  Returns NaN if fewer than 2 alters.
+    where `s_j = c_ij / C_i` is alter `j`'s share of total constraint.
+
+    Returns a value in [0, 1]:
+        1.0 → all constraint from a single alter (or n == 1)
+        0.0 → constraint evenly spread across all alters
+        NaN → no positive constraint values (undefined)
+
+    NOTE: zero-valued c_ij are excluded before computing n and shares,
+    consistent with Burt's treatment.  This means n here may be smaller
+    than ego_size; this is intentional and documented.
     """
-    import math
-
     vals = [v for v in dyadic.values() if v > 0]
     n = len(vals)
-    if n < 2:
+
+    if n == 0:
         return float("nan")
+
+    if n == 1:
+        # Single constraining alter → hierarchy is maximally concentrated
+        return 1.0
 
     total_c = sum(vals)
     if total_c == 0:
@@ -233,160 +393,153 @@ def _hierarchy(dyadic: dict[int, float]) -> float:
 
     shares = [v / total_c for v in vals]
 
-    numerator = sum(s * math.log(s) for s in shares if s > 0)
-    denominator = n * math.log(1.0 / n)
-
-    if denominator == 0:
+    log_n = math.log(n)
+    if log_n == 0:
         return float("nan")
 
-    return numerator / denominator
+    entropy_sum = sum(s * math.log(s) for s in shares if s > 0)
+    return 1.0 + entropy_sum / log_n
 
+
+# =========== EGO NETWORK METRICS MAIN ===========
 
 def compute_ego_metrics(
-    egos: dict[int, nx.Graph | nx.DiGraph],
-    victims: dict[int, str],
+    egos: Dict[int, "nx.Graph | nx.DiGraph"],
+    victims: Dict[int, str],
+    window_lo: int | None = None,
+    window_hi: int | None = None,
+    n_alive: int | None = None,
 ) -> pd.DataFrame:
-    """Compute structural metrics for each ego-network.
+    """
+    Compute structural metrics for each ego-network.
 
-    Metrics include size, density, effective size, constraint, hierarchy
-    (Burt), degree, and identification of the most constraining alter.
+    Args
+    ----
+    G_full              : full window interaction graph (all nodes, not just
+                          ego-subgraphs).  Required for NEW 5 and NEW 6.
+                          If None those columns will be NaN.
+    victim_by_window_lo : {window_lo: victim_name} mapping used to look up
+                          the upcoming victim for Jaccard (NEW 4).
+                          If None, Jaccard columns will be NaN.
     """
     import networkx as nx
-    
+    import pandas as pd
+
     rows = []
-    for vid, ego in egos.items():
-        n = ego.number_of_nodes()
-        size = n - 1  # exclude ego
 
-        # For metrics that need an undirected view
-        ego_u = ego.to_undirected() if ego.is_directed() else ego
+    for vid, name in victims.items():
+        # Absent ego
+        if vid not in egos:
+            rows.append({
+                "window_lo":                    window_lo,
+                "window_hi":                    window_hi,
+                "n_alive":                      n_alive,
+                "canonical_id":                 vid,
+                "name":                         name,
+                "ego_size":                     0,
+                "density":                      None,
+                "effective_size":               None,
+                "constraint":                   None,
+                "hierarchy":                    None,
+                "degree":                       0,
+                # Full dyadic distribution
+                "all_dyadic_constraint":        None,
+                # Most constraining alter
+                "most_constraining_alter":      None,
+                "alter_dyadic_constraint":      None,
+            })
+            continue
 
-        density = nx.density(ego_u) if n > 1 else 0.0
+        ego = egos[vid]
 
-        # Effective size and constraint (Burt) – networkx computes on undirected
+        if ego.is_directed():
+            # Undirected edges through summation of reciprocal edge weights
+            ego_u = to_undirected_symmetric(ego)
+        else:
+            ego_u = ego
+
+        n_total = ego_u.number_of_nodes()
+        size = n_total - 1  # alters only
+
+        # Alter-only subgraph to comply with Burt's density definition
+        alter_sub = _alter_only_subgraph(ego_u, vid)
+        n_alters = alter_sub.number_of_nodes()
+        n_alter_edges = alter_sub.number_of_edges()
+
+        density = nx.density(alter_sub) if n_alters > 1 else 0.0
+
+        # Compute ego-measures on whole ego-graph
         try:
-            eff_size = nx.effective_size(ego_u)
-            eff = eff_size.get(vid, float("nan"))
+            eff = nx.effective_size(ego_u).get(vid, float("nan"))
         except Exception:
             eff = float("nan")
 
         try:
-            constraint = nx.constraint(ego_u)
-            con = constraint.get(vid, float("nan"))
+            con = nx.constraint(ego_u).get(vid, float("nan"))
         except Exception:
             con = float("nan")
 
-        degree = ego.degree(vid) if vid in ego else 0
+        degree = ego_u.degree(vid) if vid in ego_u else 0
 
-        # --- Hierarchy & most constraining alter ---
+        # Calculate dyadic constraint for ego-graph
         dyadic = _dyadic_constraint(ego_u, vid)
+
+        # Serialise full distribution as JSON {alter_name: c_ij}
+        alter_names = {n: ego_u.nodes[n].get("name", str(n)) for n in ego_u.nodes}
+        all_dyadic_json = json.dumps(
+            {alter_names.get(j, str(j)): round(v, 6) for j, v in dyadic.items()},
+            ensure_ascii=False,
+        ) if dyadic else None
+
+        # Determine most constraining alter
+        if dyadic:
+            top_j = max(dyadic, key=dyadic.get)
+            top_name = alter_names.get(top_j, str(top_j))
+            top_c = dyadic[top_j]
+        else:
+            top_name = None
+            top_c = float("nan")
+
+        # Calculate hierarchy for ego-graph
         hier = _hierarchy(dyadic)
 
-        if dyadic:
-            top_alter_id = max(dyadic, key=dyadic.get)
-            top_alter_name = ego_u.nodes[top_alter_id].get("name", str(top_alter_id))
-            top_alter_c = dyadic[top_alter_id]
-        else:
-            top_alter_name = None
-            top_alter_c = float("nan")
+        def _fmt(v):
+            return round(v, 4) if (v is not None and not math.isnan(v)) else None
+        
+        rows.append({
+            # ── Window metadata ────────────────────────────────────────────
+            "window_lo":                    window_lo,
+            "window_hi":                    window_hi,
+            "n_alive":                      n_alive,
+            # ── Identity ──────────────────────────────────────────────────
+            "canonical_id":                 vid,
+            "name":                         victims.get(vid, str(vid)),
+            # ── Raw structural metrics ─────────────────────────────────────
+            "ego_size":                     size,
+            "density":                      _fmt(density),
+            "effective_size":               _fmt(eff),
+            "constraint":                   _fmt(con),
+            "hierarchy":                    _fmt(hier),
+            "degree":                       degree,
+            # ── Full dyadic constraint distribution ────────────────────────
+            "all_dyadic_constraint":        all_dyadic_json,
+            # ── Most constraining alter ────────────────────────────────────
+            "most_constraining_alter":      top_name,
+            "alter_dyadic_constraint":      _fmt(top_c),
+        })
 
-        rows.append(
-            {
-                "canonical_id": vid,
-                "name": victims.get(vid, str(vid)),
-                "ego_size": size,
-                "density": round(density, 4),
-                "effective_size": round(eff, 4) if eff == eff else None,
-                "constraint": round(con, 4) if con == con else None,
-                "hierarchy": round(hier, 4) if hier == hier else None,
-                "most_constraining_alter": top_alter_name,
-                "alter_dyadic_constraint": round(top_alter_c, 4) if top_alter_c == top_alter_c else None,
-                "degree": degree,
-            }
-        )
-
-    import pandas as pd
     return pd.DataFrame(rows)
 
 
-# ─────────────────────────────────────────────
-# 5. ALTER OVERLAP ANALYSIS
-# ─────────────────────────────────────────────
-
-def compute_alter_sets(
-    egos: dict[int, nx.Graph | nx.DiGraph],
-) -> dict[int, set[int]]:
-    """Return {victim_id: set_of_alter_ids} (excluding the ego itself)."""
-    return {vid: set(ego.nodes()) - {vid} for vid, ego in egos.items()}
-
-
-def pairwise_overlap_matrix(
-    alter_sets: dict[int, set[int]], victims: dict[int, str]
-) -> pd.DataFrame:
-    """Build a |V|×|V| matrix of shared-alter counts."""
-    
-    ids = sorted(alter_sets.keys())
-    labels = [victims.get(v, str(v)) for v in ids]
-    mat = pd.DataFrame(0, index=labels, columns=labels)
-
-    for i, vi in enumerate(ids):
-        for j, vj in enumerate(ids):
-            mat.iloc[i, j] = len(alter_sets[vi] & alter_sets[vj])
-
-    return mat
-
-
-def compute_k_overlap(
-    alter_sets: dict[int, set[int]],
-    victims: dict[int, str],
-    node_names: dict[int, str],
-    min_k: int = 2,
-) -> pd.DataFrame:
-    """
-    For every alter, count how many victim ego-networks it appears in.
-    Return only those appearing in >= min_k victims.
-    """
-    from collections import Counter
-
-    counter: Counter[int] = Counter()
-    alter_to_victims: dict[int, list[str]] = {}
-
-    for vid, alters in alter_sets.items():
-        for a in alters:
-            counter[a] += 1
-            alter_to_victims.setdefault(a, []).append(victims.get(vid, str(vid)))
-
-    rows = []
-    for alter_id, count in counter.most_common():
-        if count < min_k:
-            continue
-        rows.append(
-            {
-                "canonical_id": alter_id,
-                "name": node_names.get(alter_id, str(alter_id)),
-                "victim_overlap_count": count,
-                "shared_with_victims": "; ".join(alter_to_victims[alter_id]),
-            }
-        )
-    
-    import pandas as pd
-    return pd.DataFrame(rows)
-
-
-# ─────────────────────────────────────────────
-# 7. ORCHESTRATION
-# ─────────────────────────────────────────────
-
-def _get_node_names(G: nx.Graph | nx.DiGraph) -> dict[int, str]:
-    """Collect {node_id: name} from graph node attributes."""
-    return {n: d.get("name", str(n)) for n, d in G.nodes(data=True)}
-
+# ============================================================================
+# EGO NETWORK ANALYSIS
+# ============================================================================
 
 def run_analysis(
     df_raw: pd.DataFrame,
     fmt: str,
-    victims: dict[int, str],
-    windows: list[tuple[int, int]],
+    victims: Dict[int, str],
+    windows: List[Tuple[int, int]],
     min_k: int,
     out_root: Path,
     web: bool,
@@ -394,51 +547,69 @@ def run_analysis(
     """
     Main analysis loop.  Iterates over temporal windows, builds graphs,
     extracts ego-networks, computes metrics and overlaps, and writes outputs.
-    """
-    for lo, hi in windows:
-        # --- Determine output directory ---
-        if len(windows) == 1:
-            out_dir = out_root
-        else:
-            out_dir = out_root / f"window_{lo}_{hi}"
 
+    Only those victims that are alive at the start of each window are passed to
+    ``extract_ego_networks()``, so the dead characters never appear as egos
+    in windows after their death.
+
+    ``window_lo``, ``window_hi``, and ``n_alive`` are stamped onto every row of
+    ``ego_metrics.csv`` so files are self-describing and stackable.
+    """
+    death_schedule = death_schedule_from_intervals(DEATH_INTERVALS, fmt=fmt)
+
+    for lo, hi in windows:
+        out_dir = out_root if len(windows) == 1 else out_root / f"window_{lo}_{hi}"
         os.makedirs(out_dir, exist_ok=True)
 
-        # --- Temporal filter ---
+        # ------------------ DETERMINE #ALIVE EGO -------------------
+        n_alive = _n_alive_for_window(lo, hi, fmt=fmt)
+        if n_alive == 0:
+            living_all = living_victims_in_window(victims, death_schedule, lo, hi)
+            n_alive = len(living_all)
+
+        # ------------------ BUILD FULL GRAPH FOR GIVEN WINDOWS -------------------
         if fmt == "triples":
             df = filter_triples_temporal(df_raw, lo, hi)
             G = build_nx_graph_triples(df)
-        else:
-            df = filter_edges_temporal(df_raw, lo, hi)
-            G = build_nx_graph_edges(df)
 
         if G.number_of_nodes() == 0:
             print(f"  [window {lo}–{hi}] Graph is empty — skipping.")
             continue
 
-        # --- Ego-networks ---
-        egos = extract_ego_networks(G, victims)
+        # ------------------ LOAD LIVING VICTIMS -------------------
+        living = living_victims_in_window(victims, death_schedule, lo, hi)
+        if not living:
+            print(f"  [window {lo}–{hi}] No living victims — skipping.")
+            continue
+        
+        # ------------------ COMPUTE EGO GRAPH -------------------
+        egos = extract_ego_networks(G, living)
         if not egos:
-            print(f"  [window {lo}–{hi}] No victims found in graph — skipping.")
+            print(f"  [window {lo}–{hi}] No living victims found in graph — skipping.")
             continue
 
-        # --- Metrics ---
-        metrics_df = compute_ego_metrics(egos, victims)
+        # ------------------ COMPUTE EGO METRICS -------------------
+        metrics_df = compute_ego_metrics(
+            egos, living,
+            window_lo=lo,
+            window_hi=hi,
+            n_alive=n_alive,
+        )
         metrics_df.to_csv(out_dir / "ego_metrics.csv", index=False)
-        print(f"  [window {lo}–{hi}] ego_metrics.csv  ({len(metrics_df)} victims)")
+        print(f"  [window {lo}–{hi}] ego_metrics.csv  ({len(metrics_df)} victims, n_alive={n_alive})")
 
-        # --- Overlap ---
+        # ------------------ COMPUTE ALTER OVERLAP -------------------
         alter_sets = compute_alter_sets(egos)
         node_names = _get_node_names(G)
 
-        overlap_mat = pairwise_overlap_matrix(alter_sets, victims)
+        overlap_mat = pairwise_overlap_matrix(alter_sets, living)
         overlap_mat.to_csv(out_dir / "pairwise_overlap.csv")
 
-        k_df = compute_k_overlap(alter_sets, victims, node_names, min_k)
+        k_df = compute_k_overlap(alter_sets, living, node_names, min_k)
         k_df.to_csv(out_dir / "alter_overlap.csv", index=False)
         print(f"  [window {lo}–{hi}] alter_overlap.csv ({len(k_df)} alters with overlap ≥ {min_k})")
 
-        # --- Full intersection ---
+        # ------------------ DETERMINE COMMON EGOS IN ALTER SETS -------------------
         if alter_sets:
             full_intersection = set.intersection(*alter_sets.values())
             if full_intersection:
@@ -447,29 +618,27 @@ def run_analysis(
             else:
                 print(f"  [window {lo}–{hi}] No character appears in ALL victim ego-networks.")
 
-        # --- Visualisations ---
+        # ------------------ VISUALISE GRAPHS -------------------
         if web:
             from .visualization.ego_network_viz import (
                 visualise_ego, visualise_shared_alters, visualise_heatmap,
             )
-            # Per-victim ego HTML
             for vid, ego in egos.items():
-                visualise_ego(ego, vid, victims[vid], out_dir)
-
-            # Shared-alter subgraph
+                visualise_ego(ego, vid, living[vid], out_dir)
             shared_ids = set(k_df["canonical_id"]) if not k_df.empty else set()
-            visualise_shared_alters(G, shared_ids, set(victims.keys()), out_dir)
-
-            # Heatmap
+            visualise_shared_alters(G, shared_ids, set(living.keys()), out_dir)
             visualise_heatmap(overlap_mat, out_dir)
             print(f"  [window {lo}–{hi}] Visualisations saved.")
 
 
-# ─────────────────────────────────────────────
-# 8. CLI
-# ─────────────────────────────────────────────
+# ============================================================================
+# MAIN
+# ============================================================================
 
 def main() -> None:
+    from ..config import DATA_DIR, OBJ_OUT, EGO_OUT
+    from ..auxiliary import int_list, make_windows
+
     description = (
         "Ego-network analysis for perpetrator detection.\n\n"
         "Builds ego-networks for each victim, computes structural metrics,\n"
@@ -479,10 +648,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description=description, formatter_class=argparse.RawTextHelpFormatter,
     )
-
     parser.add_argument(
         "-i", "--input", type=Path,
-        default=Path(f"{TRIPLE_OUT}/avp_triples.csv"),
+        default=Path(OBJ_OUT) / "triples.csv",
         help="Path to the input file (triples TSV or edge-list CSV)",
     )
     parser.add_argument(
@@ -511,37 +679,36 @@ def main() -> None:
         ),
     )
 
+    parser.add_argument(
+        "--include-new-triples", action="store_true", default=False,
+        help=(
+            "Include manually added triples. (Default=False)"
+        )
+    )
+
     args = parser.parse_args()
 
-    # --- Detect format ---
     fmt = args.format or _detect_format(args.input)
     print(f"Input : {args.input}")
     print(f"Format: {fmt}")
 
-    # --- Load data ---
     if fmt == "triples":
-        df_raw = load_graph_from_triples(args.input)
-        temporal_col_min = int(df_raw["index"].min())
-        temporal_col_max = int(df_raw["index"].max())
-    else:
-        df_raw = load_graph_from_edges(args.input)
-        # Flatten sentence_ids to get range
-        all_sids = [s for ids in df_raw["sentence_ids"] for s in ids]
-        temporal_col_min = min(all_sids)
-        temporal_col_max = max(all_sids)
+        df_raw = load_graph_from_triples(args.input, args.include_new_triples)
+        temporal_col_min = DEATH_INTERVALS[0].token_start
+        temporal_col_max = DEATH_INTERVALS[-1].token_end
 
-    # --- Load victims ---
-    victims = load_victims(BASE_DATA_DIR, BASE_OUT_DIR)
-    print(victims)
-    return
+    victims = load_victims(DATA_DIR)
     print(f"Victims ({len(victims)}): {list(victims.values())}")
 
-    # --- Build windows ---
-    windows = make_windows(args.cutpoints, temporal_col_min, temporal_col_max)
+    cutpoints = args.cutpoints if args.cutpoints is not None else death_cutpoints(fmt)
+    windows = make_windows(cutpoints, temporal_col_min, temporal_col_max)
     print(f"Windows: {windows}\n")
 
-    # --- Run ---
-    run_analysis(df_raw, fmt, victims, windows, args.min_overlap, args.out, args.web)
+    run_analysis(
+        df_raw, fmt, victims, windows,
+        args.min_overlap, args.out, args.web,
+    )
+
     print("\nDone.")
 
 

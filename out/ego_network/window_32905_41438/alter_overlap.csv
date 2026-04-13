@@ -1,0 +1,9 @@
+canonical_id,name,victim_overlap_count,shared_with_victims
+0.0,Lawrence John Wargrave,4,Vera Elizabeth Claythorne; Philip Lombard; Edward George Armstrong; William Henry Blore
+1.0,Vera Elizabeth Claythorne,3,Lawrence John Wargrave; Philip Lombard; Emily Brent
+2.0,Philip Lombard,3,Lawrence John Wargrave; Vera Elizabeth Claythorne; William Henry Blore
+8.0,Thomas Rogers,3,Philip Lombard; Edward George Armstrong; Emily Brent
+4.0,William Henry Blore,2,Lawrence John Wargrave; Emily Brent
+5.0,Emily Brent,2,Lawrence John Wargrave; Vera Elizabeth Claythorne
+3.0,Edward George Armstrong,2,Vera Elizabeth Claythorne; Philip Lombard
+9.0,Ethel Rogers,2,Edward George Armstrong; Thomas Rogers

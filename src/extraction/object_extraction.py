@@ -13,7 +13,7 @@ from .utils import (
     print_headers, print_information, load_span_index,
     load_alias_dict, load_spacy_model, load_gliner_model,
     build_char_offset_to_canonical, make_doc_from_sentence,
-    load_text
+    load_text, log_print
 )
 
 
@@ -53,52 +53,56 @@ def save_stage4(
 # VERBOSE STATISTICS
 # ============================================================================
 
-def print_verbose_stats(protagonist_df: pd.DataFrame, non_protagonist_df: Optional[pd.DataFrame], include_non_protagonist: Optional[bool] = False):
+def print_verbose_stats(
+        protagonist_df: pd.DataFrame, 
+        non_protagonist_df: Optional[pd.DataFrame], 
+        include_non_protagonist: Optional[bool] = False
+    ):
     print_headers("STAGE 4 — VERBOSE STATISTICS", "-", prefix="\n")
 
     if not protagonist_df.empty:
         # Unique interaction pairs
         pairs = protagonist_df.groupby(["name_left", "name_right"]).size().sort_values(ascending=False)
-        print(f"    Unique Character Interaction Pairs: {len(pairs)}")
-        print("\n    Top 15 Interaction Pairs:")
+        log_print(f"    Unique Character Interaction Pairs: {len(pairs)}")
+        log_print("\n    Top 15 Interaction Pairs:")
         for (left, right), count in pairs.head(15).items():
-            print(f"      {left:20s} → {right:20s}  {count:4d} triples")
+            log_print(f"      {left:20s} → {right:20s}  {count:4d} triples")
 
         # Per-character triple counts (as agent)
         agent_counts = protagonist_df["name_left"].value_counts()
-        print("\n    Per-Character Triple Count (as agent):")
+        log_print("\n    Per-Character Triple Count (as agent):")
         for name, count in agent_counts.items():
-            print(f"      {name:35s} {count:5d}")
+            log_print(f"      {name:35s} {count:5d}")
 
         # Per-character triple counts (as patient)
         patient_counts = protagonist_df["name_right"].value_counts()
-        print("\n    Per-Character Triple Count (as patient):")
+        log_print("\n    Per-Character Triple Count (as patient):")
         for name, count in patient_counts.items():
-            print(f"      {name:35s} {count:5d}")
+            log_print(f"      {name:35s} {count:5d}")
 
         # Negation stats
         n_negated = protagonist_df["negated"].sum()
-        print(f"\n    Negated triples: {n_negated} / {len(protagonist_df)} "
+        log_print(f"\n    Negated triples: {n_negated} / {len(protagonist_df)} "
                 f"({n_negated/len(protagonist_df)*100:.1f}%)")
 
         # Top verbs in triples
         top_verbs = protagonist_df["lemma"].value_counts().head(15)
-        print("\n    Top 15 Verbs in Protagonist Triples:")
+        log_print("\n    Top 15 Verbs in Protagonist Triples:")
         for verb, count in top_verbs.items():
-            print(f"      {verb:20s} {count:5d}")
+            log_print(f"      {verb:20s} {count:5d}")
 
         # Sample triples
         print_headers("SAMPLE TRIPLES (first 10)", "-", prefix="\n")
         display_cols = ["name_left", "word", "name_right", "negated"]
         available_cols = [c for c in display_cols if c in protagonist_df.columns]
-        print(protagonist_df[available_cols].head(10).to_string(index=False))
+        log_print(protagonist_df[available_cols].head(10).to_string(index=False))
 
     if include_non_protagonist and not non_protagonist_df.empty:
         # Object type breakdown
         obj_types = non_protagonist_df["object_type"].value_counts()
-        print("\n    Non-Protagonist Object Types:")
+        log_print("\n    Non-Protagonist Object Types:")
         for otype, count in obj_types.items():
-            print(f"      {otype:20s} {count:5d}")
+            log_print(f"      {otype:20s} {count:5d}")
 
 
 # ============================================================================

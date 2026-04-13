@@ -1,9 +1,5 @@
 """
 Utility functions for the manual extraction pipeline.
-
-All functions are COPIED from the existing codebase and adapted
-to use local imports from manual_extraction.config.
-Original sources are noted in docstrings.
 """
 from __future__ import annotations
 
@@ -222,7 +218,6 @@ def match_name(
     if not cleaned:
         return None, original_name, 0.0, None
         
-    import pandas as pd
     from rapidfuzz import process, fuzz
 
     def try_fuzzy_match(query: str) -> Tuple[Optional[int], Optional[str], float, Optional[str]]:

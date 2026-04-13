@@ -1,0 +1,10 @@
+window_lo,window_hi,n_alive,canonical_id,name,ego_size,density,effective_size,constraint,hierarchy,degree,all_dyadic_constraint,most_constraining_alter,alter_dyadic_constraint,structural_keystone,keystone_sensitivity,all_keystone_sensitivity,z_density,z_effective_size,z_constraint,z_hierarchy,null_mean_density,null_mean_effective_size,null_mean_constraint,null_mean_hierarchy,jaccard_with_victim,victim_betweenness,bridging_gap
+17463,21070,9,0,Lawrence John Wargrave,1,0.0,1.0,1.0,1.0,1,"{""Edward Seton"": 1.0}",Edward Seton,1.0,,,{},,,,,,,,,,,0.5
+17463,21070,9,1,Vera Elizabeth Claythorne,1,0.0,1.0,1.0,1.0,1,"{""Anthony James Marston"": 1.0}",Anthony James Marston,1.0,,,{},,,,,,,,,,,0.5
+17463,21070,9,2,Philip Lombard,0,,,,,0,,,,,,,,,,,,,,,,,
+17463,21070,9,3,Edward George Armstrong,1,0.0,1.0,1.0,1.0,1,"{""Thomas Rogers"": 1.0}",Thomas Rogers,1.0,,,{},,,,,,,,,,,0.0
+17463,21070,9,4,William Henry Blore,0,,,,,0,,,,,,,,,,,,,,,,,
+17463,21070,9,5,Emily Brent,0,,,,,0,,,,,,,,,,,,,,,,,
+17463,21070,9,6,John Gordon Macarthur,2,1.0,1.0,1.125,0.0,2,"{""Arthur Richmond"": 1.0, ""Leslie Macarthur"": 1.0}",Arthur Richmond,1.0,Arthur Richmond,0.125,"{""Arthur Richmond"": 0.125, ""Leslie Macarthur"": 0.125}",,,,,1.0,1.0,1.125,0.0,,,0.5
+17463,21070,9,8,Thomas Rogers,1,0.0,1.0,1.0,1.0,1,"{""Edward George Armstrong"": 1.0}",Edward George Armstrong,1.0,,,{},,,,,,,,,,,0.0
+17463,21070,9,9,Ethel Rogers,0,,,,,0,,,,,,,,,,,,,,,,,

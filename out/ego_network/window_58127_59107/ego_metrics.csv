@@ -1,0 +1,4 @@
+window_lo,window_hi,n_alive,canonical_id,name,ego_size,density,effective_size,constraint,hierarchy,degree,all_dyadic_constraint,most_constraining_alter,alter_dyadic_constraint,structural_keystone,keystone_sensitivity,all_keystone_sensitivity,z_density,z_effective_size,z_constraint,z_hierarchy,null_mean_density,null_mean_effective_size,null_mean_constraint,null_mean_hierarchy,jaccard_with_victim,victim_betweenness,bridging_gap
+58127,59107,3,1,Vera Elizabeth Claythorne,0,0.0,,,,0,,,,,,,,,,,,,,,,0.0,0.5
+58127,59107,3,2,Philip Lombard,2,0.0,2.0,0.5,0.2781,2,"{""Vera Elizabeth Claythorne"": 0.111111, ""Edward George Armstrong"": 0.444444}",Edward George Armstrong,0.4444,Vera Elizabeth Claythorne,0.5,"{""Vera Elizabeth Claythorne"": 0.5, ""Edward George Armstrong"": 0.5}",,,,,0.0,2.0,0.5,0.0,0.0,1.0,0.0
+58127,59107,3,3,Edward George Armstrong,0,0.0,,,,0,,,,,,,,,,,,,,,,,0.0

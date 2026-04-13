@@ -1,0 +1,88 @@
+triple_key	row_idx	canonical_id_left	name_left	role_left	word	lemma	index	negated	gender_left	canonical_id_right	name_right	role_right	gender_right	corrected_agent	corrected_verb	corrected_patient	changed	changes_applied	is_new	agent_byte_start	agent_byte_end	verb_byte_start	verb_byte_end	patient_byte_start	patient_byte_end
+20_19_18327_teased	86	20	Leslie Macarthur	agent	teased	tease	18327	false	f	19	Arthur Richmond	patient	m	Leslie Macarthur	teased	Arthur Richmond	false		false						
+20_19_18330_made	87	20	Leslie Macarthur	agent	made	make	18330	false	f	19	Arthur Richmond	patient	m	Leslie Macarthur	made	Arthur Richmond	false		false						
+20_19_18335_ragged	88	20	Leslie Macarthur	agent	ragged	rag	18335	false	f	19	Arthur Richmond	patient	m	Leslie Macarthur	ragged	Arthur Richmond	false		false						
+19_20_18370_was	89	19	Arthur Richmond	agent	was	be	18370	false	m	20	Leslie Macarthur	patient	f	Arthur Richmond	was	Leslie Macarthur	false		false						
+6_20_18383_loved	90	6	John Gordon Macarthur	agent	loved	love	18383	false	m	20	Leslie Macarthur	patient	f	John Gordon Macarthur	loved	Leslie Macarthur	false		false						
+6_20_18388_see	91	6	John Gordon Macarthur	agent	see	see	18388	false	m	20	Leslie Macarthur	patient	f	John Gordon Macarthur	see	Leslie Macarthur	false		false						
+6_20_18414_loved	92	6	John Gordon Macarthur	agent	loved	love	18414	false	m	20	Leslie Macarthur	patient	f	John Gordon Macarthur	loved	Leslie Macarthur	false		false						
+6_20_18419_believed	93	6	John Gordon Macarthur	agent	believed	believe	18419	false	m	20	Leslie Macarthur	patient	f	John Gordon Macarthur	believed	Leslie Macarthur	false		false						
+6_20_18446_taken	94	6	John Gordon Macarthur	agent	taken	take	18446	false	m	20	Leslie Macarthur	patient	f	John Gordon Macarthur	taken	Leslie Macarthur	false		false						
+20_19_18495_put	95	20	Leslie Macarthur	agent	put	put	18495	false	f	19	Arthur Richmond	patient	m	Leslie Macarthur	put	Arthur Richmond	false		false						
+28_6_18667_looked	96	28	Armitage	agent	looked	look	18667	false	m	6	John Gordon Macarthur	patient	m	Armitage	looked	John Gordon Macarthur	false		false						
+28_19_18703_sent	97	28	Armitage	agent	sent	send	18703	false	m	19	Arthur Richmond	patient	m	Armitage	sent	Arthur Richmond	false		false						
+20_19_18851_wept	98	20	Leslie Macarthur	agent	wept	weep	18851	false	f	19	Arthur Richmond	patient	m	Leslie Macarthur	wept	Arthur Richmond	false		false						
+14_0_19755_love	99	14	Hugo Hamilton	agent	love	love	19755	false	m	0	Lawrence John Wargrave	patient	m	Hugo Hamilton	love	Vera Elizabeth Claythorne	true	patient: "Vera Claythorne" → "Vera Elizabeth Claythorne"	false						
+14_0_19759_love	100	14	Hugo Hamilton	agent	love	love	19759	false	m	0	Lawrence John Wargrave	patient	m	Hugo Hamilton	love	Vera Elizabeth Claythorne	true	patient: "Vera Claythorne" → "Vera Elizabeth Claythorne"	false						
+14_0_19765_love	101	14	Hugo Hamilton	agent	love	love	19765	false	m	0	Lawrence John Wargrave	patient	m	Hugo Hamilton	love	Vera Elizabeth Claythorne	true	patient: "Vera Claythorne" → "Vera Elizabeth Claythorne"	false						
+14_0_19787_ask marry	102	14	Hugo Hamilton	agent	ask marry	ask marry	19787	true	m	0	Lawrence John Wargrave	patient	m	Hugo Hamilton	ask marry	Vera Elizabeth Claythorne	true	patient: "Vera Claythorne" → "Vera Elizabeth Claythorne"	false						
+1_7_20075_remembered	103	1	Vera Elizabeth Claythorne	agent	remembered	remember	20075	false	f	7	Anthony James Marston	patient	m	Vera Elizabeth Claythorne	remembered	Anthony James Marston	false		false						
+3_8_20670_followed	104	3	Edward George Armstrong	agent	followed	follow	20670	false	m	8	Thomas Rogers	patient	m	Edward George Armstrong	followed	Thomas Rogers	false		false						
+8_3_20945_stared	105	8	Thomas Rogers	agent	stared	star	20945	false	m	3	Edward George Armstrong	patient	m	Thomas Rogers	stared	Edward George Armstrong	false		false						
+4_2_21294_said	106	4	William Henry Blore	agent	said	say	21294	false	m	2	Philip Lombard	patient	m	William Henry Blore	said	Philip Lombard	false		false						
+0_1_21662_had	107	0	Lawrence John Wargrave	agent	had	have	21662	false	m	1	Vera Elizabeth Claythorne	patient	f	Lawrence John Wargrave	had	INCORRECT_TRIPLE	true	patient: "Everyone" → "INCORRECT_TRIPLE"	false						
+3_5_21860_turned	108	3	Edward George Armstrong	agent	turned	turn	21860	false	m	5	Emily Brent	patient	f	Edward George Armstrong	turned	Emily Brent	false		false						
+9_6_21895_accused	109	9	Ethel Rogers	agent	accused	accuse	21895	false	f	6	John Gordon Macarthur	patient	m	Ethel Rogers	accused	Owen	true	patient: "John Gordon Macarthur" → "Owen"	false						
+10_9_21936_saw	110	10	Isaac Morris	agent	saw	see	21936	false	m	9	Ethel Rogers	patient	f	INCORRECT_TRIPLE	saw	Ethel Rogers	true	agent: "Everyone" → "INCORRECT_TRIPLE"	false						
+3_0_22206_bet	111	3	Edward George Armstrong	agent	bet	bet	22206	false	m	0	Lawrence John Wargrave	patient	m	William Henry Blore	bet	Edward George Armstrong	true	agent: "Edward George Armstrong" → "William Henry Blore"; patient: "Lawrence John Wargrave" → "Edward George Armstrong"	false						
+8_3_22223_assures	112	8	Thomas Rogers	agent	assures	assure	22223	false	m	3	Edward George Armstrong	patient	m	Thomas Rogers	assures	Edward George Armstrong	false		false						
+3_4_22254_looked	113	3	Edward George Armstrong	agent	looked	look	22254	false	m	4	William Henry Blore	patient	m	Edward George Armstrong	looked	William Henry Blore	false		false						
+8_9_22320_polished	114	8	Thomas Rogers	agent	polished	polish	22320	false	m	9	Ethel Rogers	patient	f	Thomas Rogers	polished	Ethel Rogers	false		false						
+6_9_22443_hung	115	6	John Gordon Macarthur	agent	hung	hang	22443	false	m	9	Ethel Rogers	patient	f	Thomas Rogers	hung	Ethel Rogers	true	agent: "John Gordon Macarthur" → "Thomas Rogers"	false						
+4_2_22999_looked	116	4	William Henry Blore	agent	looked	look	22999	false	m	2	Philip Lombard	patient	m	William Henry Blore	looked	Philip Lombard	false		false						
+4_6_23135_viewed	117	4	William Henry Blore	agent	viewed	view	23135	false	m	6	John Gordon Macarthur	patient	m	William Henry Blore	viewed	John Gordon Macarthur	false		false						
+2_0_23407_thank	118	2	Philip Lombard	agent	thank	thank	23407	false	m	0	Lawrence John Wargrave	patient	m	Philip Lombard	thank	William Henry Blore	true	patient: "Lawrence John Wargrave" → "William Henry Blore"	false						
+3_0_23461_turned	119	3	Edward George Armstrong	agent	turned	turn	23461	false	m	0	Lawrence John Wargrave	patient	m	Edward George Armstrong	turned	Lawrence John Wargrave	false		false						
+8_0_23481_have	120	8	Thomas Rogers	agent	have	have	23481	false	m	0	Lawrence John Wargrave	patient	m	Thomas Rogers	have	Edward George Armstrong	true	patient: "Lawrence John Wargrave" → "Edward George Armstrong"	false						
+8_0_23547_have	121	8	Thomas Rogers	agent	have	have	23547	false	m	0	Lawrence John Wargrave	patient	m	Thomas Rogers	have	Edward George Armstrong	true	patient: "Lawrence John Wargrave" → "Edward George Armstrong"	false						
+3_8_23565_entered	122	3	Edward George Armstrong	agent	entered	enter	23565	false	m	8	Thomas Rogers	patient	m	Edward George Armstrong	entered	INCORRECT_TRIPLE	true	patient: "INCORRECT_TRIPLE ⁠" → "INCORRECT_TRIPLE"	false						
+8_3_23614_followed	123	8	Thomas Rogers	agent	followed	follow	23614	false	m	3	Edward George Armstrong	patient	m	Thomas Rogers	followed	Edward George Armstrong	false		false						
+8_3_23617_shut	124	8	Thomas Rogers	agent	shut	shut	23617	false	m	3	Edward George Armstrong	patient	m	Thomas Rogers	shut	INCORRECT_TRIPLE ⁠	true	patient: "Edward George Armstrong" → "INCORRECT_TRIPLE ⁠"	false						
+0_8_23895_believe	125	0	Lawrence John Wargrave	agent	believe	believe	23895	true	m	8	Thomas Rogers	patient	m	Edward George Armstrong	believe	Thomas Rogers	true	agent: "Lawrence John Wargrave" → "Edward George Armstrong"	false						
+5_1_23932_suggested	126	5	Emily Brent	agent	suggested	suggest	23932	false	f	1	Vera Elizabeth Claythorne	patient	f	Emily Brent	suggested	Vera Elizabeth Claythorne	false		false						
+8_9_24278_did	127	8	Thomas Rogers	agent	did	do	24278	false	m	9	Ethel Rogers	patient	f	Thomas Rogers	did	Ethel Rogers	false		false						
+1_5_24470_said	128	1	Vera Elizabeth Claythorne	agent	said	say	24470	false	f	5	Emily Brent	patient	f	Vera Elizabeth Claythorne	said	Emily Brent	false		false						
+1_0_24510_understand	129	1	Vera Elizabeth Claythorne	agent	understand	understand	24510	true	f	0	Lawrence John Wargrave	patient	m	Vera Elizabeth Claythorne	understand	Emily Brent	true	patient: "Lawrence John Wargrave" → "Emily Brent"	false						
+5_0_24570_understand	130	5	Emily Brent	agent	understand	understand	24570	false	f	0	Lawrence John Wargrave	patient	m	Emily Brent	understand	Vera Elizabeth Claythorne	true	patient: "Lawrence John Wargrave" → "Vera Elizabeth Claythorne"	false						
+5_17_24911_keep	131	5	Emily Brent	agent	keep	keep	24911	true	f	17	Beatrice Taylor	patient	f	Emily Brent	keep	Beatrice Taylor	false		false						
+0_2_25040_blame	132	0	Lawrence John Wargrave	agent	blame	blame	25040	true	m	2	Philip Lombard	patient	m	Emily Brent	blame	Emily Brent	true	agent: "Lawrence John Wargrave" → "Emily Brent"; patient: "Philip Lombard" → "Emily Brent"	false						
+5_17_25081_said	133	5	Emily Brent	agent	said	say	25081	false	f	17	Beatrice Taylor	patient	f	Emily Brent	said	Beatrice Taylor	false		false						
+5_1_25120_turned	134	5	Emily Brent	agent	turned	turn	25120	false	f	1	Vera Elizabeth Claythorne	patient	f	Emily Brent	turned	Vera Elizabeth Claythorne	false		false						
+3_0_25318_speak	135	3	Edward George Armstrong	agent	speak	speak	25318	false	m	0	Lawrence John Wargrave	patient	m	Edward George Armstrong	speak	Philip Lombard	true	patient: "Lawrence John Wargrave" → "Philip Lombard"	false						
+0_4_25459_accept	136	0	Lawrence John Wargrave	agent	accept	accept	25459	false	m	4	William Henry Blore	patient	m	Edward George Armstrong	accept	William Henry Blore	true	agent: "Lawrence John Wargrave" → "Edward George Armstrong"	false						
+3_8_25565_asked	137	3	Edward George Armstrong	agent	asked	ask	25565	false	m	8	Thomas Rogers	patient	m	Edward George Armstrong	asked	Thomas Rogers	false		false						
+3_1_25751_beg	138	3	Edward George Armstrong	agent	beg	beg	25751	false	m	1	Vera Elizabeth Claythorne	patient	f	Edward George Armstrong	beg	Philip Lombard	true	patient: "Vera Elizabeth Claythorne" → "Philip Lombard"	false						
+0_2_26077_tell	139	0	Lawrence John Wargrave	agent	tell	tell	26077	false	m	2	Philip Lombard	patient	m	Edward George Armstrong	tell	Philip Lombard	true	agent: "Lawrence John Wargrave" → "Edward George Armstrong"	false						
+3_2_26254_prompted	140	3	Edward George Armstrong	agent	prompted	prompt	26254	false	m	2	Philip Lombard	patient	m	Edward George Armstrong	prompted	Philip Lombard	false		false						
+2_7_26317_believe	141	2	Philip Lombard	agent	believe	believe	26317	false	m	7	Anthony James Marston	patient	m	Philip Lombard	believe	Anthony James Marston	false		false						
+2_9_26336_believe	142	2	Philip Lombard	agent	believe	believe	26336	false	m	9	Ethel Rogers	patient	f	Philip Lombard	believe	Ethel Rogers	false		false						
+8_9_26358_put	143	8	Thomas Rogers	agent	put	put	26358	false	m	9	Ethel Rogers	patient	f	Thomas Rogers	put	Ethel Rogers	false		false						
+3_0_26403_give	144	3	Edward George Armstrong	agent	give	give	26403	false	m	0	Lawrence John Wargrave	patient	m	Edward George Armstrong	give	Philip Lombard	true	patient: "Lawrence John Wargrave" → "Philip Lombard"	false						
+8_3_26420_given	145	8	Thomas Rogers	agent	given	give	26420	false	m	3	Edward George Armstrong	patient	m	Thomas Rogers	given	Edward George Armstrong	false		false						
+7_9_26549_oversleeps	146	7	Anthony James Marston	agent	oversleeps	oversleep	26549	false	m	9	Ethel Rogers	patient	f	Ethel Rogers	oversleeps	Ethel Rogers	true	agent: "Anthony James Marston" → "Ethel Rogers"	false						
+2_3_26565_took	147	2	Philip Lombard	agent	took	take	26565	false	m	3	Edward George Armstrong	patient	m	Philip Lombard	took	Edward George Armstrong	false		false						
+0_2_27684_found	148	0	Lawrence John Wargrave	agent	found	find	27684	false	m	2	Philip Lombard	patient	m	John Gordon Macarthur	found	John Gordon Macarthur	true	agent: "Lawrence John Wargrave" → "John Gordon Macarthur"; patient: "Philip Lombard" → "John Gordon Macarthur"	false						
+1_5_28418_avoided	149	1	Vera Elizabeth Claythorne	agent	avoided	avoid	28418	false	f	5	Emily Brent	patient	f	Vera Elizabeth Claythorne	avoided	Emily Brent	false		false						
+1_5_28459_thought	150	1	Vera Elizabeth Claythorne	agent	thought	think	28459	false	f	5	Emily Brent	patient	f	Vera Elizabeth Claythorne	thought	Emily Brent	false		false						
+1_0_28541_looked	151	1	Vera Elizabeth Claythorne	agent	looked	look	28541	false	f	0	Lawrence John Wargrave	patient	m	Vera Elizabeth Claythorne	looked	Lawrence John Wargrave	false		false						
+6_1_28631_stirred	152	6	John Gordon Macarthur	agent	stirred	stir	28631	false	m	1	Vera Elizabeth Claythorne	patient	f	John Gordon Macarthur	stirred	Vera Elizabeth Claythorne	false		false						
+6_1_28658_stared	153	6	John Gordon Macarthur	agent	stared	star	28658	false	m	1	Vera Elizabeth Claythorne	patient	f	John Gordon Macarthur	stared	Vera Elizabeth Claythorne	false		false						
+1_6_28704_sat	154	1	Vera Elizabeth Claythorne	agent	sat	sit	28704	false	f	6	John Gordon Macarthur	patient	m	Vera Elizabeth Claythorne	sat	John Gordon Macarthur	false		false						
+1_0_28942_understand	155	1	Vera Elizabeth Claythorne	agent	understand	understand	28942	true	f	0	Lawrence John Wargrave	patient	m	Vera Elizabeth Claythorne	understand	John Gordon Macarthur	true	patient: "Lawrence John Wargrave" → "John Gordon Macarthur"	false						
+6_20_28970_loved	156	6	John Gordon Macarthur	agent	loved	love	28970	false	m	20	Leslie Macarthur	patient	f	John Gordon Macarthur	loved	Leslie Macarthur	false		false						
+6_20_28974_loved	157	6	John Gordon Macarthur	agent	loved	love	28974	false	m	20	Leslie Macarthur	patient	f	John Gordon Macarthur	loved	Leslie Macarthur	false		false						
+6_20_28999_loved	158	6	John Gordon Macarthur	agent	loved	love	28999	false	m	20	Leslie Macarthur	patient	f	John Gordon Macarthur	loved	Leslie Macarthur	false		false						
+6_20_29037_loved	159	6	John Gordon Macarthur	agent	loved	love	29037	false	m	20	Leslie Macarthur	patient	f	John Gordon Macarthur	loved	Leslie Macarthur	false		false						
+6_19_29087_sent	160	6	John Gordon Macarthur	agent	sent	send	29087	false	m	19	Arthur Richmond	patient	m	John Gordon Macarthur	sent	Arthur Richmond	true	agent: "" → "John Gordon Macarthur"; patient: "" → "Arthur Richmond"	false						
+6_19_29087_sent	161	6	John Gordon Macarthur	agent	sent	send	29087	false	m	19	Arthur Richmond	patient	m	John Gordon Macarthur	sent	Arthur Richmond	true	agent: "" → "John Gordon Macarthur"; patient: "" → "Arthur Richmond"	false						
+6_20_29225_know	162	6	John Gordon Macarthur	agent	know	know	29225	true	m	20	Leslie Macarthur	patient	f	John Gordon Macarthur	know	Leslie Macarthur	false		false						
+6_20_29240_reach	163	6	John Gordon Macarthur	agent	reach	reach	29240	true	m	20	Leslie Macarthur	patient	f	John Gordon Macarthur	reach	Leslie Macarthur	false		false						
+4_3_29392_found	164	4	William Henry Blore	agent	found	find	29392	false	m	3	Edward George Armstrong	patient	m	William Henry Blore	found	Edward George Armstrong	false		false						
+4_3_29397_left staring	165	4	William Henry Blore	agent	left staring	leave star	29397	false	m	3	Edward George Armstrong	patient	m	William Henry Blore	left staring	Edward George Armstrong	false		false						
+4_6_29481_thinking	166	4	William Henry Blore	agent	thinking	think	29481	false	m	6	John Gordon Macarthur	patient	m	Edward George Armstrong	thinking	John Gordon Macarthur	true	agent: "William Henry Blore" → "Edward George Armstrong"	false						
+3_6_29569_studied	167	3	Edward George Armstrong	agent	studied	study	29569	true	m	6	John Gordon Macarthur	patient	m	Edward George Armstrong	studied	John Gordon Macarthur	false		false						
+4_2_29798_trust	168	4	William Henry Blore	agent	trust	trust	29798	true	m	2	Philip Lombard	patient	m	William Henry Blore	trust	Philip Lombard	false		false						
+3_8_30202_say	169	3	Edward George Armstrong	agent	say	say	30202	false	m	8	Thomas Rogers	patient	m	Edward George Armstrong	say	Thomas Rogers	false		false						
+3_4_30350_grasped	170	3	Edward George Armstrong	agent	grasped	grasp	30350	false	m	4	William Henry Blore	patient	m	Edward George Armstrong	grasped	William Henry Blore	false		false						
+4_9_30986_said	171	4	William Henry Blore	agent	said	say	30986	false	m	9	Ethel Rogers	patient	f	William Henry Blore	said	Ethel Rogers	false		false						
+new_1774608073294_wjgtp	-1		John Gordon Macarthur	agent	thinking	thinking		false			Leslie Macarthur	patient		John Gordon Macarthur	thinking	Leslie Macarthur	true	new triple	true	82035	82037	82068	82076	82080	82083

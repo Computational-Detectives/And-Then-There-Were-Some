@@ -1,0 +1,159 @@
+triple_key	row_idx	canonical_id_left	name_left	role_left	word	lemma	index	negated	gender_left	canonical_id_right	name_right	role_right	gender_right	corrected_agent	corrected_verb	corrected_patient	changed	changes_applied	is_new	agent_byte_start	agent_byte_end	verb_byte_start	verb_byte_end	patient_byte_start	patient_byte_end
+0_25_401_seen	0	0	Lawrence John Wargrave	agent	seen	see	401	false	m	25	Constance Culmington	patient	f	Lawrence John Wargrave	seen	Constance Culmington	false		false						
+37_1_623_received	1	37	Owen	agent	received	receive	623	false	m	1	Vera Elizabeth Claythorne	patient	f	Owen	received	Vera Elizabeth Claythorne	false		false						
+0_1_660_take	2	0	Lawrence John Wargrave	agent	take	take	660	false	m	1	Vera Elizabeth Claythorne	patient	f	INCORRECT_TRIPLE	take	Vera Elizabeth Claythorne	true	agent: "Lawrence John Wargrave" → "INCORRECT_TRIPLE"	false						
+1_14_908_think	3	1	Vera Elizabeth Claythorne	agent	think	think	908	true	f	14	Hugo Hamilton	patient	m	Vera Elizabeth Claythorne	think	Hugo Hamilton	false		false						
+15_1_979_cleaving	4	15	Cyril Ogilvie Hamilton	agent	cleaving	cleave	979	false	m	1	Vera Elizabeth Claythorne	patient	f	INCORRECT_TRIPLE	cleaving	Vera Elizabeth Claythorne	true	agent: "Cyril Ogilvie Hamilton" → "INCORRECT_TRIPLE"	false						
+1_14_1030_think	5	1	Vera Elizabeth Claythorne	agent	think	think	1030	true	f	14	Hugo Hamilton	patient	m	Vera Elizabeth Claythorne	think	Hugo Hamilton	false		false						
+0_2_1310_give	6	0	Lawrence John Wargrave	agent	give	give	1310	true	m	2	Philip Lombard	patient	m	Isaac Morris	give	Philip Lombard	true	agent: "Lawrence John Wargrave" → "Isaac Morris"	false						
+0_2_1410_hold	7	0	Lawrence John Wargrave	agent	hold	hold	1410	false	m	2	Philip Lombard	patient	m	INCORRECT_TRIPLE	hold	Philip Lombard	true	agent: "Lawrence John Wargrave" → "INCORRECT_TRIPLE"	false						
+0_1_1923_see	8	0	Lawrence John Wargrave	agent	see	see	1923	false	m	1	Vera Elizabeth Claythorne	patient	f	INCORRECT_TRIPLE	see	Vera Elizabeth Claythorne	true	agent: "Lawrence John Wargrave" → "INCORRECT_TRIPLE"	false						
+5_31_2176_was	9	5	Emily Brent	agent	was	be	2176	false	f	31	Oliver	patient	f	Emily Brent	could remember	Oliver	true	verb: "was [be]" → "could remember"	false						
+0_1_4386_know	10	0	Lawrence John Wargrave	agent	know	know	4386	false	m	1	Vera Elizabeth Claythorne	patient	f	INCORRECT_TRIPLE	know	Vera Elizabeth Claythorne	true	agent: "Lawrence John Wargrave" → "INCORRECT_TRIPLE"	false						
+0_1_4566_know	11	0	Lawrence John Wargrave	agent	know	know	4566	false	m	1	Vera Elizabeth Claythorne	patient	f	INCORRECT_TRIPLE	know	Vera Elizabeth Claythorne	true	agent: "Lawrence John Wargrave" → "INCORRECT_TRIPLE"	false						
+1_37_4620_'m	12	1	Vera Elizabeth Claythorne	agent	'm	be	4620	false	f	37	Owen	patient	m	Vera Elizabeth Claythorne	'm	Owen	false		false						
+6_2_5222_said	13	6	John Gordon Macarthur	agent	said	say	5222	false	m	2	Philip Lombard	patient	m	John Gordon Macarthur	said	Philip Lombard	false		false						
+6_2_5266_ask	14	6	John Gordon Macarthur	agent	ask	ask	5266	false	m	2	Philip Lombard	patient	m	John Gordon Macarthur	ask	Philip Lombard	false		false						
+0_4_5520_looked	15	0	Lawrence John Wargrave	agent	looked	look	5520	false	m	4	William Henry Blore	patient	m	Lawrence John Wargrave	looked	William Henry Blore	false		false						
+11_37_6186_set	16	11	Fred Narracott	agent	set	set	6186	true	m	37	Owen	patient	m	Fred Narracott	set	Owen	false		false						
+8_0_6788_awaiting	17	8	Thomas Rogers	agent	awaiting	await	6788	false	m	0	Lawrence John Wargrave	patient	m	INCORRECT_TRIPLE	awaiting	Lawrence John Wargrave	true	agent: "Thomas Rogers" → "INCORRECT_TRIPLE"	false						
+8_0_6796_reassured	18	8	Thomas Rogers	agent	reassured	reassure	6796	false	m	0	Lawrence John Wargrave	patient	m	INCORRECT_TRIPLE	reassured	Lawrence John Wargrave	true	agent: "Thomas Rogers" → "INCORRECT_TRIPLE"	false	
+1_9_6967_followed	19	1	Vera Elizabeth Claythorne	agent	followed	follow	6967	false	f	9	Ethel Rogers	patient	f	Vera Elizabeth Claythorne	followed	Ethel Rogers	false		false						
+1_9_7102_looked	20	1	Vera Elizabeth Claythorne	agent	looked	look	7102	false	f	9	Ethel Rogers	patient	f	Vera Elizabeth Claythorne	looked	Ethel Rogers	false		false						
+37_1_7257_mention	21	37	Owen	agent	mention	mention	7257	true	m	1	Vera Elizabeth Claythorne	patient	f	Owen	mention	Vera Elizabeth Claythorne	false		false						
+9_37_7271_seen	22	9	Ethel Rogers	agent	seen	see	7271	true	f	37	Owen	patient	m	Ethel Rogers	seen	Owen	false		false						
+1_37_7515_seen	23	1	Vera Elizabeth Claythorne	agent	seen	see	7515	false	f	37	Owen	patient	m	Vera Elizabeth Claythorne	seen	Owen	false		false						
+3_0_8552_stared	24	3	Edward George Armstrong	agent	stared	star	8552	false	m	0	Lawrence John Wargrave	patient	m	Edward George Armstrong	stared	Lawrence John Wargrave	false		false						
+0_8_8733_asked	25	0	Lawrence John Wargrave	agent	asked	ask	8733	false	m	8	Thomas Rogers	patient	m	Lawrence John Wargrave	asked	Thomas Rogers	false		false						
+8_0_8749_stared	26	8	Thomas Rogers	agent	stared	star	8749	false	m	0	Lawrence John Wargrave	patient	m	Thomas Rogers	stared	Lawrence John Wargrave	false		false						
+1_4_9396_asking	27	1	Vera Elizabeth Claythorne	agent	asking	ask	9396	false	f	4	William Henry Blore	patient	m	Vera Elizabeth Claythorne	asking	William Henry Blore	false		false						
+5_1_9622_looked	28	5	Emily Brent	agent	looked	look	9622	false	f	1	Vera Elizabeth Claythorne	patient	f	Emily Brent	looked	Vera Elizabeth Claythorne	false		false						
+1_5_9629_looked	29	1	Vera Elizabeth Claythorne	agent	looked	look	9629	false	f	5	Emily Brent	patient	f	Vera Elizabeth Claythorne	looked	Emily Brent	false		false						
+0_37_9860_say	30	0	Lawrence John Wargrave	agent	say	say	9860	false	m	37	Owen	patient	m	Vera Elizabeth Claythorne	say	Owen	true	agent: "Lawrence John Wargrave" → "Vera Elizabeth Claythorne"	false						
+8_10_9913_followed	31	8	Thomas Rogers	agent	followed	follow	9913	false	m	10	Isaac Morris	patient	m	Thomas Rogers	followed	INCORRECT_TRIPLE	true	patient: "Isaac Morris" → "INCORRECT_TRIPLE"	false						
+3_1_9934_came	32	3	Edward George Armstrong	agent	came	come	9934	false	m	1	Vera Elizabeth Claythorne	patient	f	Edward George Armstrong	came	Vera Elizabeth Claythorne	false		false						
+2_8_10528_said	33	2	Philip Lombard	agent	said	say	10528	false	m	8	Thomas Rogers	patient	m	Philip Lombard	said	Thomas Rogers	false		false						
+3_0_11042_stared	34	3	Edward George Armstrong	agent	stared	star	11042	false	m	0	Lawrence John Wargrave	patient	m	Edward George Armstrong	stared	Lawrence John Wargrave	false		false						
+8_9_11185_speak	35	8	Thomas Rogers	agent	speak	speak	11185	false	m	9	Ethel Rogers	patient	f	Thomas Rogers	speak	Ethel Rogers	false		false						
+3_9_11253_spoke	36	3	Edward George Armstrong	agent	spoke	speak	11253	false	m	9	Ethel Rogers	patient	f	Edward George Armstrong	spoke	Ethel Rogers	false		false						
+3_9_11343_bent	37	3	Edward George Armstrong	agent	bent	bend	11343	false	m	9	Ethel Rogers	patient	f	Edward George Armstrong	bent	Ethel Rogers	false		false						
+8_0_11466_stared	38	8	Thomas Rogers	agent	stared	star	11466	false	m	0	Lawrence John Wargrave	patient	m	Thomas Rogers	stared	Lawrence John Wargrave	false		false						
+0_2_11724_looked	39	0	Lawrence John Wargrave	agent	looked	look	11724	false	m	2	Philip Lombard	patient	m	Lawrence John Wargrave	looked	Philip Lombard	false		false						
+0_5_11870_get	40	0	Lawrence John Wargrave	agent	get	get	11870	false	m	5	Emily Brent	patient	f	Thomas Rogers	get	Emily Brent	true	agent: "Lawrence John Wargrave" → "Thomas Rogers"	false						
+3_0_11900_give	41	3	Edward George Armstrong	agent	give	give	11900	false	m	0	Lawrence John Wargrave	patient	m	Edward George Armstrong	give	Thomas Rogers	true	patient: "Lawrence John Wargrave" → "Thomas Rogers"	false						
+0_37_12185_know	42	0	Lawrence John Wargrave	agent	know	know	12185	false	m	37	Owen	patient	m	Thomas Rogers	know	Owen	true	agent: "Lawrence John Wargrave" → "Thomas Rogers"	false						
+8_37_12210_seen	43	8	Thomas Rogers	agent	seen	see	12210	true	m	37	Owen	patient	m	Thomas Rogers	seen	Owen	false		false						
+10_37_12231_seen	44	10	Isaac Morris	agent	seen	see	12231	true	m	37	Owen	patient	m	Thomas Rogers	seen	Owen	true	agent: "Isaac Morris" → "Thomas Rogers"	false						
+0_7_12580_stared	45	0	Lawrence John Wargrave	agent	stared	star	12580	false	m	7	Anthony James Marston	patient	m	Lawrence John Wargrave	stared	William Henry Blore	true	patient: "Anthony James Marston" → "William Henry Blore"	false						
+7_4_12590_standing	46	7	Anthony James Marston	agent	standing	stand	12590	false	m	4	William Henry Blore	patient	m	Anthony James Marston	standing	William Henry Blore	false		false						
+10_0_12642_drawn	47	10	Isaac Morris	agent	drawn	draw	12642	false	m	0	Lawrence John Wargrave	patient	m	Anthony James Marston	drawn	Lawrence John Wargrave	true	agent: "Isaac Morris" → "Anthony James Marston"	false						
+0_7_12931_said	48	0	Lawrence John Wargrave	agent	said	say	12931	false	m	7	Anthony James Marston	patient	m	INCORRECT_TRIPLE	said	Anthony James Marston	true	agent: "Lawrence John Wargrave" → "INCORRECT_TRIPLE"	false						
+0_4_13263_turned	49	0	Lawrence John Wargrave	agent	turned	turn	13263	false	m	4	William Henry Blore	patient	m	Lawrence John Wargrave	turned	William Henry Blore	false		false						
+10_4_13410_are	50	10	Isaac Morris	agent	are	be	13410	false	m	4	William Henry Blore	patient	m	William Henry Blore	are	William Henry Blore	true	agent: "Isaac Morris" → "William Henry Blore"	false						
+0_1_13488_set	51	0	Lawrence John Wargrave	agent	set	set	13488	true	m	1	Vera Elizabeth Claythorne	patient	f	INCORRECT_TRIPLE	set	Vera Elizabeth Claythorne	true	agent: "Lawrence John Wargrave" → "INCORRECT_TRIPLE"	false						
+7_4_13511_moved	52	7	Anthony James Marston	agent	moved	move	13511	false	m	4	William Henry Blore	patient	m	Anthony James Marston	moved	William Henry Blore	false		false						
+10_4_13554_got	53	10	Isaac Morris	agent	got	get	13554	false	m	4	William Henry Blore	patient	m	INCORRECT_TRIPLE	got	William Henry Blore	true	agent: "Isaac Morris" → "INCORRECT_TRIPLE"	false						
+4_37_13665_said	54	4	William Henry Blore	agent	said	say	13665	false	m	37	Owen	patient	m	INCORRECT_TRIPLE	said	Owen	true	agent: "William Henry Blore" → "INCORRECT_TRIPLE"	false						
+0_25_13933_seen	55	0	Lawrence John Wargrave	agent	seen	see	13933	true	m	25	Constance Culmington	patient	f	Lawrence John Wargrave	seen	Constance Culmington	false		false						
+3_6_14109_knows	56	3	Edward George Armstrong	agent	knows	know	14109	false	m	6	John Gordon Macarthur	patient	m	INCORRECT_TRIPLE	knows	John Gordon Macarthur	true	agent: "Edward George Armstrong" → "INCORRECT_TRIPLE"	false						
+3_0_14261_accuses	57	3	Edward George Armstrong	agent	accuses	accuse	14261	false	m	0	Lawrence John Wargrave	patient	m	Owen	accuses	Lawrence John Wargrave	true	agent: "Edward George Armstrong" → "Owen"	false						
+0_13_14272_remember	58	0	Lawrence John Wargrave	agent	remember	remember	14272	false	m	13	Edward Seton	patient	m	Lawrence John Wargrave	remember	Edward Seton	false		false						
+13_0_14278_came	59	13	Edward Seton	agent	came	come	14278	false	m	0	Lawrence John Wargrave	patient	m	Edward Seton	came	Lawrence John Wargrave	false		false						
+0_13_14404_passed	60	0	Lawrence John Wargrave	agent	passed	pass	14404	false	m	13	Edward Seton	patient	m	Lawrence John Wargrave	passed	Edward Seton	false		false						
+3_29_14433_met	61	3	Edward George Armstrong	agent	met	meet	14433	false	m	29	Matthews	patient	m	Edward George Armstrong	met	Matthews	false		false						
+0_13_14551_know	62	0	Lawrence John Wargrave	agent	know	know	14551	false	m	13	Edward Seton	patient	m	Lawrence John Wargrave	know	Edward Seton	false		false						
+3_13_14593_said	63	3	Edward George Armstrong	agent	said	say	14593	false	m	13	Edward Seton	patient	m	INCORRECT_TRIPLE	said	Edward Seton	true	agent: "Edward George Armstrong" → "INCORRECT_TRIPLE"	false						
+1_15_14669_swam	64	1	Vera Elizabeth Claythorne	agent	swam	swam	14669	false	f	15	Cyril Ogilvie Hamilton	patient	m	Vera Elizabeth Claythorne	swam	Cyril Ogilvie Hamilton	false		false						
+6_1_14749_patted	65	6	John Gordon Macarthur	agent	patted	pat	14749	false	m	1	Vera Elizabeth Claythorne	patient	f	John Gordon Macarthur	patted	Vera Elizabeth Claythorne	false		false						
+2_19_14839_said	66	2	Philip Lombard	agent	said	say	14839	false	m	19	Arthur Richmond	patient	m	Owen	said	Arthur Richmond	true	agent: "Philip Lombard" → "Owen"	false						
+10_1_15002_abandoned	67	10	Isaac Morris	agent	abandoned	abandon	15002	false	m	1	Vera Elizabeth Claythorne	patient	f	INCORRECT_TRIPLE	abandoned	Vera Elizabeth Claythorne	true	agent: "Anthony James Marston" → "INCORRECT_TRIPLE"	false						
+9_22_15433_were	68	9	Ethel Rogers	agent	were	be	15433	false	f	22	Jennifer Brady	patient	f	Ethel Rogers	were	Jennifer Brady	false		false						
+2_37_15549_looked	69	2	Philip Lombard	agent	looked	look	15549	false	m	37	Owen	patient	m	Philip Lombard	looked	Thomas Rogers	true	patient: "Owen" → "Thomas Rogers"	false						
+18_1_15731_convicted	70	18	James Stephen Landor	agent	convicted	convict	15731	false	m	1	Vera Elizabeth Claythorne	patient	f	INCORRECT_TRIPLE	convicted	Vera Elizabeth Claythorne	true	agent: "James Stephen Landor" → "INCORRECT_TRIPLE"	false						
+10_1_15813_complimented	71	10	Isaac Morris	agent	complimented	compliment	15813	false	m	1	Vera Elizabeth Claythorne	patient	f	INCORRECT_TRIPLE	complimented	Vera Elizabeth Claythorne	true	agent: "Isaac Morris" → "INCORRECT_TRIPLE"	false						
+5_3_15906_glanced	72	5	Emily Brent	agent	glanced	glance	15906	false	f	3	Edward George Armstrong	patient	m	Emily Brent	glanced	Edward George Armstrong	false		false						
+3_5_16086_killed	73	3	Edward George Armstrong	agent	killed	kill	16086	false	m	5	Emily Brent	patient	f	Edward George Armstrong	killed	Louisa Mary Clees	true	patient: "Emily Brent" → "Louisa Mary Clees"	false						
+10_1_16252_reserve	74	10	Isaac Morris	agent	reserve	reserve	16252	false	m	1	Vera Elizabeth Claythorne	patient	f	INCORRECT_TRIPLE	reserve	Vera Elizabeth Claythorne	true	agent: "Isaac Morris" → "INCORRECT_TRIPLE"	false						
+8_1_16466_beg	75	8	Thomas Rogers	agent	beg	beg	16466	false	m	1	Vera Elizabeth Claythorne	patient	f	Thomas Rogers	beg	Lawrence John Wargrave	true	patient: "Vera Elizabeth Claythorne" → "Lawrence John Wargrave"	false						
+3_7_16758_went	76	3	Edward George Armstrong	agent	went	go	16758	false	m	7	Anthony James Marston	patient	m	Edward George Armstrong	went	Anthony James Marston	false		false						
+3_7_16858_peering	77	3	Edward George Armstrong	agent	peering	peer	16858	false	m	7	Anthony James Marston	patient	m	Edward George Armstrong	peering	Anthony James Marston	false		false						
+3_7_17440_carried	78	3	Edward George Armstrong	agent	carried	carry	17440	false	m	7	Anthony James Marston	patient	m	Edward George Armstrong	carried	Anthony James Marston	false		false						
+3_7_17452_laid	79	3	Edward George Armstrong	agent	laid	lay	17452	false	m	7	Anthony James Marston	patient	m	Edward George Armstrong	laid	Anthony James Marston	false		false						
+3_8_17579_said	80	3	Edward George Armstrong	agent	said	say	17579	false	m	8	Thomas Rogers	patient	m	Edward George Armstrong	said	Thomas Rogers	false		false						
+0_13_17842_thinking	81	0	Lawrence John Wargrave	agent	thinking	think	17842	false	m	13	Edward Seton	patient	m	Lawrence John Wargrave	thinking	Edward Seton	false		false						
+0_13_17848_remembered	82	0	Lawrence John Wargrave	agent	remembered	remember	17848	false	m	13	Edward Seton	patient	m	Lawrence John Wargrave	remembered	Edward Seton	false		false						
+0_13_18138_cooked	83	0	Lawrence John Wargrave	agent	cooked	cook	18138	false	m	13	Edward Seton	patient	m	Lawrence John Wargrave	cooked	Edward Seton	false		false						
+6_19_18246_liked	84	6	John Gordon Macarthur	agent	liked	like	18246	false	m	19	Arthur Richmond	patient	m	John Gordon Macarthur	liked	Arthur Richmond	false		false						
+20_19_18262_liked	85	20	Leslie Macarthur	agent	liked	like	18262	false	f	19	Arthur Richmond	patient	m	Leslie Macarthur	liked	Arthur Richmond	false		false						
+new_1774556740195_8qnbd	-1		Coroner	agent	acquit	acquit		false			Vera Elizabeth Claythorne	patient		Coroner	acquit	Vera Elizabeth Claythorne	true	new triple	true	4221	4228	4233	4239	4240	4242
+new_1774556774567_wdnn1	-1		Coroner	agent	complimented	complimented		false			Vera Elizabeth Claythorne	patient		Coroner	complimented	Vera Elizabeth Claythorne	true	new triple	true	4259	4261	4271	4283	4284	4286
+new_1774557148309_nbu3q	-1		Isaac Morris	agent	am empowered to hand	am empowered to hand		false			Philip Lombard	patient		Isaac Morris	am empowered to hand	Philip Lombard	true	new triple	true	6477	6478	6479	6499	6500	6503
+new_1774557291464_l598y	-1		Philip Lombard	agent	had darted	had darted		false			Isaac Morris	patient		Philip Lombard	had darted	Isaac Morris	true	new triple	true	6971	6973	6974	6984	7008	7017
+new_1774558037815_fgmu7	-1		Lawrence John Wargrave	agent	followed	followed		false			Emily Brent	patient		Lawrence John Wargrave	followed	Emily Brent	true	new triple	true	19870	19890	19891	19899	19900	19903
+new_1774558301374_yox78	-1		Vera Elizabeth Claythorne	agent	am	am		false			Owen	patient		Vera Elizabeth Claythorne	am	Owen	true	new triple	true	22968	22969	22970	22972	22973	22982
+new_1774558905639_uiitc	-1		Badger Berkeley	agent	let	let		false			Anthony James Marston	patient		Badger Berkeley	let	Anthony James Marston	true	new triple	true	31560	31566	31595	31598	31599	31602
+new_1774628887803_3h8v1	-1		Edward George Armstrong	agent	chatted	chatted		false			Fred Narracott	patient		Edward George Armstrong	chatted	Fred Narracott	true	new triple	true	36449	36451	36456	36463	36467	36478
+new_1774628982676_g5iwh	-1		Edward George Armstrong	agent	seen	seen		false			Lawrence John Wargrave	patient		Edward George Armstrong	seen	Lawrence John Wargrave	true	new triple	true	37846	37848	37849	37853	37984	37996
+new_1774629024023_hhej8	-1		Edward George Armstrong	agent	given	given		false			Lawrence John Wargrave	patient		Edward George Armstrong	given	Lawrence John Wargrave	true	new triple	true	37998	38000	38003	38008	38030	38033
+new_1774629203445_syx4f	-1		Edward George Wargrave	agent	go and pay	go and pay		false			Owen	patient		Edward George Wargrave	go and pay	Owen	true	new triple	true	38736	38737	38743	38753	38769	38788
+new_1774629310810_f5bxf	-1		Lawrence John Wargrave	agent	didn't care	didn't care		false			Vera Elizabeth Claythorne	patient		Lawrence John Wargrave	didn't care	Vera Elizabeth Claythorne	true	new triple	true	39630	39632	39633	39644	39649	39657
+new_1774629449029_wadid	-1		All 10	agent	talk	talk		false			All 10	patient		All 10	talk	All 10	true	new triple	true	42508	42512	42526	42530	42534	42544
+new_1774629516915_wqbsm	-1		Edward George Armstrong	agent	listening	listening		false			Lawrence John Wargrave	patient		Edward George Armstrong	listening	Lawrence John Wargrave	true	new triple	true	42672	42685	42708	42717	42721	42724
+new_1774629542915_glt4t	-1		Anthony Marston	agent	listening	listening		false			Lawrence John Wargrave	patient		Anthony Marston	listening	Lawrence John Wargrave	true	new triple	true	42690	42702	42708	42717	42721	42724
+new_1774629570821_ntuje	-1		Emily Brent	agent	chatted	chatted		false			John Gordon Macarthur	patient		Emily Brent	chatted	John Gordon Macarthur	true	new triple	true	42726	42736	42737	42744	42748	42765
+new_1774629709540_06wu1	-1		Owen	agent	get	get		false			Thomas Rogers	patient		Owen	get	Thomas Rogers	true	new triple	true	44441	44452	44471	44474	44475	44484
+new_1774629733253_3aboa	-1		Owen	agent	get	get		false			Ethel Rogers	patient		Owen	get	Ethel Rogers	true	new triple	true	44441	44452	44471	44474	44475	44484
+new_1774629799306_8uigz	-1		Emily Brent	agent	met	met		false			Owen	patient		Emily Brent	met	Owen	true	new triple	true	44881	44882	44892	44895	44911	44915
+new_1774629931933_012by	-1		All 10	agent	looked	looked		false			All 10	patient		All 10	looked	All 10	true	new triple	true	45988	45992	45993	45999	46014	46024
+new_1774629972799_oowz3	-1		Edward George Armstrong	agent	cause	cause		false			Louisa Mary Clees	patient		Edward George Armstrong	cause	Louisa Mary Clees	true	new triple	true	46142	46165	46214	46219	46233	46250
+new_1774630000980_8xhyp	-1		Emily Caroline Brent	agent	were responsible	were responsible		false			Beatrice Taylor	patient		Emily Caroline Brent	were responsible	Beatrice Taylor	true	new triple	true	46253	46273	46313	46329	46347	46362
+new_1774630029941_e2fi7	-1		Wiliam Henry Blore	agent	brought about	brought about		false			James Stephen Landor	patient		Wiliam Henry Blore	brought about	James Stephen Landor	true	new triple	true	46365	46384	46395	46408	46422	46442
+new_1774630063911_irlm1	-1		Vera Elizabeth Claythorne	agent	killed	killed		false			Cyril Oglivie Hamilton	patient		Vera Elizabeth Claythorne	killed	Cyril Oglivie Hamilton	true	new triple	true	46467	46492	46536	46542	46543	46565
+new_1774630123989_itsgp	-1		John Gordon Macarthur	agent	sent	sent		false			Arthur Richmond	patient		John Gordon Macarthur	sent	Arthur Richmond	true	new triple	true	46702	46723	46776	46780	46800	46815
+new_1774630154657_hwktq	-1		Anthony James Marston	agent	were guilty	were guilty		false			John Combes	patient		Anthony James Marston	were guilty	John Combes	true	new triple	true	46832	46853	46900	46911	46929	46933
+new_1774630176339_ajz5l	-1		Anthony James Marston	agent	were guilty	were guilty		false			Lucy Combes	patient		Anthony James Marston	were guilty	Lucy Combes	true	new triple	true	46832	46853	46900	46911	46938	46949
+new_1774630199712_80wnx	-1		Thomas Rogers	agent	brought about	brought about		false			Jennifer Brady	patient		Thomas Rogers	brought about	Jennifer Brady	true	new triple	true	46952	46965	47018	47031	47045	47059
+new_1774630219686_mouq2	-1		Ethel Rogers	agent	brought about	brought about		false			Jennifer Brady	patient		Ethel Rogers	brought about	Jennifer Brady	true	new triple	true	46970	46982	47018	47031	47045	47059
+new_1774630244220_h4kyj	-1		Lawrence John Wargrave	agent	were guilty	were guilty		false			Edward Seton	patient		Lawrence John Wargrave	were guilty	Edward Seton	true	new triple	true	47062	47084	47128	47139	47157	47169
+new_1774630289156_lsfdl	-1		Anthony James Marston	agent	help	help		false			Philip Lombard	patient		Anthony James Marston	help	Philip Lombard	true	new triple	true	47631	47638	47649	47653	47654	47657
+new_1774630321151_kl1yz	-1		Philip Lombard	agent	lifted	lifted		false			Ethel Rogers	patient		Philip Lombard	lifted	Ethel Rogers	true	new triple	true	47673	47677	47678	47684	47688	47697
+new_1774630342341_0dbps	-1		Anthony James Marston	agent	lifted	lifted		false			Ethel Rogers	patient		Anthony James Marston	lifted	Ethel Rogers	true	new triple	true	47667	47671	47678	47684	47688	47697
+new_1774630382595_p3z1v	-1		Philip Lombard	agent	carried	carried		false			Ethel Rogers	patient		Philip Lombard	carried	Ethel Rogers	true	new triple	true	47673	47677	47702	47709	47710	47713
+new_1774630427862_ags5s	-1		Anthony James Marston	agent	carried	carried		false			Ethel Rogers	patient		Anthony James Marston	carried	Ethel Rogers	true	new triple	true	47673	47677	47702	47709	47710	47713
+new_1774630473471_3rc1r	-1		Edward George Armstrong	agent	helped	helped		false			Philip Lombard	patient		Edward George Armstrong	helped	Philip Lombard	true	new triple	true	47772	47774	47775	47781	47782	47786
+new_1774630505816_i32hj	-1		Edward George Armstrong	agent	helped	helped		false			Anthony James Marston	patient		Edward George Armstrong	helped	Anthony James Marston	true	new triple	true	47772	47774	47775	47781	47782	47786
+new_1774630557136_nlvdc	-1		Edward George Armstrong	agent	bent over	bent over		false			Ethel Rogers	patient		Edward George Armstrong	bent over	Ethel Rogers	true	new triple	true	47772	47774	47817	47826	47827	47830
+new_1774630734094_g88vy	-1		Emily Caroline Brent	agent	bending over	bending over		false			Ethel Rogers	patient		Emily Caroline Brent	bending over	Ethel Rogers	true	new triple	true	50758	50768	50773	50785	50806	50817
+new_1774630987722_cyxmo	-1		Edward George Armstrong	agent	given	given		false			Ethel Rogers	patient		Edward George Armstrong	given	Ethel Rogers	true	new triple	true	54457	54458	54462	54467	54468	54471
+new_1774631096735_nn0z2	-1		Thomas Rogers	agent	tell	tell		false			Lawrence John Wargrave	patient		Thomas Rogers	tell	Lawrence John Wargrave	true	new triple	true	54899	54902	54906	54910	54911	54913
+new_1774631279383_w836p	-1		Lawrence John Wargrave	agent	let	let		false			William Henry Blore	patient		Lawrence John Wargrave	let	William Henry Blore	true	new triple	true	56238	56241	56250	56253	56254	56256
+new_1774631361665_k1lx4	-1		Lawrence John Wargrave	agent	am obliged	am obliged		false			Anthony James Marston	patient		Lawrence John Wargrave	am obliged	Anthony James Marston	true	new triple	true	56760	56761	56762	56772	56776	56779
+new_1774631441023_2r5mj	-1		Emily Caroline Brent	agent	am acquainted	am acquainted		false			Oliver	patient		Emily Caroline Brent	am acquainted	Oliver	true	new triple	true	57630	57631	57632	57645	57653	57664
+new_1774631462116_6lt2z	-1		Emily Caroline Brent	agent	am acquainted	am acquainted		false			Ogden	patient		Emily Caroline Brent	am acquainted	Ogden	true	new triple	true	57630	57631	57632	57645	57681	57691
+new_1774631489663_2njc5	-1		Emily Caroline Brent	agent	never met	never met		false			Owen	patient		Emily Caroline Brent	never met	Owen	true	new triple	true	57717	57718	57724	57733	57783	57787
+new_1774631595987_zzxcs	-1		Badger Berkeley	agent	Told	Told		false			Anthony James Marston	patient		Badger Berkeley	Told	Anthony James Marston	true	new triple	true	58214	58229	58312	58316	58317	58319
+new_1774631638037_gwf1z	-1		Philip Lombard	agent	staring	staring		false			William Henry Blore	patient		Philip Lombard	staring	William Henry Blore	true	new triple	true	58623	58630	58645	58652	58656	58661
+new_1774631878913_yi2th	-1		Owen	agent	instructed	instructed		false			William Henry Blore	patient		Owen	instructed	William Henry Blore	true	new triple	true	60949	60953	61004	61014	61015	61017
+new_1774631920817_7snth	-1		William Henry Blore	agent	don't believe	don't believe		false			Owen	patient		William Henry Blore	don't believe	Owen	true	new triple	true	61265	61266	61267	61280	61293	61304
+new_1774632288805_kfgau	-1		Lawrence John Wargrave	agent	knew nothing	knew nothing		false			Edward Seton	patient		Lawrence John Wargrave	knew nothing	Edward Seton	true	new triple	true	65346	65347	65348	65360	65364	65369
+new_1774632376662_hpvlc	-1		Coroner	agent	exonerated	exonerated		false			Vera Elizabeth Claythorne	patient		Coroner	exonerated	Vera Elizabeth Claythorne	true	new triple	true	65894	65901	65902	65912	65913	65915
+new_1774632410714_us4i0	-1		Mrs. Hamilton	agent	didn't blame	didn't blame		false			Vera Elizabeth Claythorne	patient		Mrs. Hamilton	didn't blame	Vera Elizabeth Claythorne	true	new triple	true	65962	65965	65966	65978	65979	65981
+new_1774632636917_0bmw5	-1		Anthony James Marston	agent	ran	ran		false			John Combes	patient		Anthony James Marston	ran	John Combes	true	new triple	true	67655	67656	67657	67660	67650	67654
+new_1774632681545_013fe	-1		Anthony James Marston	agent	ran	ran		false			Lucy Combes	patient		Anthony James Marston	ran	Lucy Combes	true	new triple	true	67655	67656	67657	67660	67650	67654
+new_1774632752612_b0m78	-1		Thomas Rogers	agent	were	were		false			Jennifer Brady	patient		Thomas Rogers	were	Jennifer Brady	true	new triple	true	68903	68904	68905	68909	68922	68932
+new_1774633377722_7kei3	-1		Philip Lombard	agent	carried	carried		false			Anthony James Marston	patient		Philip Lombard	carried	Anthony James Marston	true	new triple	true	77469	77476	77481	77488	77516	77531
+new_1774633401462_ehs6c	-1		Philip Lombard	agent	laid	laid		false			Anthony James Marston	patient		Philip Lombard	laid	Anthony James Marston	true	new triple	true	77469	77476	77580	77584	77592	77595
+new_1774633582311_qkbi9	-1		John Gordon Macarthur	agent	seeing	seeing		false			Arthur Richmond	patient		John Gordon Macarthur	seeing	Arthur Richmond	true	new triple	true	81116	81118	81124	81130	81131	81146
+new_1774633640055_4ct4g	-1		Leslie Macarthur	agent	hadn't found	hadn't found		false			Arthur Riochmond	patient		Leslie Macarthur	hadn't found	Arthur Riochmond	true	new triple	true	81387	81390	81391	81403	81404	81419
+new_1774633666471_cztnj	-1		Leslie Macarthur	agent	teased	teased		false			Arthur Richmond	patient		Leslie Macarthur	teased	Arthur Richmond	true	new triple	true	81530	81533	81536	81542	81543	81546
+new_1774633687448_z56jh	-1		Leslie Macarthur	agent	ragged	ragged		false			Arthur Richmond	patient		Leslie Macarthur	ragged	Arthur Richmond	true	new triple	true	81530	81533	81565	81571	81572	81575
+new_1774633728251_zawc3	-1		John Gordon Macarthur	agent	loved	loved		false			Leslie Macarthur	patient		John Gordon Macarthur	loved	Leslie Macarthur	true	new triple	true	81786	81788	81791	81796	81797	81803
+new_1774633756007_a5dqc	-1		John Gordon Macarthur	agent	see	see		false			Leslie Macarthur	patient		John Gordon Macarthur	see	Leslie Macarthur	true	new triple	true	81805	81807	81814	81817	81818	81821
+new_1774633790069_ccoms	-1		John Gordon Macarthur	agent	believed in	believed in		false			Leslie Macarthur	patient		John Gordon Macarthur	believed in	Leslie Macarthur	true	new triple	true	81943	81945	81948	81959	81960	81963
+new_1774633975746_c2x7s	-1		John Gordon Macarthur	agent	sent	sent		false			Arthur Richmond	patient		John Gordon Macarthur	sent	Arthur Richmond	true	new triple	true	83225	83227	83230	83234	83235	83243
+new_1774634036796_wyow5	-1		Leslie Macarthur	agent	wept	wept		false			Arthur Richmond	patient		Leslie Macarthur	wept	Arthur Richmond	true	new triple	true	83918	83924	83929	83933	83938	83947
+new_1774634200173_repn9	-1		Vera Elizabeth Claythorne	agent	think	think		false			Hugo Hamilton	patient		Vera Elizabeth Claythorne	think	Hugo Hamilton	true	new triple	true	87344	87347	87355	87360	87364	87367
+new_1774634251822_opfr3	-1		Hugo Hamilton	agent	love	love		false			Vera Elizabeth Claythorne	patient		Hugo Hamilton	love	Vera Elizabeth Claythorne	true	new triple	true	87877	87878	87879	87883	87884	87887
+new_1774634289564_3b410	-1		Hugo Hamilton	agent	can't ask	can't ask		false			Vera Elizabeth Claythorne	patient		Hugo Hamilton	can't ask	Vera Elizabeth Claythorne	true	new triple	true	87969	87970	87971	87980	87981	87984
+new_1774634349070_9irac	-1		Hugo Hamilton	agent	m awfully fond	m awfully fond		false			Cyril Ogilvie Hamilton	patient		Hugo Hamilton	m awfully fond	Cyril Ogilvie Hamilton	true	new triple	true	88445	88446	88447	88461	88465	88468
+new_1774634416192_pcba4	-1		Cyril Ogilvie Hamilton	agent	was fond	was fond		false			Hugo Hamilton	patient		Cyril Ogilvie Hamilton	was fond	Hugo Hamilton	true	new triple	true	88476	88478	88479	88487	88491	88494

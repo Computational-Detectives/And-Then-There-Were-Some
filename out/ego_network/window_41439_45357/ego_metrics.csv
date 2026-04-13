@@ -1,0 +1,7 @@
+window_lo,window_hi,n_alive,canonical_id,name,ego_size,density,effective_size,constraint,hierarchy,degree,all_dyadic_constraint,most_constraining_alter,alter_dyadic_constraint,structural_keystone,keystone_sensitivity,all_keystone_sensitivity,z_density,z_effective_size,z_constraint,z_hierarchy,null_mean_density,null_mean_effective_size,null_mean_constraint,null_mean_hierarchy,jaccard_with_victim,victim_betweenness,bridging_gap
+41439,45357,6,0,Lawrence John Wargrave,1,0.0,1.0,1.0,1.0,1,"{""Edward George Armstrong"": 1.0}",Edward George Armstrong,1.0,,,{},,,,,,,,,0.0,0.0,0.8
+41439,45357,6,1,Vera Elizabeth Claythorne,1,0.0,1.0,1.0,1.0,1,"{""Emily Brent"": 1.0}",Emily Brent,1.0,,,{},,,,,,,,,0.0,0.2,0.4
+41439,45357,6,2,Philip Lombard,1,0.0,1.0,1.0,1.0,1,"{""William Henry Blore"": 1.0}",William Henry Blore,1.0,,,{},,,,,,,,,0.0,0.0,-0.2
+41439,45357,6,3,Edward George Armstrong,2,1.0,1.0,1.125,0.0,2,"{""Vera Elizabeth Claythorne"": 1.0, ""Emily Brent"": 1.0}",Vera Elizabeth Claythorne,1.0,Vera Elizabeth Claythorne,0.125,"{""Vera Elizabeth Claythorne"": 0.125, ""Emily Brent"": 0.125}",,,,,1.0,1.0,1.125,0.0,0.3333,0.2,0.6
+41439,45357,6,4,William Henry Blore,1,0.0,1.0,1.0,1.0,1,"{""Philip Lombard"": 1.0}",Philip Lombard,1.0,,,{},,,,,,,,,0.0,0.0,-0.2
+41439,45357,6,5,Emily Brent,2,0.0,2.0,0.5,0.1095,2,"{""Vera Elizabeth Claythorne"": 0.36, ""Beatrice Taylor"": 0.16}",Vera Elizabeth Claythorne,0.36,Vera Elizabeth Claythorne,0.5,"{""Vera Elizabeth Claythorne"": 0.5, ""Beatrice Taylor"": 0.5}",,,,,0.0,2.0,0.5,0.0,,,-0.2

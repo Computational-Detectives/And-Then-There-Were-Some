@@ -1,0 +1,212 @@
+19:27:19 
+================================================================================
+4-STAGE MANUAL EXTRACTION PIPELINE
+================================================================================
+19:27:19     Stages to run: [0, 1, 2, 3, 4]
+19:27:19     Input text: data/book/attwn.md
+19:27:19     Names CSV: /Users/saqr/Documents/UniSachen/UdS/0_WS2526/Social Network Analysis/Project/data/names_owen_split.csv
+19:27:19     Output dir: out_log
+19:27:19     Coref model: maverick
+19:27:19     Iterative refinement: ENABLED
+19:27:19 [*] Pre-loading global spaCy model 'data/models/en_core_web_sm'...
+19:32:35     Model loaded
+19:32:35 [*] Pre-loading global GLiNER model...
+19:34:23     GLiNER model loaded
+19:34:23 
+================================================================================
+STAGE 0 — TOKENISATION
+================================================================================
+19:34:23 
+[1] Loading raw text...
+19:34:23     Loaded 299296 characters from attwn.md
+19:34:23 
+[2] Loading spaCy model 'data/models/en_core_web_sm'...
+19:34:23     Using pre-loaded global spaCy model.
+19:34:23 
+[3] Tokenising text per paragraph...
+19:34:33     Produced 68825 tokens across 5908 sentences in 1104 paragraphs
+19:34:33     Avg tokens per sentence: 11.6
+19:34:33 
+--------------------------------------------------------------------------------
+TOKENISATION STATISTICS
+--------------------------------------------------------------------------------
+19:34:33 
+[4] Saving .tokens file...
+19:34:33 [✓] Saved to → out_log/attwn.tokens
+19:34:33 [✓] Stage 0 completed in 10.3s
+
+19:34:33 
+================================================================================
+STAGE 1 — CHARACTER RESOLUTION
+================================================================================
+19:34:33 
+[1] Loading text...
+19:34:33     Loaded 299296 characters
+19:34:33 
+[2] Loading canonical names...
+19:34:33     Loaded 38 canonical characters
+19:34:33 
+[3] Loading spaCy + GLiNER models...
+19:34:33     Using pre-loaded global spaCy model.
+19:34:33     Using pre-loaded global GLiNER model
+19:34:33 
+[4] Segmenting sentences...
+19:34:35     Found 5908 sentences
+19:34:35 
+[5] Running NER (GLiNER + spaCy)...
+19:39:25     Detected 4860 PERSON spans
+19:39:25 
+[7] Running dictionary pre-pass...
+19:39:28     Found 16655 additional spans from dictionary
+19:39:28     Total unique spans after merge: 4907
+19:39:28 
+[7] Building alias dictionary...
+19:39:28     Auto-accepted: 193 surface forms
+19:39:28     Flagged for review: 547 surface forms
+19:39:28 
+--------------------------------------------------------------------------------
+STAGE 1 — VERBOSE STATISTICS
+--------------------------------------------------------------------------------
+19:39:28 
+--------------------------------------------------------------------------------
+ALIAS DICTIONARY
+--------------------------------------------------------------------------------
+19:39:28 
+[8] Saving Stage 1 outputs...
+19:39:28 [✓] Saved to → out_log/char_resolution
+19:39:28 [✓] Stage 1 completed in 294.5s
+
+19:39:28 Launching Stage 2...
+19:39:28     Found isolated environment: .venv_coref
+20:04:58 [✓] Stage 2 completed in 1529.8s
+
+20:04:58 
+================================================================================
+STAGE 3 — VERB/ACTION EXTRACTION
+================================================================================
+20:04:58 
+[1] Loading inputs...
+20:04:58     Loaded 15360 resolved spans
+20:04:58     Loaded 68825 tokens
+20:04:58 
+[2] Loading spaCy model...
+20:04:58     Using pre-loaded global spaCy model.
+20:04:58 
+[3] Extracting verbs...
+20:05:10     Extracted 4396 (character, verb) pairs
+20:05:10     VerbNet/FrameNet categorised: 4367/4396 (99.3%)
+20:05:10     Uncategorised: 29
+20:05:10     Unique verb lemmas: 679
+20:05:10     Characters with verbs: 30
+20:05:10 
+--------------------------------------------------------------------------------
+STAGE 3 — VERBOSE STATISTICS
+--------------------------------------------------------------------------------
+20:05:10     Per-Character Verb Counts:
+20:05:10       Lawrence John Wargrave                715 verbs
+20:05:10       Vera Elizabeth Claythorne             686 verbs
+20:05:10       Philip Lombard                        605 verbs
+20:05:10       Edward George Armstrong               550 verbs
+20:05:10       William Henry Blore                   502 verbs
+20:05:10       Emily Brent                           250 verbs
+20:05:10       Thomas Rogers                         246 verbs
+20:05:10       Isaac Morris                          184 verbs
+20:05:10       John Gordon Macarthur                 154 verbs
+20:05:10       Anthony James Marston                 109 verbs
+20:05:10       Ethel Rogers                           74 verbs
+20:05:10       Hugo Hamilton                          56 verbs
+20:05:10       Thomas Legge                           48 verbs
+20:05:10       Owen                                   40 verbs
+20:05:10       Maine                                  28 verbs
+20:05:10       Fred Narracott                         23 verbs
+20:05:10       Cyril Ogilvie Hamilton                 23 verbs
+20:05:10       Leslie Macarthur                       22 verbs
+20:05:10       Edward Seton                           18 verbs
+20:05:10       James Stephen Landor                   13 verbs
+20:05:10       Beatrice Taylor                        11 verbs
+20:05:10       Armitage                               10 verbs
+20:05:10       Arthur Richmond                         8 verbs
+20:05:10       Constance Culmington                    8 verbs
+20:05:10       Jennifer Brady                          6 verbs
+20:05:10       Matthews                                2 verbs
+20:05:10       Badger Berkeley                         2 verbs
+20:05:10       Gabrielle Turl                          1 verbs
+20:05:10       Elmer Robson                            1 verbs
+20:05:10       Merryweather                            1 verbs
+20:05:10 
+    Verb Modifiers:
+20:05:10       Passive constructions:    80  (1.8%)
+20:05:10       Negated verbs:           339  (7.7%)
+20:05:10 
+    Top Verb Categories:
+20:05:10       COMMUNICATION         1050  ( 23.9%)
+20:05:10       STATE                  479  ( 10.9%)
+20:05:10       COGNITION              394  (  9.0%)
+20:05:10       MOTION                 336  (  7.6%)
+20:05:10       PERCEPTION             213  (  4.8%)
+20:05:10       OBTAINING              188  (  4.3%)
+20:05:10       POSSESSION             133  (  3.0%)
+20:05:10       BODY_POSITION           82  (  1.9%)
+20:05:10       ABANDONMENT             74  (  1.7%)
+20:05:10       DESIRE                  64  (  1.5%)
+20:05:10       TRANSFER                62  (  1.4%)
+20:05:10       NONVERBAL_EXPRESSION    61  (  1.4%)
+20:05:10       AMUSE                   60  (  1.4%)
+20:05:10       CONJECTURE              52  (  1.2%)
+20:05:10       WINK                    44  (  1.0%)
+20:05:10 
+    Top 15 Verb Lemmas:
+20:05:10       say                    863
+20:05:10       be                     467
+20:05:10       think                  153
+20:05:10       go                     128
+20:05:10       know                   115
+20:05:10       have                    96
+20:05:10       get                     86
+20:05:10       come                    73
+20:05:10       look                    68
+20:05:10       do                      68
+20:05:10       see                     64
+20:05:10       take                    48
+20:05:10       sit                     46
+20:05:10       hear                    36
+20:05:10       make                    32
+20:05:10 
+[4] Saving Stage 3 outputs...
+20:05:10 [✓] Saved to → out_log/verb_extraction
+20:05:10 [✓] Stage 3 completed in 12.5s
+
+20:05:10 
+================================================================================
+STAGE 4 — OBJECT EXTRACTION & TRIPLE ASSEMBLY
+================================================================================
+20:05:10 
+[1] Loading inputs...
+20:05:10     Loaded 4396 (character, verb) pairs
+20:05:10     Loaded 15360 resolved spans
+20:05:10     Loaded 3868 alias entries
+20:05:10 
+[2] Loading models...
+20:05:10     Using pre-loaded global spaCy model.
+20:05:10 
+[3] Building triples...
+20:05:13     Protagonist-to-protagonist triples: 343
+20:05:13 
+--------------------------------------------------------------------------------
+STAGE 4 — VERBOSE STATISTICS
+--------------------------------------------------------------------------------
+20:05:13 
+--------------------------------------------------------------------------------
+SAMPLE TRIPLES (first 10)
+--------------------------------------------------------------------------------
+20:05:13 
+[4] Saving Stage 4 outputs...
+20:05:13 [✓] Saved to → out_log/obj_extraction
+20:05:13 [✓] Stage 4 completed in 2.8s
+
+20:05:13 
+================================================================================
+PIPELINE COMPLETE
+================================================================================
+20:05:13 [✓] Total time: 2273.7s
+20:05:13     Outputs in: out_log

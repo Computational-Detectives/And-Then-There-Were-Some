@@ -1,8 +1,11 @@
-booknlp
-pandas
-networkx
-torch
 colorama
-pyvis
+pandas
+spacy
+nltk
+torch
 rapidfuzz
-textacy
+networkx
+pyvis
+matplotlib
+# protobuf==3.20.0
+# transformers>=4.34,<5.0

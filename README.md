@@ -87,6 +87,8 @@ options:
 ```
 
 #### Processing of Corrections
+The original triples can be found in `out/obj_extraction/triples.csv` whereas the corrected and processed triples are located in `out/obj_extraction/corrections/proccessed/processed_triples_updated.csv`.
+
 ```bash
 # Process corrections by running the following script as a Python module from the main VENV
 python -m src.verification.process_corrections -h
@@ -104,31 +106,34 @@ options:
 ```
 
 ## Run Analysis Pipeline
-To reproduce the results obtained in the study, run `run_analysis.py`.
+To reproduce the results obtained in the study, run `run_analysis.py`. This will run `ego_network.py`,
+`ego_borda.py`, and `ego_borda_viz.py` at once to get the full suite of results.
+
+*Note: Currently, only the `ego` option is available. The option `timeline` will not produce any results.*
 
 ```bash
-# Run script (can be run as-is, no arguments need to be passed)
-python run_pipeline.py
-
-# Display usage information
-python run_pipeline.py -h
-usage: run_pipeline.py [-h] [--text TEXT] [-o OUTPUT] [--stages STAGES] [--refine] [--coref-model {maverick}] [--include-non-protagonist] [--names NAMES]
-                       [-v] [--debug]
-
-4-Stage Manual Triple Extraction Pipeline
+# Run ego-network full analysis
+python run_analysis.py ego -h
+usage: run_analysis.py ego [-h] [-i INPUT] [-f {triples,edges}] [-o OUT] [--max-windows MAX_WINDOWS] [-t CUTPOINTS] [--include-new-triples]
+                           [-k MIN_OVERLAP] [-w]
 
 options:
   -h, --help            show this help message and exit
-  --text TEXT           Path to input text file. Default: /data/book/attwn.md
-  -o OUTPUT, --output OUTPUT
-                        Output directory. Default: /out
-  --stages STAGES       Comma-separated list of stages to run (0=tokenise, 1-4=pipeline). Default: 0,1,2,3,4
-  --refine              Enable iterative Stage 1 ↔ 2 refinement pass
-  --coref-model {maverick}
-                        Coreference model to use. Default: maverick
-  --include-non-protagonist
-                        Also extract triples where the object is not a protagonist
-  --names NAMES         Path to canonical names CSV. Default: /data/names_owen_split.csv
-  -v, --verbose         Verbose output
-  --debug               Start the spaCy model server for faster iterative runs. (Currently doesn't do anything.)
+  -i INPUT, --input INPUT
+                        Path to the input file (triples TSV or edge-list CSV)
+  -f {triples,edges}, --format {triples,edges}
+                        Input format. Auto-detected if omitted.
+  -o OUT, --out OUT     Output directory
+  --max-windows MAX_WINDOWS
+                        Only aggregate the first N windows (by window_lo order). Default: all.
+  -t CUTPOINTS, --cutpoints CUTPOINTS
+                        Comma-separated cutpoints for temporal windowing, e.g. '5000,10000'.
+                        For triples these are token IDs (index column);
+                        for edge lists these are sentence IDs.
+                        (Default: Split into Death Intervals)
+  --include-new-triples
+                        Include manually added triples.
+  -k MIN_OVERLAP, --min-overlap MIN_OVERLAP
+                        Minimum victim count for an alter to be flagged (default: 2)
+  -w, --web             Generate interactive pyvis HTML visualisations
 ```
